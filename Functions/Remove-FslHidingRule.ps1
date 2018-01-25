@@ -14,7 +14,7 @@ function Remove-FslHidingRule {
         $outHidingRules = $outHidingRules | Where-Object {$_ -notmatch $escapeLine }
     }
 
-    $linesWithNoRepeatComments = Remove-RepeatComments -Line $outHidingRules
+    $linesWithNoRepeatComments = Remove-RepeatComment -Line $outHidingRules
 
     if (Test-path $OutHidingFile) {
         Write-Error 'File already exists'
