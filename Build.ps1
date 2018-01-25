@@ -38,10 +38,8 @@ function Add-FslRelease {
                 $actualFunc
             }
         }
-
-        Set-Content (Join-Path )
     }
-
+    $ctrlScript | Set-Content (Join-Path $ReleaseFolder $ControlScript)
 }
 
 Add-FslRelease -ControlScript 'Add-FslNewRuleFile.ps1'
