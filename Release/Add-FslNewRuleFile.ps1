@@ -44,111 +44,111 @@ function Add-FslNewRuleFile {
         #region load helper functions
 
         #Find-DuplicateLine
-        function Find-DuplicateLine {
-            [cmdletbinding()]
-            param (
-                [Parameter(
-                    Position = 0,
-                    ValuefromPipelineByPropertyName = $true,
-                    Mandatory = $true
-                )]
-                [System.String[]]$VisibleAppHidingRule,
+function Find-DuplicateLine {
+    [cmdletbinding()]
+    param (
+        [Parameter(
+            Position = 0,
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
+        )]
+        [System.String[]]$VisibleAppHidingRule,
 
-                [Parameter(
-                    Position = 1,
-                    ValuefromPipelineByPropertyName = $true,
-                    Mandatory = $true
+        [Parameter(
+            Position = 1,
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
 
-                )]
-                [System.String[]]$HidableAppHidingRule
-            )
+        )]
+        [System.String[]]$HidableAppHidingRule
+    )
 
-            $visibleRulesOnly = $VisibleAppHidingRule | Where-Object { $_.Startswith('HKLM\SOFTWARE\') -eq $true }
-            $hidingRulesOnly = $HidableAppHidingRule | Where-Object { $_.Startswith('HKLM\SOFTWARE\') -eq $true }
+    $visibleRulesOnly = $VisibleAppHidingRule | Where-Object { $_.Startswith('HKLM\SOFTWARE\') -eq $true }
+    $hidingRulesOnly = $HidableAppHidingRule | Where-Object { $_.Startswith('HKLM\SOFTWARE\') -eq $true }
 
-            $rules = $visibleRulesOnly + $hidingRulesOnly
+    $rules = $visibleRulesOnly + $hidingRulesOnly
 
-            $dupes = $rules | Group-Object | Where-Object {$_.Count -gt 1 } | Select-Object -ExpandProperty Name
+    $dupes = $rules | Group-Object | Where-Object {$_.Count -gt 1 } | Select-Object -ExpandProperty Name
 
-            Write-Output $dupes
-        }
+    Write-Output $dupes
+}
         #Write-FslRedirectLine
-        function Write-FslRedirectLine {
+function Write-FslRedirectLine {
 
-            [cmdletbinding()]
-            Param (
-                [String[]]$DuplicateLine,
-                [System.String]$OutRedirectFile,
-                [System.String]$AppName
-            )
+    [cmdletbinding()]
+    Param (
+        [String[]]$DuplicateLine,
+        [System.String]$OutRedirectFile,
+        [System.String]$AppName
+    )
 
-            if (Test-Path $OutRedirectFile) {
-                Write-Error 'File Already Exists'
-            }
-            else {
+    if (Test-Path $OutRedirectFile) {
+        Write-Error 'File Already Exists'
+    }
+    else {
 
-                Add-Content $OutRedirectFile '1' -Encoding Unicode
-                Add-Content $OutRedirectFile '##' -Encoding Unicode
+        Add-Content $OutRedirectFile '1' -Encoding Unicode
+        Add-Content $OutRedirectFile '##' -Encoding Unicode
 
-                foreach ($line in $DuplicateLine) {
+        foreach ($line in $DuplicateLine) {
 
-                    $regPath = $line.split()[0]
-                    $destination = $regPath.replace('HKLM\SOFTWARE\', "HKLM\SOFTWARE\FSlogix\Redirect\$AppName\")
-                    Add-Content $OutRedirectFile "$regPath`t`t$destination`t`t0x00000121`t" -Encoding Unicode
-                }
-            }
+            $regPath = $line.split()[0]
+            $destination = $regPath.replace('HKLM\SOFTWARE\', "HKLM\SOFTWARE\FSlogix\Redirect\$AppName\")
+            Add-Content $OutRedirectFile "$regPath`t`t$destination`t`t0x00000121`t" -Encoding Unicode
         }
+    }
+}
         #Remove-RepeatComment
-        function Remove-RepeatComment {
-            [cmdletbinding()]
-            Param (
-                [String[]]$Line
-            )
+function Remove-RepeatComment {
+        [cmdletbinding()]
+    Param (
+        [String[]]$Line
+    )
 
-            $lastLineFirstLetterHash = $false
-            foreach ($item in $Line) {
-                $firstLetterHash = $item.StartsWith('#')
-                if (-not ($lastLineFirstLetterHash -and $firstLetterHash)) {
-                    Write-Output $item
-                }
-
-                $lastLineFirstLetterHash = $firstLetterHash
-            }
-
+    $lastLineFirstLetterHash = $false
+    foreach ($item in $Line){
+        $firstLetterHash = $item.StartsWith('#')
+        if (-not ($lastLineFirstLetterHash -and $firstLetterHash)){
+            Write-Output $item
         }
+
+        $lastLineFirstLetterHash = $firstLetterHash
+    }
+
+}
         #Remove-FslHidingRule
-        function Remove-FslHidingRule {
-            [cmdletbinding()]
-            Param (
-                [String[]]$DuplicateLine,
-                [String[]]$HidableAppHidingRule,
-                [String]$OutHidingFile
-            )
+function Remove-FslHidingRule {
+    [cmdletbinding()]
+    Param (
+        [String[]]$DuplicateLine,
+        [String[]]$HidableAppHidingRule,
+        [String]$OutHidingFile
+    )
 
-            $dupes = $DuplicateLine
-            $outHidingRules = $HidableAppHidingRule
+    $dupes = $DuplicateLine
+    $outHidingRules = $HidableAppHidingRule
 
-            foreach ($line in $dupes) {
-                $escapeLine = [regex]::Escape("$line")
-                $outHidingRules = $outHidingRules | Where-Object {$_ -notmatch $escapeLine }
-            }
+    foreach ($line in $dupes) {
+        $escapeLine = [regex]::Escape("$line")
+        $outHidingRules = $outHidingRules | Where-Object {$_ -notmatch $escapeLine }
+    }
 
-            $linesWithNoRepeatComments = Remove-RepeatComments -Line $outHidingRules
+    $linesWithNoRepeatComments = Remove-RepeatComment -Line $outHidingRules
 
-            if (Test-path $OutHidingFile) {
-                Write-Error 'File already exists'
-            }
-            else {
-                Set-Content -Path $OutHidingFile -Value $linesWithNoRepeatComments -Encoding Unicode
-            }
-        }
+    if (Test-path $OutHidingFile) {
+        Write-Error 'File already exists'
+    }
+    else {
+        Set-Content -Path $OutHidingFile -Value $linesWithNoRepeatComments -Encoding Unicode
+    }
+}
 
         #endregion
 
     }
 
     PROCESS {
-        $dupelist = Find-DuplicateLines -VisibleAppHidingRule $VisibleAppHidingRule -HidableAppHidingRule $HidableAppHidingRule
+        $dupelist = Find-DuplicateLine -VisibleAppHidingRule $VisibleAppHidingRule -HidableAppHidingRule $HidableAppHidingRule
         Write-FslRedirectLine -DuplicateLine $dupelist -OutRedirectFile $OutRedirectFile -AppName $AppName
         Remove-FslHidingRule -DuplicateLine $dupelist -HidableAppHidingRule $HidableAppHidingRule -OutHidingFile $OutHidingFile
     }
