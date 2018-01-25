@@ -41,6 +41,16 @@ function Add-FslNewRuleFile {
 
     BEGIN {
         Set-StrictMode -Version Latest
+
+        #region load helper functions
+
+        #Find-DuplicateLine
+        #Write-FslRedirectLine
+        #Remove-RepeatComment
+        #Remove-FslHidingRule
+
+        #endregion
+
     }
 
     PROCESS {

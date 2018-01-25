@@ -1,4 +1,4 @@
-function Remove-RepeatComments {
+function Remove-RepeatComment {
         [cmdletbinding()]
     Param (
         [String[]]$Line

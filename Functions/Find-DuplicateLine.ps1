@@ -1,4 +1,4 @@
-function Find-DuplicateLines {
+function Find-DuplicateLine {
     [cmdletbinding()]
     param (
         [Parameter(
