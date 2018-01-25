@@ -38,7 +38,6 @@ function Add-FslNewRuleFile {
         [System.String]$AppName
     )
 
-
     BEGIN {
         Set-StrictMode -Version Latest
 
