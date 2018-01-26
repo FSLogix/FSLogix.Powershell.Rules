@@ -22,7 +22,7 @@ function Find-DuplicateLine {
 
     $rules = $visibleRulesOnly + $hidingRulesOnly
 
-    $dupes = $rules | Group-Object | Where-Object {$_.Count -gt 1 } | Select-Object -ExpandProperty Name
+    $dupes = $rules | Group-Object | Where-Object { $_.Count -gt 1 } | Select-Object -ExpandProperty Name
 
     Write-Output $dupes
 }
