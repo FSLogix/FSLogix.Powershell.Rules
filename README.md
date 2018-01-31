@@ -5,12 +5,20 @@ Function to create hiding and redirect files for FSLogix App Masking when hiding
 Example:
 
 $path = 'C:\Users\Jim\FieldScripts\Create-Rules-Files\TestFiles'
+
 $AddFSLNewRuleFileParams = @{
-    VisibleAppHidingRule = Get-Content -Path ( Join-Path $path 'AppRule_Office2013.fxr' )
-    HidableAppHidingRule = Get-Content -Path (Join-Path $path 'AppRule_Visio2013Pro.fxr' )
-    OutHidingFile        = Join-Path $path 'AppRule_Visio2013Pro_H.fxr'
-    OutRedirectFile      = Join-Path $path '\AppRule_Visio2013Pro_R.fxr'
+
+    VisibleAppHidingRule = Get-Content -Path ( Join-Path $path 'AppRuleOffice2013.fxr' )
+
+    HidableAppHidingRule = Get-Content -Path (Join-Path $path 'AppRuleVisio2013Pro.fxr' )
+
+    OutHidingFile        = Join-Path $path 'AppRuleVisio2013Pro_H.fxr'
+
+    OutRedirectFile      = Join-Path $path '\AppRuleVisio2013Pro_R.fxr'
+
     AppName              = 'Visio2013Pro'
+
 }
+
 
 Add-FslNewRuleFile @AddFSLNewRuleFileParams
