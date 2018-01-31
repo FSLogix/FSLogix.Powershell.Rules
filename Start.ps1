@@ -1,8 +1,8 @@
-# Create-Rules-Files
-
-Function to create hiding and redirect files for FSLogix App Masking when hiding part of a suite or part of an app.  e.g Project and Office
-
-Example:
+. .\Functions\Add-FslNewRuleFile.ps1
+. .\Functions\Find-DuplicateLine.ps1
+. .\Functions\Remove-FslHidingRule.ps1
+. .\Functions\Remove-RepeatComment.ps1
+. .\Functions\Write-FslRedirectLine.ps1
 
 $path = 'C:\Users\Jim\FieldScripts\Create-Rules-Files\TestFiles'
 $AddFSLNewRuleFileParams = @{
