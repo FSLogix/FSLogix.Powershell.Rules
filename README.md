@@ -14,7 +14,7 @@ $AddFSLNewRuleFileParams = @{
 
     OutHidingFile        = Join-Path $path 'AppRuleVisio2013Pro_H.fxr'
 
-    OutRedirectFile      = Join-Path $path '\AppRuleVisio2013Pro_R.fxr'
+    OutRedirectFile      = Join-Path $path 'AppRuleVisio2013Pro_R.fxr'
 
     AppName              = 'Visio2013Pro'
 
