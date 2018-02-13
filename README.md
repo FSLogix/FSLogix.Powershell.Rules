@@ -27,4 +27,9 @@ Example:
 
 gci -file | Write-FslFileHidingLine -OutRedirectFile c:\jimm\hiding.fxr
 
-gci -file -Path c:\madeup\fictional -Recurse -File -Filter *.exe | Write-FslFileHidingLine -OutRedirectFile c:\jimm\hiding.fxr
+gci -Path c:\madeup\fictional -Recurse -File | Write-FslFileHidingLine -OutRedirectFile c:\jimm\hiding.fxr
+
+
+Example:
+
+gci -Path c:\madeup\fictional -Recurse -File -Filter *.exe | Add-FslProcessAssignment -$OutAssignmentFile c:\jimm\assignment.fxa
