@@ -1,5 +1,5 @@
-function Write-FslFileHidingLine {
-    [cmdletbinding()]
+function Add-FslProcessAssignment {
+    [CmdletBinding()]
 
     Param (
         [Parameter(
@@ -7,16 +7,16 @@ function Write-FslFileHidingLine {
             ValuefromPipelineByPropertyName = $true,
             ValuefromPipeline = $true,
             Mandatory = $true,
-            ParameterSetName = 'String'
+            ParameterSetName = 'FileAsArg'
         )]
-        [System.String[]]$FilePath,
+        [System.String[]]$FileName,
 
         [Parameter(
             Position = 1,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
-        [System.String]$OutRedirectFile,
+        [System.String]$OutAssignmentFile,
 
         [Parameter(
             Position = 2,
@@ -28,31 +28,28 @@ function Write-FslFileHidingLine {
         [System.IO.FileInfo]$FileInfoObject
 
     )
+
     BEGIN {
         Set-StrictMode -Version Latest
-        if ($OutAssignmentFile -notlike "*.fxr"){
-            Write-Warning 'Rule files should have an fxr extension'
+        if ($OutAssignmentFile -notlike "*.fxa"){
+            Write-Warning 'Assignment files should have an fxa extension'
         }
-        if (Test-Path $OutRedirectFile) {
+        if (Test-Path $OutAssignmentFile) {
             Write-Error 'File Already Exists'
         }
-        Add-Content $OutRedirectFile '1' -Encoding Unicode
-    }
+        Add-Content $OutAssignmentFile "1`t0" -Encoding Unicode
+    } # Begin
     PROCESS {
-
         if ($PSCmdlet.ParameterSetName -eq 'FileInfo') {
             $FilePath = $FileInfoObject.FullName.ToString()
         }
         
         foreach ($path in $FilePath) {
 
-            $childName = Split-Path $path -Leaf
-            $parentName = Split-Path $path -Parent
-            Add-Content $OutRedirectFile '##Created by Script' -Encoding Unicode
-            Add-Content $OutRedirectFile "$parentName`t$childName`t`t`t0x00000222`t" -Encoding Unicode
+            Add-Content $OutAssignmentFile '##Created by Script' -Encoding Unicode
+            Add-Content $OutAssignmentFile "0x00000109`t$path`t`t`t0`t0" -Encoding Unicode
             
         } # foreach
-        
-    } # process
-    END {}
-} #function
+    } #Process
+    END {} #End
+}  #function Add-FslProcessAssignment
