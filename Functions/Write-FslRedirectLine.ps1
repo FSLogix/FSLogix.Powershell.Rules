@@ -13,8 +13,7 @@ function Write-FslRedirectLine {
     else {
 
         Add-Content $OutRedirectFile '1' -Encoding Unicode
-        #Add-Content $OutRedirectFile '##' -Encoding Unicode
-
+        
         foreach ($line in $DuplicateLine) {
 
             $regPath = $line.split()[0]
