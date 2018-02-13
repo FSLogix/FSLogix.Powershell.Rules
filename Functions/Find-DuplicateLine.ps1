@@ -18,9 +18,9 @@ function Find-DuplicateLine {
     )
 
     #$visibleRulesOnly = $VisibleAppHidingRule | Where-Object { $_.Startswith('HKLM\SOFTWARE\') -eq $true }
-    $visibleRulesOnly = $VisibleAppHidingRule | Where-Object { $_.Startswith('##') -eq $false -or $_ -ne '1' }
+    $visibleRulesOnly = $VisibleAppHidingRule | Where-Object { $_.Startswith('##') -eq $false -and $_ -ne '1' }
     #$hidingRulesOnly = $HidableAppHidingRule | Where-Object { $_.Startswith('HKLM\SOFTWARE\') -eq $true }
-    $hidingRulesOnly = $HidableAppHidingRule | Where-Object { $_.Startswith('##') -eq $false -or $_ -ne '1' }
+    $hidingRulesOnly = $HidableAppHidingRule | Where-Object { $_.Startswith('##') -eq $false -and $_ -ne '1' }
 
     $rules = $visibleRulesOnly + $hidingRulesOnly
 
