@@ -63,12 +63,13 @@ function Add-FslNewRuleFile {
                 [System.String[]]$HidableAppHidingRule
             )
 
-            $visibleRulesOnly = $VisibleAppHidingRule | Where-Object { $_.Startswith('HKLM\SOFTWARE\') -eq $true }
-            $hidingRulesOnly = $HidableAppHidingRule | Where-Object { $_.Startswith('HKLM\SOFTWARE\') -eq $true }
+            #Eliminate non relevant lines
+            $visibleRulesOnly = $VisibleAppHidingRule | Where-Object { $_.Startswith('##') -eq $false -and $_ -ne '1' }
+            $hidingRulesOnly = $HidableAppHidingRule | Where-Object { $_.Startswith('##') -eq $false -and $_ -ne '1' }
 
             $rules = $visibleRulesOnly + $hidingRulesOnly
 
-            $dupes = $rules | Group-Object | Where-Object {$_.Count -gt 1 } | Select-Object -ExpandProperty Name
+            $dupes = $rules | Group-Object | Where-Object { $_.Count -gt 1 } | Select-Object -ExpandProperty Name
 
             Write-Output $dupes
         }
@@ -88,12 +89,12 @@ function Add-FslNewRuleFile {
             else {
 
                 Add-Content $OutRedirectFile '1' -Encoding Unicode
-                Add-Content $OutRedirectFile '##' -Encoding Unicode
-
+        
                 foreach ($line in $DuplicateLine) {
 
                     $regPath = $line.split()[0]
                     $destination = $regPath.replace('HKLM\SOFTWARE\', "HKLM\SOFTWARE\FSlogix\Redirect\$AppName\")
+                    Add-Content $OutRedirectFile '##Created by Script' -Encoding Unicode
                     Add-Content $OutRedirectFile "$regPath`t`t$destination`t`t0x00000121`t" -Encoding Unicode
                 }
             }
@@ -144,9 +145,7 @@ function Add-FslNewRuleFile {
         }
 
         #endregion
-
     }
-
     PROCESS {
         $dupelist = Find-DuplicateLine -VisibleAppHidingRule $VisibleAppHidingRule -HidableAppHidingRule $HidableAppHidingRule
         Write-FslRedirectLine -DuplicateLine $dupelist -OutRedirectFile $OutRedirectFile -AppName $AppName
