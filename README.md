@@ -22,3 +22,9 @@ $AddFSLNewRuleFileParams = @{
 
 
 Add-FslNewRuleFile @AddFSLNewRuleFileParams
+
+Example:
+
+gci -file | Write-FslFileHidingLine -OutRedirectFile c:\jimm\hiding.fxr
+
+gci -file -Path c:\madeup\fictional -Recurse -File -Filter *.exe | Write-FslFileHidingLine -OutRedirectFile c:\jimm\hiding.fxr
