@@ -27,7 +27,7 @@ Example:
 
 gci -file | Write-FslFileHidingLine -OutRedirectFile c:\jimm\hiding.fxr
 
-gci -Path c:\madeup\fictional -Recurse -File | Write-FslFileHidingLine -OutRedirectFile c:\jimm\hiding.fxr
+gci -Path c:\madeup\fictional -Recurse -File | Add-FslFileHidingLine -OutRedirectFile c:\jimm\hiding.fxr
 
 
 Example:
