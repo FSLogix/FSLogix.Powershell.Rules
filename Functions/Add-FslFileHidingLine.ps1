@@ -1,4 +1,4 @@
-function Write-FslFileHidingLine {
+function Add-FslFileHidingLine {
     [cmdletbinding()]
 
     Param (
@@ -55,4 +55,4 @@ function Write-FslFileHidingLine {
         
     } # process
     END {}
-} #function
+} #function Add-FslFileHidingLine

@@ -1,4 +1,4 @@
-function Write-FslRedirectLine {
+function Add-FslRedirectLine {
 
     [cmdletbinding()]
     Param (

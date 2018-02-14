@@ -44,7 +44,7 @@ function Add-FslNewRuleFile {
         #region load helper functions
 
         #Find-DuplicateLine
-        #Write-FslRedirectLine
+        #Add-FslRedirectLine
         #Remove-RepeatComment
         #Remove-FslHidingRule
 
@@ -52,7 +52,7 @@ function Add-FslNewRuleFile {
     }
     PROCESS {
         $dupelist = Find-DuplicateLine -VisibleAppHidingRule $VisibleAppHidingRule -HidableAppHidingRule $HidableAppHidingRule
-        Write-FslRedirectLine -DuplicateLine $dupelist -OutRedirectFile $OutRedirectFile -AppName $AppName
+        Add-FslRedirectLine -DuplicateLine $dupelist -OutRedirectFile $OutRedirectFile -AppName $AppName
         Remove-FslHidingRule -DuplicateLine $dupelist -HidableAppHidingRule $HidableAppHidingRule -OutHidingFile $OutHidingFile
     }
     END {
