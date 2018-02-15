@@ -33,4 +33,8 @@ Describe 'Find-DuplicateLine' {
         $dupes = Find-DuplicateLine -VisibleAppHidingRule $visibleApp -HidableAppHidingRule $hidableApp
         $dupes.Count -le $hidableApp.Count | Should Be $true
     }
+    It "First line is not 1" {
+        Find-DuplicateLine -VisibleAppHidingRule $visRul -HidableAppHidingRule $hideRul | Select-Object -First 1 | Should Not Be 1
+    }
+
 }
