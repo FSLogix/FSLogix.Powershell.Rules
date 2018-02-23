@@ -30,38 +30,49 @@ function ConvertFrom-FslRuleCode {
     PROCESS {
 
         switch ($true){
-            { $RuleCode -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY } { $FolderOrKey = $true }
-            { -not ( $RuleCode -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY ) } { $FolderOrKey = $false}
-            { $RuleCode -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE } { Write-Output 'File'}
-            { -not ( $RuleCode -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE ) } { Write-Output 'Not File'}
-            { $RuleCode -band $FRX_RULE_CONTAINS_USER_VARS } { Write-Output 'Vars'}
-            { -not ( $RuleCode -band $FRX_RULE_CONTAINS_USER_VARS ) } { Write-Output 'Not Vars'}
-            { $RuleCode -band $FRX_RULE_SHOULD_COPY_FILE } { Write-Output 'Copy'}
-            { -not ( $RuleCode -band $FRX_RULE_SHOULD_COPY_FILE ) } { Write-Output 'Not Copy'}
-            { $RuleCode -band $FRX_RULE_IS_PERSISTANT } { Write-Output 'Persistent'}
-            { -not ( $RuleCode -band $FRX_RULE_IS_PERSISTANT ) } { Write-Output 'Not Persistent'}
-            { $RuleCode -band $FRX_RULE_TYPE_REDIRECT } { Write-Output 'Redirect'}
-            { -not ( $RuleCode -band $FRX_RULE_TYPE_REDIRECT ) } { Write-Output 'Not Redirect'}
-            { $RuleCode -band $FRX_RULE_TYPE_HIDING } { Write-Output 'Hiding'}
-            { -not ( $RuleCode -band $FRX_RULE_TYPE_HIDING ) } { Write-Output 'Not Hiding'}
-            { $RuleCode -band $FRX_RULE_TYPE_HIDE_PRINTER } { Write-Output 'Printer'}
-            { -not ( $RuleCode -band $FRX_RULE_TYPE_HIDE_PRINTER ) } { Write-Output 'Not Printer'}
-            { $RuleCode -band $FRX_RULE_TYPE_SPECIFIC_DATA } { Write-Output 'Specific'}
-            { -not ( $RuleCode -band $FRX_RULE_TYPE_SPECIFIC_DATA ) } { Write-Output 'Not Specific'}
-            { $RuleCode -band $FRX_RULE_TYPE_JAVA } { Write-Output 'Java'}
-            { -not ( $RuleCode -band $FRX_RULE_TYPE_JAVA ) } { Write-Output 'Not Java'}
-            { $RuleCode -band $FRX_RULE_TYPE_VOLUME_AUTOMOUNT } { Write-Output 'Mount'}
-            { -not ( $RuleCode -band $FRX_RULE_TYPE_VOLUME_AUTOMOUNT ) } { Write-Output 'Not Mount'}
-            { $RuleCode -band $FRX_RULE_TYPE_HIDE_FONT } { Write-Output 'Font'}
-            { -not ( $RuleCode -band $FRX_RULE_TYPE_HIDE_FONT ) } { Write-Output 'Not Font'}
-            { $RuleCode -band $FRX_RULE_TYPE_MASK } { Write-Output 'Mask'}
-            { -not ( $RuleCode -band $FRX_RULE_TYPE_MASK ) } { Write-Output 'Not Mask'}
+            { $RuleCode -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY } { $folderOrKey = $true }
+            { -not ( $RuleCode -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY ) } { $folderOrKey = $false}
+            { $RuleCode -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE } {$fileOrValue = $true}
+            { -not ( $RuleCode -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE ) } { $fileOrValue = $false }
+            { $RuleCode -band $FRX_RULE_CONTAINS_USER_VARS } { $containsUserVar = $true }
+            { -not ( $RuleCode -band $FRX_RULE_CONTAINS_USER_VARS ) } { $containsUserVar = $false }
+            { $RuleCode -band $FRX_RULE_SHOULD_COPY_FILE } { $copyObject = $true }
+            { -not ( $RuleCode -band $FRX_RULE_SHOULD_COPY_FILE ) } { $copyObject = $false }
+            { $RuleCode -band $FRX_RULE_IS_PERSISTANT } { $persistent = $true}
+            { -not ( $RuleCode -band $FRX_RULE_IS_PERSISTANT ) } { $persistent = $false }
+            { $RuleCode -band $FRX_RULE_TYPE_REDIRECT } { $redirect = $true}
+            { -not ( $RuleCode -band $FRX_RULE_TYPE_REDIRECT ) } { $redirect = $false }
+            { $RuleCode -band $FRX_RULE_TYPE_HIDING } { $hiding = $true}
+            { -not ( $RuleCode -band $FRX_RULE_TYPE_HIDING ) } { $hiding = $false }
+            { $RuleCode -band $FRX_RULE_TYPE_HIDE_PRINTER } { $hidePrinter = $true }
+            { -not ( $RuleCode -band $FRX_RULE_TYPE_HIDE_PRINTER ) } { $hidePrinter = $false}
+            { $RuleCode -band $FRX_RULE_TYPE_SPECIFIC_DATA } { $specificData = $true }
+            { -not ( $RuleCode -band $FRX_RULE_TYPE_SPECIFIC_DATA ) } { $specificData = $false }
+            { $RuleCode -band $FRX_RULE_TYPE_JAVA } { $java = $true }
+            { -not ( $RuleCode -band $FRX_RULE_TYPE_JAVA ) } { $java = $false }
+            { $RuleCode -band $FRX_RULE_TYPE_VOLUME_AUTOMOUNT } { $volumeAutoMount = $true}
+            { -not ( $RuleCode -band $FRX_RULE_TYPE_VOLUME_AUTOMOUNT ) } { $volumeAutoMount = $false }
+            { $RuleCode -band $FRX_RULE_TYPE_HIDE_FONT } { $font = $true }
+            { -not ( $RuleCode -band $FRX_RULE_TYPE_HIDE_FONT ) } { $font = $false }
+            { $RuleCode -band $FRX_RULE_TYPE_MASK } { $mask = $true }
+            { -not ( $RuleCode -band $FRX_RULE_TYPE_MASK ) } { $mask = $false }
             default {}
         } #Switch
 
         $outObject = [PSCustomObject]@{
-            'FolderOrKey' = $FolderOrKey
-
+            'FolderOrKey'     = $folderOrKey
+            'FileOrValue'     = $fileOrValue
+            'ContainsUserVar' = $containsUserVar
+            'CopyObject'      = $copyObject
+            'Persistent'      = $persistent
+            'Redirect'        = $redirect
+            'Hiding'          = $hiding
+            'HidePrinter'     = $hidePrinter
+            'SpecificData'    = $specificData
+            'Java'            = $java
+            'VolumeAutoMount' = $volumeAutoMount
+            'Font'            = $font
+            'Mask'            = $mask
         }
         Write-Output $outObject
     } #Process
