@@ -86,7 +86,7 @@ function ConvertTo-FslRuleCode {
         $FRX_RULE_TYPE_MASK                 = 0x00007F00
     } # Begin
     PROCESS {
-        $codeToOutput =
+        $codeToOutput = 0
         switch ($true){
             $FolderOrKey        { $codeToOutput = $codeToOutput -bor $FRX_RULE_SRC_IS_A_DIR_OR_KEY }
             $FileOrValue        { $codeToOutput = $codeToOutput -bor $FRX_RULE_SRC_IS_A_FILE_OR_VALUE }
@@ -100,7 +100,7 @@ function ConvertTo-FslRuleCode {
             $Java               { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_JAVA }
             $VolumeAutomount    { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_VOLUME_AUTOMOUNT }
             $HideFont           { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_HIDE_FONT }
-            $Mask               { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_MASK }
+            #$Mask               { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_MASK }
         }
 
         Write-Output $codeToOutput
