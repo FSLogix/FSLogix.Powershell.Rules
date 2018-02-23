@@ -106,4 +106,4 @@ function ConvertTo-FslRuleCode {
         Write-Output $codeToOutput
     } #Process
     END {} #End
-}  #function Convert-FslToRuleCode
+}  #function ConvertTo-FslRuleCode
