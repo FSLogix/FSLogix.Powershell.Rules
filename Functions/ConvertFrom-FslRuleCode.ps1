@@ -30,8 +30,8 @@ function ConvertFrom-FslRuleCode {
     PROCESS {
 
         switch ($true){
-            { $RuleCode -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY } { Write-Output 'Key'}
-            { -not ( $RuleCode -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY ) } { Write-Output 'Not Key'}
+            { $RuleCode -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY } { $FolderOrKey = $true }
+            { -not ( $RuleCode -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY ) } { $FolderOrKey = $false}
             { $RuleCode -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE } { Write-Output 'File'}
             { -not ( $RuleCode -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE ) } { Write-Output 'Not File'}
             { $RuleCode -band $FRX_RULE_CONTAINS_USER_VARS } { Write-Output 'Vars'}
@@ -57,7 +57,13 @@ function ConvertFrom-FslRuleCode {
             { $RuleCode -band $FRX_RULE_TYPE_MASK } { Write-Output 'Mask'}
             { -not ( $RuleCode -band $FRX_RULE_TYPE_MASK ) } { Write-Output 'Not Mask'}
             default {}
+        } #Switch
+
+        $outObject = [PSCustomObject]@{
+            'FolderOrKey' = $FolderOrKey 
+
         }
+        Write-Output $outObject
     } #Process
     END {} #End
 }  #function ConvertFrom-FslRuleCode
