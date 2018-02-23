@@ -13,9 +13,6 @@ function ConvertFrom-FslRuleCode {
 
     BEGIN {
         Set-StrictMode -Version Latest
-    } # Begin
-    PROCESS {
-
         $FRX_RULE_SRC_IS_A_DIR_OR_KEY       = 0x00000001
         $FRX_RULE_SRC_IS_A_FILE_OR_VALUE    = 0x00000002
         $FRX_RULE_CONTAINS_USER_VARS        = 0x00000008
@@ -29,7 +26,8 @@ function ConvertFrom-FslRuleCode {
         $FRX_RULE_TYPE_VOLUME_AUTOMOUNT     = 0x00002000 #Ask what this means
         $FRX_RULE_TYPE_HIDE_FONT            = 0x00004000
         $FRX_RULE_TYPE_MASK                 = 0x00007F00 #Ask what this means
-
+    } # Begin
+    PROCESS {
 
         switch ($true){
             { $RuleCode -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY } { Write-Output 'Key'}
