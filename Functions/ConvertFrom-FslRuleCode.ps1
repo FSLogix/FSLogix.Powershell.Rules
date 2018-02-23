@@ -1,4 +1,4 @@
-function Convert-FslFromRuleCode {
+function ConvertFrom-FslRuleCode {
     [CmdletBinding()]
 
     Param (
@@ -62,8 +62,4 @@ function Convert-FslFromRuleCode {
         }
     } #Process
     END {} #End
-}  #function Convert-FslRuleCode
-
-$c = 0x00000222
-
-Convert-FslRuleCode $c
+}  #function ConvertFrom-FslRuleCode
