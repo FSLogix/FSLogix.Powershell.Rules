@@ -25,7 +25,7 @@ function ConvertFrom-FslRuleCode {
         $FRX_RULE_TYPE_JAVA                 = 0x00001000
         $FRX_RULE_TYPE_VOLUME_AUTOMOUNT     = 0x00002000 #Ask what this means
         $FRX_RULE_TYPE_HIDE_FONT            = 0x00004000
-        $FRX_RULE_TYPE_MASK                 = 0x00007F00 #Ask what this means
+        #$FRX_RULE_TYPE_MASK                 = 0x00007F00 #Ask what this means
     } # Begin
     PROCESS {
 
@@ -54,8 +54,8 @@ function ConvertFrom-FslRuleCode {
             { -not ( $RuleCode -band $FRX_RULE_TYPE_VOLUME_AUTOMOUNT ) } { $volumeAutoMount = $false }
             { $RuleCode -band $FRX_RULE_TYPE_HIDE_FONT } { $font = $true }
             { -not ( $RuleCode -band $FRX_RULE_TYPE_HIDE_FONT ) } { $font = $false }
-            { $RuleCode -band $FRX_RULE_TYPE_MASK } { $mask = $true }
-            { -not ( $RuleCode -band $FRX_RULE_TYPE_MASK ) } { $mask = $false }
+            #{ $RuleCode -band $FRX_RULE_TYPE_MASK } { $mask = $true }
+            #{ -not ( $RuleCode -band $FRX_RULE_TYPE_MASK ) } { $mask = $false }
             default {}
         } #Switch
 
@@ -72,7 +72,7 @@ function ConvertFrom-FslRuleCode {
             'Java'            = $java
             'VolumeAutoMount' = $volumeAutoMount
             'Font'            = $font
-            'Mask'            = $mask
+            #'Mask'            = $mask
         }
         Write-Output $outObject
     } #Process
