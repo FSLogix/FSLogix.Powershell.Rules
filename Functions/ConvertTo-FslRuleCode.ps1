@@ -83,7 +83,7 @@ function ConvertTo-FslRuleCode {
         $FRX_RULE_TYPE_JAVA                 = 0x00001000
         $FRX_RULE_TYPE_VOLUME_AUTOMOUNT     = 0x00002000
         $FRX_RULE_TYPE_HIDE_FONT            = 0x00004000
-        $FRX_RULE_TYPE_MASK                 = 0x00007F00
+        #$FRX_RULE_TYPE_MASK                 = 0x00007F00
     } # Begin
     PROCESS {
         $codeToOutput = 0
