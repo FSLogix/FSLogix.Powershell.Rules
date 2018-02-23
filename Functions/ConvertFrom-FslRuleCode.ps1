@@ -60,7 +60,7 @@ function ConvertFrom-FslRuleCode {
         } #Switch
 
         $outObject = [PSCustomObject]@{
-            'FolderOrKey' = $FolderOrKey 
+            'FolderOrKey' = $FolderOrKey
 
         }
         Write-Output $outObject
