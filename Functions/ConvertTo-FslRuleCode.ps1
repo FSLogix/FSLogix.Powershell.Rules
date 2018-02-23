@@ -61,12 +61,12 @@ function ConvertTo-FslRuleCode {
             Position = 11,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Switch]$HideFont,
-        [Parameter(
+        [Switch]$HideFont
+        <#[Parameter(
             Position = 12,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Switch]$Mask
+        [Switch]$Mask#>
     )
 
     BEGIN {
