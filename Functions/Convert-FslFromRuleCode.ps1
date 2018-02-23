@@ -1,4 +1,4 @@
-function Convert-FslRuleCode {
+function Convert-FslFromRuleCode {
     [CmdletBinding()]
 
     Param (
