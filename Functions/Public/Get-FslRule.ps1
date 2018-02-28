@@ -20,7 +20,7 @@ function Get-FslRule {
             exit
         }
         #Grab txt file contaents apart from first line
-        $lines = Get-Content -Path $Path | Select-Object -Skip 1 
+        $lines = Get-Content -Path $Path | Select-Object -Skip 1
 
         foreach ($line in $lines) {
             switch ($true) {
