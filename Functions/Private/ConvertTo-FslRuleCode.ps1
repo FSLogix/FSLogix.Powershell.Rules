@@ -103,7 +103,10 @@ function ConvertTo-FslRuleCode {
             #$Mask               { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_MASK }
         }
 
-        Write-Output $codeToOutput
+        #convert code to hex so it doesn't get outputted as an integer
+        $formattedCode =  "0x{0:X8}" -f $codeToOutput
+
+        Write-Output $formattedCode
     } #Process
     END {} #End
 }  #function ConvertTo-FslRuleCode

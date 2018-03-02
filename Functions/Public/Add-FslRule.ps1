@@ -4,65 +4,129 @@ function Add-FslRule {
     Param (
         [Parameter(
             Position = 0,
-            ValuefromPipelineByPropertyName = $true,
             ValuefromPipeline = $true,
+            ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
-        [System.String]$SrcParent,
+        [System.String]$Name,
 
         [Parameter(
+            ParameterSetName = 'RuleType',
             Position = 1,
-            ValuefromPipelineByPropertyName = $true,
-            ValuefromPipeline = $true,
-            Mandatory = $true
+            ValuefromPipelineByPropertyName = $true
         )]
-        [System.String]$Src,
+        [ValidateSet('Hiding', 'Redirect', 'Java', 'SpecificData', 'VolumeAutomount')]
+        [System.String]$RuleType = 'Hiding',
 
         [Parameter(
             Position = 2,
-            ValuefromPipelineByPropertyName = $true,
-            ValuefromPipeline = $true,
-            Mandatory = $true
+            ValuefromPipelineByPropertyName = $true
         )]
-        [System.String]$DestParent,
+        [System.String]$RedirectTarget,
 
         [Parameter(
             Position = 3,
-            ValuefromPipelineByPropertyName = $true,
-            ValuefromPipeline = $true,
-            Mandatory = $true
+            Mandatory = $true,
+            ValuefromPipelineByPropertyName = $true
         )]
-        [System.String]$Dest,
+        [System.String]$RuleFilePath,
 
         [Parameter(
-            Position = 3,
-            ValuefromPipelineByPropertyName = $true,
-            ValuefromPipeline = $true,
-            Mandatory = $true
+            ParameterSetName = 'RuleType',
+            Position = 5,
+            ValuefromPipelineByPropertyName = $true
         )]
-        [System.String]$Flags,
+        [ValidateSet('File', 'Folder', 'RegistryValue', 'RegistryKey', 'Font', 'Printer')]
+        [string]$RuleTarget = 'File',
 
         [Parameter(
-            Position = 3,
-            ValuefromPipelineByPropertyName = $true,
-            ValuefromPipeline = $true,
-            Mandatory = $true
+            ParameterSetName = 'RuleType',
+            Position = 7,
+            ValuefromPipelineByPropertyName = $true
         )]
-        [System.String]$Binary,
+        [Switch]$ShouldCopy,
 
         [Parameter(
-            Position = 3,
-            ValuefromPipelineByPropertyName = $true,
-            ValuefromPipeline = $true,
-            Mandatory = $true
+            Position = 8,
+            ValuefromPipelineByPropertyName = $true
         )]
-        [System.String]$Comment
+        [System.String]$Comment = 'Created by Script',
+
+        [Parameter(
+            ParameterSetName = 'Flags',
+            Position = 9,
+            Mandatory = $true,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [System.String]$Flags
     )
+
 
     BEGIN {
         Set-StrictMode -Version Latest
+        $FRX_RULE_SRC_IS_A_FILE_OR_VALUE = 0x00000002
+        $FRX_RULE_TYPE_REDIRECT = 0x00000100
     } # Begin
     PROCESS {
+        if ($PSCmdlet.ParameterSetName -eq 'RuleType') {
+
+
+            switch ($true) {
+                { $RuleTarget -eq 'Font' } { $convertToFslRuleCodeParams += @{ 'HideFont' = $true }}
+                { $RuleTarget -eq 'Printer' } { $convertToFslRuleCodeParams += @{ 'HidePrinter' = $true }}
+                { $RuleTarget -eq 'File' -or $RuleTarget -eq 'RegistryValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }}
+                { $RuleTarget -eq 'Folder' -or $RuleTarget -eq 'RegistryKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }}
+                { $RuleType -eq 'VolumeAutoMount' } { $convertToFslRuleCodeParams += @{ 'VolumeAutomount' = $true }}
+                { $RuleType -eq 'SpecificData' } { $convertToFslRuleCodeParams += @{ 'SpecificData' = $true }}
+                { $RuleType -eq 'Java' } { $convertToFslRuleCodeParams += @{ 'Java' = $true }}
+                { $RuleType -eq 'Redirect' } { $convertToFslRuleCodeParams += @{ 'Redirect' = $true }}
+                { $RuleType -eq 'Redirect' } { $convertToFslRuleCodeParams += @{ 'Redirect' = $true }}         
+            }
+
+            $Flags = ConvertTo-FslRuleCode @convertToFslRuleCodeParams
+        }
+
+
+
+        if ($flags -bor  $FRX_RULE_SRC_IS_A_FILE_OR_VALUE) {
+            $SourceParent = Split-Path $Name -Parent
+            $Source = Split-Path $Name -Leaf
+        }
+        else {
+            $SourceParent = $Name
+        }
+
+        if ($flags -bor $FRX_RULE_SRC_IS_A_FILE_OR_VALUE -and 
+            $flags -bor $FRX_RULE_TYPE_REDIRECT -and 
+            $null -ne $RedirectTarget) {
+            $DestParent = Split-Path $RedirectTarget -Parent
+            $Dest = Split-Path $RedirectTarget -Leaf
+        }
+        else {
+            $DestParent = $RedirectTarget
+        }
+
+        #Binary is an unused field in fxr files
+        $binary = $null
+
+        $addContentParams = @{
+            'Path'     = $RuleFilePath
+            'Encoding' = 'Unicode'
+            'Value' = "##$Comment"
+        }
+
+        Add-Content @addContentParams
+
+        $exportCsvParams = @{
+            'InputObject'       = @($SourceParent, $Source, $DestParent, $Dest, $Flags, $binary)
+            'Path'              = $RuleFilePath
+            'Encoding'          = 'Unicode'
+            'Delimiter'         = "`t"
+            'NoTypeInformation' = $true
+            'Append'            = $true
+        }
+
+        Export-Csv @exportCsvParams
 
     } #Process
     END {} #End

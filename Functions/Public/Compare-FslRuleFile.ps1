@@ -26,10 +26,12 @@ function Compare-FslRuleFile {
         foreach ($filepath in $Path) {
             if (-not (Test-Path $file)){
                 Write-Error "$filepath does not exist"
-                break
+            }
+            else{
+                $rules = Get-FslRule $filepath
+                
             }
 
-            $rules = Get-FslRule $filepath
         }
     } #Process
     END {} #End
