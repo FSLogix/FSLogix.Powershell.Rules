@@ -44,7 +44,7 @@ function Add-FslRule {
             Position = 7,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Switch]$ShouldCopy,
+        [Switch]$CopyObject,
 
         [Parameter(
             Position = 8,
@@ -58,7 +58,13 @@ function Add-FslRule {
             Mandatory = $true,
             ValuefromPipelineByPropertyName = $true
         )]
-        [System.String]$Flags
+        [System.String]$Flags,
+
+        [Parameter(
+            Position = 10,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Switch]$Passthru
     )
 
 
@@ -70,6 +76,10 @@ function Add-FslRule {
     PROCESS {
         if ($PSCmdlet.ParameterSetName -eq 'RuleType') {
 
+            $convertToFslRuleCodeParams = @{
+                'Persistent' = $true
+                'CopyObject' = $CopyObject
+            }
 
             switch ($true) {
                 { $RuleTarget -eq 'Font' } { $convertToFslRuleCodeParams += @{ 'HideFont' = $true }}
@@ -80,7 +90,9 @@ function Add-FslRule {
                 { $RuleType -eq 'SpecificData' } { $convertToFslRuleCodeParams += @{ 'SpecificData' = $true }}
                 { $RuleType -eq 'Java' } { $convertToFslRuleCodeParams += @{ 'Java' = $true }}
                 { $RuleType -eq 'Redirect' } { $convertToFslRuleCodeParams += @{ 'Redirect' = $true }}
-                { $RuleType -eq 'Redirect' } { $convertToFslRuleCodeParams += @{ 'Redirect' = $true }}         
+                { $RuleType -eq 'Hiding' -and
+                $RuleTarget -ne 'Font' -and
+                $RuleTarget -ne 'Printer' } { $convertToFslRuleCodeParams += @{ 'Hiding' = $true }}         
             }
 
             $Flags = ConvertTo-FslRuleCode @convertToFslRuleCodeParams
@@ -89,21 +101,22 @@ function Add-FslRule {
 
 
         if ($flags -bor  $FRX_RULE_SRC_IS_A_FILE_OR_VALUE) {
-            $SourceParent = Split-Path $Name -Parent
-            $Source = Split-Path $Name -Leaf
+            $sourceParent = Split-Path $Name -Parent
+            $source = Split-Path $Name -Leaf
         }
         else {
-            $SourceParent = $Name
+            $sourceParent = $Name
+            $source = ''
         }
 
-        if ($flags -bor $FRX_RULE_SRC_IS_A_FILE_OR_VALUE -and 
-            $flags -bor $FRX_RULE_TYPE_REDIRECT -and 
-            $null -ne $RedirectTarget) {
-            $DestParent = Split-Path $RedirectTarget -Parent
-            $Dest = Split-Path $RedirectTarget -Leaf
+        if ($flags -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE -and 
+            $flags -band $FRX_RULE_TYPE_REDIRECT) {
+            $destParent = Split-Path $RedirectTarget -Parent
+            $dest = Split-Path $RedirectTarget -Leaf
         }
         else {
-            $DestParent = $RedirectTarget
+            $destParent = $RedirectTarget
+            $dest = ''
         }
 
         #Binary is an unused field in fxr files
@@ -112,10 +125,11 @@ function Add-FslRule {
         $addContentParams = @{
             'Path'     = $RuleFilePath
             'Encoding' = 'Unicode'
-            'Value' = "##$Comment"
+            'Value'    = "##$Comment"
         }
 
         Add-Content @addContentParams
+        Write-Verbose -Message "Written $Comment to $RuleFilePath"
 
         $exportCsvParams = @{
             'InputObject'       = @($SourceParent, $Source, $DestParent, $Dest, $Flags, $binary)
@@ -127,6 +141,20 @@ function Add-FslRule {
         }
 
         Export-Csv @exportCsvParams
+        Write-Verbose -Message "Written $SourceParent`t$Source`t$DestParent`t$Dest`t$Flags`t$binary to $RuleFilePath"
+
+        If($passThru){
+            $passThruObject = [pscustomobject]@{
+                SourceParent = $SourceParent
+                Source = $Source
+                DestParent = $DestParent
+                Dest = $Dest
+                Flags = $Flags
+                binary = $binary
+                Comment = $Comment
+            }
+            Write-Output $passThruObject
+        }
 
     } #Process
     END {} #End
