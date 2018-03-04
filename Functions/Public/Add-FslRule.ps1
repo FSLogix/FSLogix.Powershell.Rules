@@ -2,8 +2,9 @@ function Add-FslRule {
     [CmdletBinding()]
 
     Param (
+
         [Parameter(
-            Position = 0,
+            Position = 1,
             ValuefromPipeline = $true,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
@@ -12,57 +13,78 @@ function Add-FslRule {
         [System.String]$FullName,
 
         [Parameter(
-            ParameterSetName = 'RuleType',
-            Position = 1,
-            ValuefromPipelineByPropertyName = $true
-        )]
-        [ValidateSet('Hiding', 'Redirect', 'Java', 'SpecificData', 'VolumeAutomount')]
-        [System.String]$RuleType = 'Hiding',
-
-        [Parameter(
             Position = 2,
-            ValuefromPipelineByPropertyName = $true
-        )]
-        [System.String]$RedirectTarget,
-
-        [Parameter(
-            Position = 3,
             Mandatory = $true,
             ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$RuleFilePath,
 
         [Parameter(
-            ParameterSetName = 'RuleType',
-            Position = 5,
+            ParameterSetName = 'Hiding',
+            Mandatory = $true,
+            Position = 3,
             ValuefromPipelineByPropertyName = $true
         )]
         [ValidateSet('File', 'Folder', 'RegistryValue', 'RegistryKey', 'Font', 'Printer')]
-        [string]$RuleTarget = 'File',
+        [string]$HidingType,
 
         [Parameter(
-            ParameterSetName = 'RuleType',
+            ParameterSetName = 'Redirect',
+            Mandatory = $true,
+            Position = 6,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [System.String]$RedirectDestPath,
+
+        [Parameter(
+            ParameterSetName = 'Redirect',
+            Mandatory = $true,
             Position = 7,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [ValidateSet('File', 'Folder', 'RegistryValue', 'RegistryKey')]
+        [string]$RedirectType,
+
+        [Parameter(
+            ParameterSetName = 'Redirect',
+            Position = 8,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$CopyObject,
 
+
         [Parameter(
-            Position = 8,
+            ParameterSetName = 'AppContainer',
+            Mandatory = $true,
+            Position = 9,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [string]$DiskFile,
+
+        [Parameter(
+            ParameterSetName = 'SpecifyValue',
+            Mandatory = $true,
+            Position = 10,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [string]$Data,
+
+        [Parameter(
+            Position = 11,
             ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$Comment = 'Created By Powershell Script',
 
         [Parameter(
             ParameterSetName = 'Flags',
-            Position = 9,
+            Position = 12,
             Mandatory = $true,
             ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$Flags,
 
         [Parameter(
-            Position = 10,
+            Position = 13,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$Passthru
@@ -75,31 +97,44 @@ function Add-FslRule {
         $FRX_RULE_TYPE_REDIRECT = 0x00000100
     } # Begin
     PROCESS {
-        if ($PSCmdlet.ParameterSetName -eq 'RuleType') {
 
-            $convertToFslRuleCodeParams = @{
-                'Persistent' = $true
-                'CopyObject' = $CopyObject
+        $convertToFslRuleCodeParams = @{
+            'Persistent' = $true
+            'CopyObject' = $CopyObject
+        }        
+
+        switch ($PSCmdlet.ParameterSetName) {
+
+            Hiding {  
+                switch ($true) {
+                    { $HidingType -eq 'Font' } { $convertToFslRuleCodeParams += @{ 'HideFont' = $true } }
+                    { $HidingType -eq 'Printer' } { $convertToFslRuleCodeParams += @{ 'HidePrinter' = $true } }
+                    { $HidingType -eq 'File' -or $HidingType -eq 'RegistryValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true } }
+                    { $HidingType -eq 'Folder' -or $HidingType -eq 'RegistryKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true } }
+                    { $HidingType -ne 'Font' -and $HidingType -ne 'Printer' } { $convertToFslRuleCodeParams += @{ 'Hiding' = $true } }
+                }
+                break
             }
-
-            switch ($true) {
-                { $RuleTarget -eq 'Font' } { $convertToFslRuleCodeParams += @{ 'HideFont' = $true }}
-                { $RuleTarget -eq 'Printer' } { $convertToFslRuleCodeParams += @{ 'HidePrinter' = $true }}
-                { $RuleTarget -eq 'File' -or $RuleTarget -eq 'RegistryValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }}
-                { $RuleTarget -eq 'Folder' -or $RuleTarget -eq 'RegistryKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }}
-                { $RuleType -eq 'VolumeAutoMount' } { $convertToFslRuleCodeParams += @{ 'VolumeAutomount' = $true }}
-                { $RuleType -eq 'SpecificData' } { $convertToFslRuleCodeParams += @{ 'SpecificData' = $true }}
-                { $RuleType -eq 'Java' } { $convertToFslRuleCodeParams += @{ 'Java' = $true }}
-                { $RuleType -eq 'Redirect' } { $convertToFslRuleCodeParams += @{ 'Redirect' = $true }}
-                { $RuleType -eq 'Hiding' -and
-                $RuleTarget -ne 'Font' -and
-                $RuleTarget -ne 'Printer' } { $convertToFslRuleCodeParams += @{ 'Hiding' = $true }}         
+            Redirect {  
+                $convertToFslRuleCodeParams += @{ 'Redirect' = $true }
+                break
             }
-
-            $Flags = ConvertTo-FslRuleCode @convertToFslRuleCodeParams
+            AppContainer {  
+                $convertToFslRuleCodeParams += @{ 'VolumeAutomount' = $true }
+                break
+            }
+            SpecifyValue {  
+                $convertToFslRuleCodeParams += @{ 'SpecificData' = $true }
+                break
+            }
+            Flags {  
+                #No neccesary actions
+                break
+            }
         }
-
-
+        if (-not $Flags){
+            $flags = ConvertTo-FslRuleCode @convertToFslRuleCodeParams
+        }
 
         if ($flags -bor  $FRX_RULE_SRC_IS_A_FILE_OR_VALUE) {
             $sourceParent = Split-Path $FullName -Parent
@@ -112,11 +147,11 @@ function Add-FslRule {
 
         if ($flags -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE -and 
             $flags -band $FRX_RULE_TYPE_REDIRECT) {
-            $destParent = Split-Path $RedirectTarget -Parent
-            $dest = Split-Path $RedirectTarget -Leaf
+            $destParent = Split-Path $RedirectDestPath -Parent
+            $dest = Split-Path $RedirectDestPath -Leaf
         }
         else {
-            $destParent = $RedirectTarget
+            $destParent = $RedirectDestPath
             $dest = ''
         }
 
@@ -137,15 +172,15 @@ function Add-FslRule {
 
         Write-Verbose -Message "Written $message to $RuleFilePath"
 
-        If($passThru){
+        If ($passThru) {
             $passThruObject = [pscustomobject]@{
                 SourceParent = $SourceParent
-                Source = $Source
-                DestParent = $DestParent
-                Dest = $Dest
-                Flags = $Flags
-                binary = $binary
-                Comment = $Comment
+                Source       = $Source
+                DestParent   = $DestParent
+                Dest         = $Dest
+                Flags        = $Flags
+                binary       = $binary
+                Comment      = $Comment
             }
             Write-Output $passThruObject
         }
