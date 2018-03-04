@@ -8,7 +8,8 @@ function Add-FslRule {
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
-        [System.String]$Name,
+        [Alias('Name')]
+        [System.String]$FullName,
 
         [Parameter(
             ParameterSetName = 'RuleType',
@@ -50,7 +51,7 @@ function Add-FslRule {
             Position = 8,
             ValuefromPipelineByPropertyName = $true
         )]
-        [System.String]$Comment = 'Created by Script',
+        [System.String]$Comment = 'Created By Powershell Script',
 
         [Parameter(
             ParameterSetName = 'Flags',
@@ -101,11 +102,11 @@ function Add-FslRule {
 
 
         if ($flags -bor  $FRX_RULE_SRC_IS_A_FILE_OR_VALUE) {
-            $sourceParent = Split-Path $Name -Parent
-            $source = Split-Path $Name -Leaf
+            $sourceParent = Split-Path $FullName -Parent
+            $source = Split-Path $FullName -Leaf
         }
         else {
-            $sourceParent = $Name
+            $sourceParent = $FullName
             $source = ''
         }
 
@@ -125,23 +126,16 @@ function Add-FslRule {
         $addContentParams = @{
             'Path'     = $RuleFilePath
             'Encoding' = 'Unicode'
-            'Value'    = "##$Comment"
         }
 
-        Add-Content @addContentParams
+        Add-Content @addContentParams -Value "##$Comment"
         Write-Verbose -Message "Written $Comment to $RuleFilePath"
 
-        $exportCsvParams = @{
-            'InputObject'       = @($SourceParent, $Source, $DestParent, $Dest, $Flags, $binary)
-            'Path'              = $RuleFilePath
-            'Encoding'          = 'Unicode'
-            'Delimiter'         = "`t"
-            'NoTypeInformation' = $true
-            'Append'            = $true
-        }
+        $message = "$SourceParent`t$Source`t$DestParent`t$Dest`t$Flags`t$binary"
 
-        Export-Csv @exportCsvParams
-        Write-Verbose -Message "Written $SourceParent`t$Source`t$DestParent`t$Dest`t$Flags`t$binary to $RuleFilePath"
+        Add-Content @addContentParams -Value $message
+
+        Write-Verbose -Message "Written $message to $RuleFilePath"
 
         If($passThru){
             $passThruObject = [pscustomobject]@{
