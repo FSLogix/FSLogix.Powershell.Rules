@@ -142,7 +142,7 @@ function Add-FslRule {
         }
         else {
             $sourceParent = $FullName
-            $source = ''
+            $source = $null
         }
 
         if ($flags -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE -and 
@@ -152,7 +152,7 @@ function Add-FslRule {
         }
         else {
             $destParent = $RedirectDestPath
-            $dest = ''
+            $dest = $null
         }
 
         #Binary is an unused field in fxr files

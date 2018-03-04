@@ -36,4 +36,58 @@ Describe Add-FSlRule {
         }
     }
 
+    Context 'Pipeline' {
+
+        . ..\..\Private\ConvertTo-FslRuleCode.ps1
+        #Mock ConvertTo-FslRuleCode { '0x00000221' }
+        Mock Add-Content { $null } -ParameterFilter { $Encoding -and $Encoding -eq 'Unicode' }
+
+        BeforeAll{
+            [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
+            $AddfslRuleParams = @{
+                RuleFilePath = 'Testdrive:\temprule.fxr'
+                HidingType = 'File'
+                passthru = $true
+                Comment = 'Test'
+            }
+        }
+
+
+        It 'Accepts values from the pipeline by value' {
+            $return = 'Testdrive:\madeup.txt' | Add-FslRule @AddfslRuleParams
+            Assert-MockCalled Add-Content -Times 2 -Exactly -Scope It
+            #Assert-MockCalled ConvertTo-FslRuleCode -Times 1 -Exactly -Scope It
+            $return.SourceParent | Should Be 'Testdrive:\'
+            $return.Source | Should Be 'madeup.txt'
+            $return.DestParent | Should BeNullOrEmpty
+            $return.Dest | Should BeNullOrEmpty
+            $return.Flags | Should Be '0x00000222'
+            $return.binary | Should BeNullOrEmpty
+            $return.Comment | Should Be 'Test'
+
+        }
+
+        It 'Accepts value from the pipeline by property name' {
+
+            $pipeObject = [PSCustomObject]@{
+                RuleFilePath = 'Testdrive:\temprule.fxr'
+                HidingType = 'File'
+                passthru = $true
+                Comment = 'Test'
+                FullName = 'Testdrive:\madeup.txt'
+            }
+
+            $return =  $pipeObject | Add-FslRule
+            Assert-MockCalled Add-Content -Times 2 -Exactly -Scope It
+            #Assert-MockCalled ConvertTo-FslRuleCode -Times 1 -Exactly -Scope It
+            $return.SourceParent | Should Be 'Testdrive:\'
+            $return.Source | Should Be 'madeup.txt'
+            $return.DestParent | Should BeNullOrEmpty
+            $return.Dest | Should BeNullOrEmpty
+            $return.Flags | Should Be '0x00000222'
+            $return.binary | Should BeNullOrEmpty
+            $return.Comment | Should Be 'Test'
+        }
+    }
+
 }
