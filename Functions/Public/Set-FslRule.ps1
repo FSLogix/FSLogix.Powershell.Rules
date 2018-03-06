@@ -9,7 +9,7 @@ function Set-FslRule {
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
-        [Alias('Name')]
+        [Alias('Name','SrcParent')]
         [System.String]$FullName,
 
         [Parameter(
@@ -97,7 +97,7 @@ function Set-FslRule {
     } # Begin
     PROCESS {
 
-        $PSBoundParameters | Add-FslRule
+        Add-FslRule @PSBoundParameters
 
     } #Process
     END {} #End

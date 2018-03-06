@@ -35,7 +35,43 @@ function Get-FslRule {
                     $lineObj = $line | ConvertFrom-String -Delimiter `t -PropertyNames SrcParent, Src, DestParent, Dest, FlagsDec, Binary
                     #ConvertFrom-String converts the hex value in flag to decimal, need to convert back to a hex string. Add in the comment and output it.
                     $rulePlusComment = $lineObj | Select-Object -Property SrcParent, Src, DestParent, Dest, @{n='Flags';e={'0x' + "{0:X8}" -f $lineObj.FlagsDec}}, Binary, @{n='Comment';e={$comment}}
-                    Write-Output $rulePlusComment 
+
+                    $poshFlags =  $rulePlusComment.Flags | ConvertFrom-FslRuleCode
+
+                    $destPath = Join-Path $rulePlusComment.DestParent $rulePlusCommentDest
+
+                    $output = [PSCustomObject]@{
+                        FullName = Join-Path $rulePlusComment.SrcParent $rulePlusComment.Src
+                        HidingType = if ($poshFlags.Hiding){
+                            switch( $true ){
+                                $poshFlags.Font {'Font';break}
+                                $poshFlags.Printer {'Printer';break}
+                                $poshFlags.FolderOrKey {'FolderOrKey';break}
+                                $poshFlags.FileOrValue {'FileOrValue';break}
+                            }
+                        }
+                        else{ $null }
+                        RedirectDestPath = if ($poshFlags.Redirect){ $destPath } else {$null}
+                        RedirectType = if ($poshFlags.Redirect){
+                            switch( $true ){
+                                $poshFlags.FolderOrKey {'FolderOrKey';break}
+                                $poshFlags.FileOrValue {'FileOrValue';break}
+                            }
+                        }
+                        else { $null }
+                        CopyObject = $poshFlags.CopyObject
+                        DiskFile = if ($poshFlags.VolumeAutoMount){ $destPath } else {$null}
+                        Binary = $rulePlusComment.Binary
+                        Comment = $rulePlusComment.Comment
+                        Flags = $rulePlusComment.Flags
+                    }
+
+
+                    #$output = $rulePlusComment | Select-Object -Property @{n='FullName';e={(Join-Path $_.SrcParent $_.Src)}}
+                    
+
+
+                    Write-Output $output 
                     break
                 }
                 Default { 

@@ -67,6 +67,7 @@ function Add-FslRule {
             Position = 10,
             ValuefromPipelineByPropertyName = $true
         )]
+        [Alias('Binary')]
         [string]$Data,
 
         [Parameter(
@@ -117,6 +118,11 @@ function Add-FslRule {
             }
             Redirect {  
                 $convertToFslRuleCodeParams += @{ 'Redirect' = $true }
+                switch ($true) {
+                    { $RedirectType -eq 'File' -or $RedirectType -eq 'RegistryValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true } }
+                    { $RedirectType -eq 'Folder' -or $RedirectType -eq 'RegistryKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true } }
+                }
+
                 break
             }
             AppContainer {  

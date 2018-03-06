@@ -61,14 +61,14 @@ function Compare-FslRuleFile {
             #remove dupes from old rule list
             $newRules = $rules | Where-Object {$dupes -notcontains $_.SrcParent }
 
-            $newRuleFileName = Join-Path $OutputPath ($BaseName + '_Hiding' + '.fxr')
+            $newRuleFileName = Join-Path $OutputPath ($baseFileName + '_Hiding' + '.fxr')
 
-            $newRedirectFileName = Join-Path $OutputPath ($BaseName + '_Redirect' + '.fxr')
+            $newRedirectFileName = Join-Path $OutputPath ($baseFileName + '_Redirect' + '.fxr')
 
             $newRules | Set-FslRule -RuleFilePath $newRuleFileName
 
             $newRedirect = $dupes | Select-Object -Property @{n='FullName';e={$_}}, @{n='RedirectDestPath';e={        
-                "HKLM\Software\FSLogix\$($BaseName)\$($_.TrimStart('HKLM\'))"
+                "HKLM\Software\FSLogix\$($baseFileName)\$($_.TrimStart('HKLM\'))"
             }}
 
             $newRedirect | Set-FslRule -RuleFilePath $newRedirectFileName -RedirectType RegistryKey
@@ -81,5 +81,9 @@ function Compare-FslRuleFile {
 }  #function Compare-FslRuleFile
 
 . D:\PoSHCode\GitHub\Create-Rules-Files\Functions\Public\Get-FslRule.ps1
+. D:\PoSHCode\GitHub\Create-Rules-Files\Functions\Public\Set-FslRule.ps1
+. D:\PoSHCode\GitHub\Create-Rules-Files\Functions\Public\Add-FslRule.ps1
+. D:\PoSHCode\GitHub\Create-Rules-Files\Functions\Private\ConvertTo-FslRuleCode.ps1
+. D:\PoSHCode\GitHub\Create-Rules-Files\Functions\Private\ConvertFrom-FslRuleCode.ps1
 
 Compare-FslRuleFile -Files D:\PoSHCode\GitHub\Create-Rules-Files\TestFiles\AppRule_Project2013Pro.fxr, D:\PoSHCode\GitHub\Create-Rules-Files\TestFiles\AppRule_Office2013.fxr, D:\PoSHCode\GitHub\Create-Rules-Files\TestFiles\AppRule_Visio2013Pro.fxr
