@@ -12,8 +12,7 @@ function Compare-FslRuleFile {
 
         [Parameter(
             Position = 0,
-            ValuefromPipelineByPropertyName = $true,
-            Mandatory = $false
+            ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$OutputPath = "$PSScriptRoot"
     )
@@ -30,14 +29,13 @@ function Compare-FslRuleFile {
                 Write-Error "$filepath does not exist"
                 exit
             }
-        }
-
-        
+        }     
 
         foreach ($filepath in $Files) {
             $diffRule = @()
 
             $referenceFile = $filepath
+            $baseFileName = $filepath | Get-ChildItem | Select-Object -ExpandProperty BaseName
             $rules = Get-FslRule $filepath
             #Get hiding rules (only concerned with hiding rules that are registry keys)
             $refRule = $rules | Where-Object { $_.Flags -band $FRX_RULE_TYPE_HIDING -and $_.Flags -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY -and $_.SrcParent -like "HKLM*"} | Select-Object -ExpandProperty SrcParent
@@ -51,20 +49,30 @@ function Compare-FslRuleFile {
                 }
             }
 
+            #get rid of dupes between the rest of the files
             $uniqueDiffRule = $diffRule | Group-Object | Select-Object -ExpandProperty Name 
             
+            #Add all together
             $refAndDiff = $refRule + $uniqueDiffRule
 
+            #Get Dupes between current file and rest of files
             $dupes = $refAndDiff  | Group-Object | Where-Object { $_.Count -gt 1 } | Select-Object -ExpandProperty Name
 
-            $dupes.count
+            #remove dupes from old rule list
+            $newRules = $rules | Where-Object {$dupes -notcontains $_.SrcParent }
 
-            $newHiding = $rules | Where-Object {$dupes -notcontains $_.SrcParent }
+            $newRuleFileName = Join-Path $OutputPath ($BaseName + '_Hiding' + '.fxr')
 
-            $newRedirect = $rules | Where-Object {$dupes -contains $_.SrcParent }
+            $newRedirectFileName = Join-Path $OutputPath ($BaseName + '_Redirect' + '.fxr')
 
-            $newHiding.count# | Set-FslRule
-            $newRedirect.count
+            $newRules | Set-FslRule -RuleFilePath $newRuleFileName
+
+            $newRedirect = $dupes | Select-Object -Property @{n='FullName';e={$_}}, @{n='RedirectDestPath';e={        
+                "HKLM\Software\FSLogix\$($BaseName)\$($_.TrimStart('HKLM\'))"
+            }}
+
+            $newRedirect | Set-FslRule -RuleFilePath $newRedirectFileName -RedirectType RegistryKey
+
 
         }
         
