@@ -26,7 +26,7 @@ function Add-FslRule {
             ValuefromPipelineByPropertyName = $true
         )]
         [ValidateSet('FolderOrKey', 'FileOrValue', 'Font', 'Printer')]
-        [string]$HidingType,
+        [System.String]$HidingType,
 
         [Parameter(
             ParameterSetName = 'Redirect',
@@ -86,15 +86,15 @@ function Add-FslRule {
 
     BEGIN {
         Set-StrictMode -Version Latest
-        #check file has correct filename extension
-        if ($RuleFilePath -notlike "*.fxr") {
-            Write-Warning 'Assignment files should have an fxa extension'
-        }
 
         $FRX_RULE_SRC_IS_A_FILE_OR_VALUE = 0x00000002
         $FRX_RULE_TYPE_REDIRECT = 0x00000100
     } # Begin
     PROCESS {
+        #check file has correct filename extension
+        if ($RuleFilePath -notlike "*.fxr") {
+            Write-Warning 'Rule files should have an fxr extension'
+        }
 
         $convertToFslRuleCodeParams = @{
             'Persistent' = $true
@@ -195,18 +195,3 @@ function Add-FslRule {
     } #Process
     END {} #End
 }  #function Add-FslRule
-
-<#$pipe = [PSCustomObject]@{
-    'FullName'         = '%ProgramFilesFolder32%\Microsoft Office\'
-    'HidingType'       = 'FolderOrKey'
-    'RedirectDestPath' = ''
-    #'RedirectType'     =
-    'CopyObject'       = $False
-    #'DiskFile'         =
-    #'Binary'           =
-    'Comment'          = 'Product Install Directory'
-    'Flags'            = '0x00000221'
-}
-
-. D:\PoSHCode\GitHub\Create-Rules-Files\Functions\Private\ConvertTo-FslRuleCode.ps1
-$pipe | Add-FslRule -RuleFilePath c:\jimm\test.fxr#>

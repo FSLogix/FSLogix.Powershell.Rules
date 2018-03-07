@@ -13,12 +13,12 @@ function Add-FslAssignment {
 
     BEGIN {
         Set-StrictMode -Version Latest
+    } # Begin
+    PROCESS {
         #check file has correct filename extension
         if ($AssignmentFilePath -notlike "*.fxa") {
             Write-Warning 'Assignment files should have an fxa extension'
         }
-    } # Begin
-    PROCESS {
 
     } #Process
     END {} #End
