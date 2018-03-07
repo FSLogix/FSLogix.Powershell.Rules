@@ -4,7 +4,7 @@ $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 . "$here\$sut"
 
 Describe Add-FSlRule {
-    
+
     Context -Name 'Output' {
         . ..\..\Private\ConvertTo-FslRuleCode.ps1
         Mock ConvertTo-FslRuleCode {'0x00000222'}
@@ -15,7 +15,7 @@ Describe Add-FSlRule {
             $AddfslRuleParams = @{
                 RuleFilePath = 'Testdrive:\temprule.fxr'
                 FullName = 'Testdrive:\madeup.txt'
-                HidingType = 'File'
+                HidingType = 'FileOrValue'
             }
         }
 
@@ -46,9 +46,9 @@ Describe Add-FSlRule {
             [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
             $AddfslRuleParams = @{
                 RuleFilePath = 'Testdrive:\temprule.fxr'
-                HidingType = 'File'
-                passthru = $true
-                Comment = 'Test'
+                HidingType   = 'FileOrValue'
+                passthru     = $true
+                Comment      = 'Test'
             }
         }
 
@@ -71,7 +71,7 @@ Describe Add-FSlRule {
 
             $pipeObject = [PSCustomObject]@{
                 RuleFilePath = 'Testdrive:\temprule.fxr'
-                HidingType = 'File'
+                HidingType = 'FileOrValue'
                 passthru = $true
                 Comment = 'Test'
                 FullName = 'Testdrive:\madeup.txt'

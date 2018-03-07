@@ -5,6 +5,7 @@ function Add-FslRule {
 
         [Parameter(
             Position = 1,
+            ValuefromPipeline = $true,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -93,34 +94,41 @@ function Add-FslRule {
         $convertToFslRuleCodeParams = @{
             'Persistent' = $true
             'CopyObject' = $CopyObject
-        }        
+        }
 
         switch ($PSCmdlet.ParameterSetName) {
 
-            Hiding {  
+            Hiding {
                 switch ($true) {
-                    { $HidingType -eq 'Font' } { $convertToFslRuleCodeParams += @{ 'HideFont' = $true } }
-                    { $HidingType -eq 'Printer' } { $convertToFslRuleCodeParams += @{ 'Printer' = $true } }
-                    { $HidingType -eq 'FileOrValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true } }
-                    { $HidingType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true } }
-                    { $HidingType -ne 'Font' -and $HidingType -ne 'Printer' } { $convertToFslRuleCodeParams += @{ 'Hiding' = $true } }
+                    { $HidingType -eq 'Font' } { $convertToFslRuleCodeParams += @{ 'HideFont' = $true }
+                    }
+                    { $HidingType -eq 'Printer' } { $convertToFslRuleCodeParams += @{ 'Printer' = $true }
+                    }
+                    { $HidingType -eq 'FileOrValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
+                    }
+                    { $HidingType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
+                    }
+                    { $HidingType -ne 'Font' -and $HidingType -ne 'Printer' } { $convertToFslRuleCodeParams += @{ 'Hiding' = $true }
+                    }
                 }
                 break
             }
-            Redirect {  
+            Redirect {
                 $convertToFslRuleCodeParams += @{ 'Redirect' = $true }
                 switch ($true) {
-                    { $RedirectType -eq 'FileOrValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true } }
-                    { $RedirectType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true } }
+                    { $RedirectType -eq 'FileOrValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
+                    }
+                    { $RedirectType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
+                    }
                 }
 
                 break
             }
-            AppContainer {  
+            AppContainer {
                 $convertToFslRuleCodeParams += @{ 'VolumeAutomount' = $true }
                 break
             }
-            SpecifyValue {  
+            SpecifyValue {
                 $convertToFslRuleCodeParams += @{ 'SpecificData' = $true }
                 break
             }
@@ -139,7 +147,7 @@ function Add-FslRule {
             $source = $null
         }
 
-        if ($flags -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE -and 
+        if ($flags -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE -and
             $flags -band $FRX_RULE_TYPE_REDIRECT) {
             $destParent = Split-Path $RedirectDestPath -Parent
             $dest = Split-Path $RedirectDestPath -Leaf
@@ -187,10 +195,10 @@ function Add-FslRule {
     'FullName'         = '%ProgramFilesFolder32%\Microsoft Office\'
     'HidingType'       = 'FolderOrKey'
     'RedirectDestPath' = ''
-    #'RedirectType'     = 
+    #'RedirectType'     =
     'CopyObject'       = $False
-    #'DiskFile'         = 
-    #'Binary'           = 
+    #'DiskFile'         =
+    #'Binary'           =
     'Comment'          = 'Product Install Directory'
     'Flags'            = '0x00000221'
 }
