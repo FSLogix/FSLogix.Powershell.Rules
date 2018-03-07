@@ -85,7 +85,12 @@ function Add-FslRule {
 
 
     BEGIN {
-        #Set-StrictMode -Version Latest
+        Set-StrictMode -Version Latest
+        #check file has correct filename extension
+        if ($RuleFilePath -notlike "*.fxr") {
+            Write-Warning 'Assignment files should have an fxa extension'
+        }
+
         $FRX_RULE_SRC_IS_A_FILE_OR_VALUE = 0x00000002
         $FRX_RULE_TYPE_REDIRECT = 0x00000100
     } # Begin

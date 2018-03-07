@@ -86,6 +86,11 @@ function Set-FslRule {
 
     BEGIN {
         Set-StrictMode -Version Latest
+        #check file has correct filename extension
+        if ($RuleFilePath -notlike "*.fxr") {
+            Write-Warning 'Assignment files should have an fxa extension'
+        }
+
         Set-Content -Path $RuleFilePath -Value 1 -Encoding Unicode -ErrorAction Stop
     } # Begin
     PROCESS {
