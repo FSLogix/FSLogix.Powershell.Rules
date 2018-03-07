@@ -26,7 +26,7 @@ Describe Add-FSlRule {
             ( Add-FslRule @AddfslRuleParams  | Measure-Object ).Count | Should Be 0
         }
         It 'Returns an object from passthru' {
-            $result = Add-FslRule @AddfslRuleParams  -Passthru
+            $result = Add-FslRule @AddfslRuleParams -Passthru
             $result.Count | Should BeLessThan 7
             $result.Count | Should BeGreaterThan 2
         }

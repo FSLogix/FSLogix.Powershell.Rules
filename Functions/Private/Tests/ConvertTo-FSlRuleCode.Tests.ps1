@@ -3,27 +3,27 @@ $here = Split-Path $here
 $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 . "$here\$sut"
 
-Describe Add-FSlRule {
-    
+Describe ConvertTo-FslRuleCode {
+
     Context -Name 'Output' {
 
         BeforeAll{
-            
+
         }
 
         It 'Does not throw' {
-            { Add-FslRule @AddfslRuleParams  } | should not throw
+            { ConvertTo-FslRuleCode @AddfslRuleParams  } | should not throw
         }
         It 'Does not return an object' {
-            ( Add-FslRule @AddfslRuleParams  | Measure-Object ).Count | Should Be 0
+            ( ConvertTo-FslRuleCode @AddfslRuleParams  | Measure-Object ).Count | Should Be 0
         }
         It 'Returns an object from passthru' {
-            $result = Add-FslRule @AddfslRuleParams  -Passthru
+            $result = ConvertTo-FslRuleCode @AddfslRuleParams  -Passthru
             $result.Count | Should BeLessThan 7
             $result.Count | Should BeGreaterThan 2
         }
         It 'Returns Some Verbose lines'{
-            $verboseLine = Add-FslRule @AddfslRuleParams  -Verbose 4>&1
+            $verboseLine = ConvertTo-FslRuleCode @AddfslRuleParams  -Verbose 4>&1
             $verboseLine.count | Should BeGreaterThan 0
         }
     }
@@ -46,7 +46,7 @@ Describe Add-FSlRule {
 
 
         It 'Accepts values from the pipeline by value' {
-            $return = 'Testdrive:\madeup.txt' | Add-FslRule @AddfslRuleParams
+            $return = 'Testdrive:\madeup.txt' | ConvertTo-FslRuleCode @AddfslRuleParams
             Assert-MockCalled Add-Content -Times 2 -Exactly -Scope It
             #Assert-MockCalled ConvertTo-FslRuleCode -Times 1 -Exactly -Scope It
             $return.SourceParent | Should Be 'Testdrive:\'
@@ -69,7 +69,7 @@ Describe Add-FSlRule {
                 FullName = 'Testdrive:\madeup.txt'
             }
 
-            $return =  $pipeObject | Add-FslRule
+            $return =  $pipeObject | ConvertTo-FslRuleCode
             Assert-MockCalled Add-Content -Times 2 -Exactly -Scope It
             #Assert-MockCalled ConvertTo-FslRuleCode -Times 1 -Exactly -Scope It
             $return.SourceParent | Should Be 'Testdrive:\'
