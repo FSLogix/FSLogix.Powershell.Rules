@@ -31,6 +31,23 @@ function ConvertFrom-FslAssignmentCode {
 
     } # Begin
     PROCESS {
+        $output = [PSCustomObject]@{
+            'Apply'                  = if ( $ruleCode -band $Apply ) { $true } else { $false }
+            'Remove'                 = if ( $ruleCode -band $Remove ) { $true } else { $false }
+            'User'                   = if ( $ruleCode -band $User ) { $true } else { $false }
+            'Process'                = if ( $ruleCode -band $Process ) { $true } else { $false }
+            'Group'                  = if ( $ruleCode -band $Group ) { $true } else { $false }
+            'Network'                = if ( $ruleCode -band $Network ) { $true } else { $false }
+            'Computer'               = if ( $ruleCode -band $Computer ) { $true } else { $false }
+            'ADDistinguishedName'    = if ( $ruleCode -band $ADDistinguishedName ) { $true } else { $false }
+            'ApplyToProcessChildren' = if ( $ruleCode -band $ApplyToProcessChildren ) { $true } else { $false }
+            'Pid'                    = if ( $ruleCode -band $Pid ) { $true } else { $false }
+            'MandatoryLevelMask'     = if ( $ruleCode -band $MandatoryLevelMask ) { $true } else { $false }
+            'EnvironmentVariable'    = if ( $ruleCode -band $EnvironmentVariable ) { $true } else { $false }
+            'MandatoryLevelShift'    = if ( $ruleCode -band $MandatoryLevelShift ) { $true } else { $false }
+        }
+
+        Write-Output $output
 
     } #Process
     END {} #End
