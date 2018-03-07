@@ -9,7 +9,7 @@ function Set-FslRule {
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
-        [Alias('Name','SrcParent')]
+        [Alias('Name')]
         [System.String]$FullName,
 
         [Parameter(
@@ -25,7 +25,7 @@ function Set-FslRule {
             Position = 3,
             ValuefromPipelineByPropertyName = $true
         )]
-        [ValidateSet('File', 'Folder', 'RegistryValue', 'RegistryKey', 'Font', 'Printer')]
+        [ValidateSet('FolderOrKey', 'FileOrValue', 'Font', 'Printer')]
         [string]$HidingType,
 
         [Parameter(
@@ -42,7 +42,7 @@ function Set-FslRule {
             Position = 7,
             ValuefromPipelineByPropertyName = $true
         )]
-        [ValidateSet('File', 'Folder', 'RegistryValue', 'RegistryKey')]
+        [ValidateSet('FolderOrKey', 'FileOrValue')]
         [string]$RedirectType,
 
         [Parameter(
@@ -67,6 +67,7 @@ function Set-FslRule {
             Position = 10,
             ValuefromPipelineByPropertyName = $true
         )]
+        [Alias('Binary')]
         [string]$Data,
 
         [Parameter(
@@ -74,14 +75,6 @@ function Set-FslRule {
             ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$Comment = 'Created By Powershell Script',
-
-        [Parameter(
-            ParameterSetName = 'Flags',
-            Position = 12,
-            Mandatory = $true,
-            ValuefromPipelineByPropertyName = $true
-        )]
-        [System.String]$Flags,
 
         [Parameter(
             Position = 13,

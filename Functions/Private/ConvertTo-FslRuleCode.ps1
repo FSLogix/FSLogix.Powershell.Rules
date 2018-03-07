@@ -41,7 +41,7 @@ function ConvertTo-FslRuleCode {
             Position = 7,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Switch]$HidePrinter,
+        [Switch]$Printer,
         [Parameter(
             Position = 8,
             ValuefromPipelineByPropertyName = $true
@@ -95,7 +95,7 @@ function ConvertTo-FslRuleCode {
             $Persistent { $codeToOutput = $codeToOutput -bor $FRX_RULE_IS_PERSISTANT }
             $Redirect { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_REDIRECT }
             $Hiding { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_HIDING }
-            $HidePrinter { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_HIDE_PRINTER }
+            $Printer { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_HIDE_PRINTER }
             $SpecificData { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_SPECIFIC_DATA }
             $Java { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_JAVA }
             $VolumeAutomount { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_VOLUME_AUTOMOUNT }

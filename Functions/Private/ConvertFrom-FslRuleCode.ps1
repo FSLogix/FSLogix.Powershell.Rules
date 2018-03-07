@@ -68,7 +68,7 @@ function ConvertFrom-FslRuleCode {
             'Persistent'      = $persistent
             'Redirect'        = $redirect
             'Hiding'          = $hiding
-            'HidePrinter'     = $hidePrinter
+            'Printer'         = $hidePrinter
             'SpecificData'    = $specificData
             'Java'            = $java
             'VolumeAutoMount' = $volumeAutoMount

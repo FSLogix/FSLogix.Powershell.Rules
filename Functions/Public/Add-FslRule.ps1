@@ -5,7 +5,6 @@ function Add-FslRule {
 
         [Parameter(
             Position = 1,
-            ValuefromPipeline = $true,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -25,7 +24,7 @@ function Add-FslRule {
             Position = 3,
             ValuefromPipelineByPropertyName = $true
         )]
-        [ValidateSet('File', 'Folder', 'RegistryValue', 'RegistryKey', 'Font', 'Printer')]
+        [ValidateSet('FolderOrKey', 'FileOrValue', 'Font', 'Printer')]
         [string]$HidingType,
 
         [Parameter(
@@ -42,7 +41,7 @@ function Add-FslRule {
             Position = 7,
             ValuefromPipelineByPropertyName = $true
         )]
-        [ValidateSet('File', 'Folder', 'RegistryValue', 'RegistryKey')]
+        [ValidateSet('FolderOrKey', 'FileOrValue')]
         [string]$RedirectType,
 
         [Parameter(
@@ -77,14 +76,6 @@ function Add-FslRule {
         [System.String]$Comment = 'Created By Powershell Script',
 
         [Parameter(
-            ParameterSetName = 'Flags',
-            Position = 12,
-            Mandatory = $true,
-            ValuefromPipelineByPropertyName = $true
-        )]
-        [System.String]$Flags,
-
-        [Parameter(
             Position = 13,
             ValuefromPipelineByPropertyName = $true
         )]
@@ -93,7 +84,7 @@ function Add-FslRule {
 
 
     BEGIN {
-        Set-StrictMode -Version Latest
+        #Set-StrictMode -Version Latest
         $FRX_RULE_SRC_IS_A_FILE_OR_VALUE = 0x00000002
         $FRX_RULE_TYPE_REDIRECT = 0x00000100
     } # Begin
@@ -109,9 +100,9 @@ function Add-FslRule {
             Hiding {  
                 switch ($true) {
                     { $HidingType -eq 'Font' } { $convertToFslRuleCodeParams += @{ 'HideFont' = $true } }
-                    { $HidingType -eq 'Printer' } { $convertToFslRuleCodeParams += @{ 'HidePrinter' = $true } }
-                    { $HidingType -eq 'File' -or $HidingType -eq 'RegistryValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true } }
-                    { $HidingType -eq 'Folder' -or $HidingType -eq 'RegistryKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true } }
+                    { $HidingType -eq 'Printer' } { $convertToFslRuleCodeParams += @{ 'Printer' = $true } }
+                    { $HidingType -eq 'FileOrValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true } }
+                    { $HidingType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true } }
                     { $HidingType -ne 'Font' -and $HidingType -ne 'Printer' } { $convertToFslRuleCodeParams += @{ 'Hiding' = $true } }
                 }
                 break
@@ -119,8 +110,8 @@ function Add-FslRule {
             Redirect {  
                 $convertToFslRuleCodeParams += @{ 'Redirect' = $true }
                 switch ($true) {
-                    { $RedirectType -eq 'File' -or $RedirectType -eq 'RegistryValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true } }
-                    { $RedirectType -eq 'Folder' -or $RedirectType -eq 'RegistryKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true } }
+                    { $RedirectType -eq 'FileOrValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true } }
+                    { $RedirectType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true } }
                 }
 
                 break
@@ -133,14 +124,11 @@ function Add-FslRule {
                 $convertToFslRuleCodeParams += @{ 'SpecificData' = $true }
                 break
             }
-            Flags {  
-                #No neccesary actions
-                break
-            }
+
         }
-        if (-not $Flags){
-            $flags = ConvertTo-FslRuleCode @convertToFslRuleCodeParams
-        }
+
+        $flags = ConvertTo-FslRuleCode @convertToFslRuleCodeParams
+
 
         if ($flags -bor  $FRX_RULE_SRC_IS_A_FILE_OR_VALUE) {
             $sourceParent = Split-Path $FullName -Parent
@@ -194,3 +182,18 @@ function Add-FslRule {
     } #Process
     END {} #End
 }  #function Add-FslRule
+
+<#$pipe = [PSCustomObject]@{
+    'FullName'         = '%ProgramFilesFolder32%\Microsoft Office\'
+    'HidingType'       = 'FolderOrKey'
+    'RedirectDestPath' = ''
+    #'RedirectType'     = 
+    'CopyObject'       = $False
+    #'DiskFile'         = 
+    #'Binary'           = 
+    'Comment'          = 'Product Install Directory'
+    'Flags'            = '0x00000221'
+}
+
+. D:\PoSHCode\GitHub\Create-Rules-Files\Functions\Private\ConvertTo-FslRuleCode.ps1
+$pipe | Add-FslRule -RuleFilePath c:\jimm\test.fxr#>

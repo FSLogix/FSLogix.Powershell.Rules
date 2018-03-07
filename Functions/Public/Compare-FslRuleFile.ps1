@@ -38,13 +38,13 @@ function Compare-FslRuleFile {
             $baseFileName = $filepath | Get-ChildItem | Select-Object -ExpandProperty BaseName
             $rules = Get-FslRule $filepath
             #Get hiding rules (only concerned with hiding rules that are registry keys)
-            $refRule = $rules | Where-Object { $_.Flags -band $FRX_RULE_TYPE_HIDING -and $_.Flags -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY -and $_.SrcParent -like "HKLM*"} | Select-Object -ExpandProperty SrcParent
+            $refRule = $rules | Where-Object { $_.Flags -band $FRX_RULE_TYPE_HIDING -and $_.Flags -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY -and $_.FullName -like "HKLM*"} | Select-Object -ExpandProperty FullName
 
             foreach ($filepath in $Files){
                 if ($filepath -ne $referenceFile){
                     $notRefRule = Get-FslRule $filepath
                      #Get hiding rules (only concerned with hiding rules that are registry keys)
-                    $notRefHideRules = $notRefRule | Where-Object { $_.Flags -band $FRX_RULE_TYPE_HIDING -and $_.Flags -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY -and $_.SrcParent -like "HKLM*"} | Select-Object -ExpandProperty SrcParent
+                    $notRefHideRules = $notRefRule | Where-Object { $_.Flags -band $FRX_RULE_TYPE_HIDING -and $_.Flags -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY -and $_.FullName -like "HKLM*"} | Select-Object -ExpandProperty FullName
                     $diffRule += $notRefHideRules 
                 }
             }
@@ -59,7 +59,7 @@ function Compare-FslRuleFile {
             $dupes = $refAndDiff  | Group-Object | Where-Object { $_.Count -gt 1 } | Select-Object -ExpandProperty Name
 
             #remove dupes from old rule list
-            $newRules = $rules | Where-Object {$dupes -notcontains $_.SrcParent }
+            $newRules = $rules | Where-Object {$dupes -notcontains $_.FullName }
 
             $newRuleFileName = Join-Path $OutputPath ($baseFileName + '_Hiding' + '.fxr')
 
@@ -71,7 +71,7 @@ function Compare-FslRuleFile {
                 "HKLM\Software\FSLogix\$($baseFileName)\$($_.TrimStart('HKLM\'))"
             }}
 
-            $newRedirect | Set-FslRule -RuleFilePath $newRedirectFileName -RedirectType RegistryKey
+            $newRedirect | Set-FslRule -RuleFilePath $newRedirectFileName -RedirectType FolderOrKey
 
 
         }
