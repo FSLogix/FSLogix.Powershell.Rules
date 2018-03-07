@@ -8,6 +8,14 @@ function Add-FslAssignment {
             ValuefromPipeline = $true,
             Mandatory = $true
         )]
+        [System.String]$Name,
+
+        [Parameter(
+            Position = 1,
+            ValuefromPipelineByPropertyName = $true,
+            ValuefromPipeline = $true,
+            Mandatory = $true
+        )]
         [System.String]$AssignmentFilePath
     )
 

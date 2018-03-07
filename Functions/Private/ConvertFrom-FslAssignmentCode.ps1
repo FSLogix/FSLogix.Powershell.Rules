@@ -8,7 +8,7 @@ function ConvertFrom-FslAssignmentCode {
             ValuefromPipeline = $true,
             Mandatory = $true
         )]
-        [Int]$RuleCode
+        [Int]$AssignmentCode
     )
 
     BEGIN {
@@ -22,7 +22,7 @@ function ConvertFrom-FslAssignmentCode {
         $Computer                   = 0x0040
         $ADDistinguishedName        = 0x0080
         $ApplyToProcessChildren     = 0x0100
-        $Pid                        = 0x0200
+        $ProcessID                  = 0x0200
         $MandatoryLevelMask         = 0x1C00
         $EnvironmentVariable        = 0x2000
         $MandatoryLevelShift        = 10
@@ -30,19 +30,19 @@ function ConvertFrom-FslAssignmentCode {
     } # Begin
     PROCESS {
         $output = [PSCustomObject]@{
-            'Apply'                  = if ( $ruleCode -band $Apply ) { $true } else { $false }
-            'Remove'                 = if ( $ruleCode -band $Remove ) { $true } else { $false }
-            'User'                   = if ( $ruleCode -band $User ) { $true } else { $false }
-            'Process'                = if ( $ruleCode -band $Process ) { $true } else { $false }
-            'Group'                  = if ( $ruleCode -band $Group ) { $true } else { $false }
-            'Network'                = if ( $ruleCode -band $Network ) { $true } else { $false }
-            'Computer'               = if ( $ruleCode -band $Computer ) { $true } else { $false }
-            'ADDistinguishedName'    = if ( $ruleCode -band $ADDistinguishedName ) { $true } else { $false }
-            'ApplyToProcessChildren' = if ( $ruleCode -band $ApplyToProcessChildren ) { $true } else { $false }
-            'Pid'                    = if ( $ruleCode -band $Pid ) { $true } else { $false }
-            'MandatoryLevelMask'     = if ( $ruleCode -band $MandatoryLevelMask ) { $true } else { $false }
-            'EnvironmentVariable'    = if ( $ruleCode -band $EnvironmentVariable ) { $true } else { $false }
-            'MandatoryLevelShift'    = if ( $ruleCode -band $MandatoryLevelShift ) { $true } else { $false }
+            'Apply'                  = if ( $AssignmentCode -band $Apply ) { $true } else { $false }
+            'Remove'                 = if ( $AssignmentCode -band $Remove ) { $true } else { $false }
+            'User'                   = if ( $AssignmentCode -band $User ) { $true } else { $false }
+            'Process'                = if ( $AssignmentCode -band $Process ) { $true } else { $false }
+            'Group'                  = if ( $AssignmentCode -band $Group ) { $true } else { $false }
+            'Network'                = if ( $AssignmentCode -band $Network ) { $true } else { $false }
+            'Computer'               = if ( $AssignmentCode -band $Computer ) { $true } else { $false }
+            'ADDistinguishedName'    = if ( $AssignmentCode -band $ADDistinguishedName ) { $true } else { $false }
+            'ApplyToProcessChildren' = if ( $AssignmentCode -band $ApplyToProcessChildren ) { $true } else { $false }
+            'ProcessID'              = if ( $AssignmentCode -band $ProcessID ) { $true } else { $false }
+            'MandatoryLevelMask'     = if ( $AssignmentCode -band $MandatoryLevelMask ) { $true } else { $false }
+            'EnvironmentVariable'    = if ( $AssignmentCode -band $EnvironmentVariable ) { $true } else { $false }
+            'MandatoryLevelShift'    = if ( $AssignmentCode -band $MandatoryLevelShift ) { $true } else { $false }
         }
 
         Write-Output $output
