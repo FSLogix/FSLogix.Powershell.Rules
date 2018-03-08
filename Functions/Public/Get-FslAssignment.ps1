@@ -24,11 +24,6 @@ function Get-FslAssignment {
 
         foreach ($line in $lines) {
             switch ($true) {
-                #Grab comment if this line is one.
-                $line.StartsWith('##') {
-                    $comment = $line.TrimStart('#')
-                    break
-                }
                 #If line matches tab separated data with 5 columns.
                 { $line -match "([^\t]*\t){5}" } {
                     #Create a powershell object from the columns
