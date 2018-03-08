@@ -2,21 +2,78 @@ function Add-FslAssignment {
     [CmdletBinding()]
 
     Param (
+
         [Parameter(
             Position = 0,
             ValuefromPipelineByPropertyName = $true,
             ValuefromPipeline = $true,
             Mandatory = $true
         )]
-        [System.String]$Name,
+        [System.String]$AssignmentFilePath,
 
         [Parameter(
+            ParameterSetName = 'User',
             Position = 1,
             ValuefromPipelineByPropertyName = $true,
-            ValuefromPipeline = $true,
             Mandatory = $true
         )]
-        [System.String]$AssignmentFilePath
+        [System.String]$UserName,
+
+        [Parameter(
+            ParameterSetName = 'Group',
+            Position = 2,
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
+        )]
+        [System.String]$GroupName,
+
+        [Parameter(
+            ParameterSetName = 'Process',
+            Position = 3,
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
+        )]
+        [System.String]$ProcessName,
+
+        [Parameter(
+            ParameterSetName = 'Process',
+            Position = 4,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Switch]$IncludeChildProcess,
+
+        [Parameter(
+            ParameterSetName = 'Network',
+            Position = 3,
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
+        )]
+        [System.Net.IPAddress]$IPAddress,
+
+        [Parameter(
+            ParameterSetName = 'Computer',
+            Position = 3,
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
+        )]
+        [System.Net.IPAddress]$ComputerName,
+
+        [Parameter(
+            ParameterSetName = 'OU',
+            Position = 3,
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
+        )]
+        [System.Net.IPAddress]$OU,
+
+        [Parameter(
+            ParameterSetName = 'EnvironmentVariable',
+            Position = 3,
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
+        )]
+        [System.Net.IPAddress]$EnvironmentVariable
+
     )
 
     BEGIN {

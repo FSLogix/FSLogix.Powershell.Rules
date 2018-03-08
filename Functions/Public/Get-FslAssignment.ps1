@@ -29,9 +29,9 @@ function Get-FslAssignment {
                     #Create a powershell object from the columns
                     $lineObj = $line | ConvertFrom-String -Delimiter `t -PropertyNames FlagsDec, DistinguishedName, NotUsed, FriendlyName, AssignmentTime, Zero
                     #ConvertFrom-String converts the hex value in flag to decimal, need to convert back to a hex string. Add in the comment and output it.
-                    $AssignmentPlusComment = $lineObj | Select-Object -Property DistinguishedName, Notused, FriendlyName, AssignmentTime, Zero, @{n = 'Flags'; e = {'0x' + "{0:X8}" -f $lineObj.FlagsDec}}, Binary, @{n = 'Comment'; e = {$comment}}
+                    $assignment = $lineObj | Select-Object -Property DistinguishedName, Notused, FriendlyName, AssignmentTime, Zero, @{n = 'Flags'; e = {'0x' + "{0:X8}" -f $lineObj.FlagsDec}}
 
-                    $poshFlags = $AssignmentPlusComment.Flags | ConvertFrom-FslAssignmentCode
+                    $output = $assignment
 
                     <#$output = [PSCustomObject]@{
                         FullName         = Join-Path $AssignmentPlusComment.DistinguishedName # $AssignmentPlusComment.FriendlyName
@@ -62,7 +62,7 @@ function Get-FslAssignment {
                     $output | ForEach-Object {
                         $Properties = $_.PSObject.Properties
                         @( $Properties | Where-Object { -not $_.Value } ) | ForEach-Object { $Properties.Remove($_.Name) }
-                        Write-Output $_
+                        $_ #| Format-List
                     }
 
                     break
@@ -78,4 +78,4 @@ function Get-FslAssignment {
 
 #. D:\PoSHCode\GitHub\Create-Rules-Files\Functions\Private\ConvertFrom-FslRuleCode.ps1
 
-#Get-FslRule -Path 'C:\Users\jsmoy\OneDrive\Documents\FSLogix Rule Sets\redirect.fxr'
+Get-FslAssignment -Path 'C:\poshcode\github\FSLogix.Powershell.Rules\TestFiles\Assign.fxa'
