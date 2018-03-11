@@ -13,6 +13,9 @@ function Set-FslAssignment {
 
     BEGIN {
         Set-StrictMode -Version Latest
+        $version = 1
+        $minimumLicenseAssignedTime = 0
+        Set-Content -Path $RuleFilePath -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop
     } # Begin
     PROCESS {
         #check file has correct filename extension

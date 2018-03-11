@@ -12,8 +12,17 @@ function Add-FslAssignment {
         [System.String]$AssignmentFilePath,
 
         [Parameter(
-            ParameterSetName = 'User',
             Position = 1,
+            ValuefromPipelineByPropertyName = $true,
+            ValuefromPipeline = $true,
+            Mandatory = $true
+        )]
+        [Validateset($true,$false)]
+        [System.String]$RuleSetApplies,
+
+        [Parameter(
+            ParameterSetName = 'User',
+            Position = 2,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -21,7 +30,7 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'Group',
-            Position = 2,
+            Position = 3,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -29,7 +38,7 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'Process',
-            Position = 3,
+            Position = 4,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -37,14 +46,21 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'Process',
-            Position = 4,
+            Position = 5,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$IncludeChildProcess,
 
         [Parameter(
+            ParameterSetName = 'Process',
+            Position = 6,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Switch]$ProcessId,
+
+        [Parameter(
             ParameterSetName = 'Network',
-            Position = 3,
+            Position = 7,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -52,27 +68,57 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'Computer',
-            Position = 3,
+            Position = 8,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
-        [System.Net.IPAddress]$ComputerName,
+        [ValidatePattern(".*@.*")]
+        [System.String]$ComputerName,
 
         [Parameter(
             ParameterSetName = 'OU',
-            Position = 3,
+            Position = 9,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
-        [System.Net.IPAddress]$OU,
+        [System.String]$OU,
 
         [Parameter(
             ParameterSetName = 'EnvironmentVariable',
-            Position = 3,
+            Position = 10,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
-        [System.Net.IPAddress]$EnvironmentVariable
+        [ValidatePattern(".*=.*")]
+        [System.String]$EnvironmentVariable,
+
+        [Parameter(
+            ParameterSetName = 'EnvironmentVariable',
+            Position = 11,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [datetime]$AssignedTime,
+
+        [Parameter(
+            ParameterSetName = 'EnvironmentVariable',
+            Position = 12,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [datetime]$UnAssignedTime,
+
+        [Parameter(
+            ParameterSetName = 'User',
+            Position = 13,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'Group',
+            Position = 13,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [System.String]$ADDistinguisedName
+
+
 
     )
 

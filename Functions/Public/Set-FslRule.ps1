@@ -86,8 +86,8 @@ function Set-FslRule {
 
     BEGIN {
         Set-StrictMode -Version Latest
-
-        Set-Content -Path $RuleFilePath -Value 1 -Encoding Unicode -ErrorAction Stop
+        $version = 1
+        Set-Content -Path $RuleFilePath -Value $version -Encoding Unicode -ErrorAction Stop
     } # Begin
     PROCESS {
 
