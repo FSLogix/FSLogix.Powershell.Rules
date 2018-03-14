@@ -104,7 +104,7 @@ function Add-FslAssignment {
             Position = 12,
             ValuefromPipelineByPropertyName = $true
         )]
-        [datetime]$UnAssignedTime,
+        [datetime]$UnAssignedTime = (Get-Date),
 
         [Parameter(
             ParameterSetName = 'User',

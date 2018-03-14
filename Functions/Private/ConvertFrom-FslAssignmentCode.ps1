@@ -23,9 +23,9 @@ function ConvertFrom-FslAssignmentCode {
         $ADDistinguishedName        = 0x0080
         $ApplyToProcessChildren     = 0x0100
         $ProcessID                  = 0x0200
-        $MandatoryLevelMask         = 0x1C00
         $EnvironmentVariable        = 0x2000
-        $MandatoryLevelShift        = 10
+        #$MandatoryLevelShift        = 10
+        #$MandatoryLevelMask         = 0x1C00
 
     } # Begin
     PROCESS {
@@ -39,10 +39,10 @@ function ConvertFrom-FslAssignmentCode {
             'Computer'               = if ( $AssignmentCode -band $Computer ) { $true } else { $false }
             'ADDistinguishedName'    = if ( $AssignmentCode -band $ADDistinguishedName ) { $true } else { $false }
             'ApplyToProcessChildren' = if ( $AssignmentCode -band $ApplyToProcessChildren ) { $true } else { $false }
-            'ProcessID'              = if ( $AssignmentCode -band $ProcessID ) { $true } else { $false }
-            'MandatoryLevelMask'     = if ( $AssignmentCode -band $MandatoryLevelMask ) { $true } else { $false }
+            'ProcessId'              = if ( $AssignmentCode -band $ProcessID ) { $true } else { $false }
             'EnvironmentVariable'    = if ( $AssignmentCode -band $EnvironmentVariable ) { $true } else { $false }
-            'MandatoryLevelShift'    = if ( $AssignmentCode -band $MandatoryLevelShift ) { $true } else { $false }
+            #'MandatoryLevelShift'    = if ( $AssignmentCode -band $MandatoryLevelShift ) { $true } else { $false }
+            #'MandatoryLevelMask'     = if ( $AssignmentCode -band $MandatoryLevelMask ) { $true } else { $false }
         }
 
         Write-Output $output

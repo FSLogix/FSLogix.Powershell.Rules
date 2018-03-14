@@ -29,7 +29,7 @@ function Compare-FslRuleFile {
                 Write-Error "$filepath does not exist"
                 exit
             }
-        }     
+        }
 
         foreach ($filepath in $Files) {
             $diffRule = @()
@@ -45,13 +45,13 @@ function Compare-FslRuleFile {
                     $notRefRule = Get-FslRule $filepath
                      #Get hiding rules (only concerned with hiding rules that are registry keys)
                     $notRefHideRules = $notRefRule | Where-Object { $_.Flags -band $FRX_RULE_TYPE_HIDING -and $_.Flags -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY -and $_.FullName -like "HKLM*"} | Select-Object -ExpandProperty FullName
-                    $diffRule += $notRefHideRules 
+                    $diffRule += $notRefHideRules
                 }
             }
 
             #get rid of dupes between the rest of the files
-            $uniqueDiffRule = $diffRule | Group-Object | Select-Object -ExpandProperty Name 
-            
+            $uniqueDiffRule = $diffRule | Group-Object | Select-Object -ExpandProperty Name
+
             #Add all together
             $refAndDiff = $refRule + $uniqueDiffRule
 
@@ -67,23 +67,23 @@ function Compare-FslRuleFile {
 
             $newRules | Set-FslRule -RuleFilePath $newRuleFileName
 
-            $newRedirect = $dupes | Select-Object -Property @{n='FullName';e={$_}}, @{n='RedirectDestPath';e={        
-                "HKLM\Software\FSLogix\$($baseFileName)\$($_.TrimStart('HKLM\'))"
+            $newRedirect = $dupes | Select-Object -Property @{n='FullName';e={$_}}, @{n='RedirectDestPath';e={
+                "HKLM\Software\FSLogix\Redirect\$($baseFileName)\$($_.TrimStart('HKLM\'))"
             }}
 
             $newRedirect | Set-FslRule -RuleFilePath $newRedirectFileName -RedirectType FolderOrKey
 
 
         }
-        
+
     } #Process
     END {} #End
 }  #function Compare-FslRuleFile
 
-. D:\PoSHCode\GitHub\Create-Rules-Files\Functions\Public\Get-FslRule.ps1
-. D:\PoSHCode\GitHub\Create-Rules-Files\Functions\Public\Set-FslRule.ps1
-. D:\PoSHCode\GitHub\Create-Rules-Files\Functions\Public\Add-FslRule.ps1
-. D:\PoSHCode\GitHub\Create-Rules-Files\Functions\Private\ConvertTo-FslRuleCode.ps1
-. D:\PoSHCode\GitHub\Create-Rules-Files\Functions\Private\ConvertFrom-FslRuleCode.ps1
+. .\Get-FslRule.ps1
+. .\Set-FslRule.ps1
+. .\Add-FslRule.ps1
+. ..\Private\ConvertTo-FslRuleCode.ps1
+. ..\Private\ConvertFrom-FslRuleCode.ps1
 
-Compare-FslRuleFile -Files D:\PoSHCode\GitHub\Create-Rules-Files\TestFiles\AppRule_Project2013Pro.fxr, D:\PoSHCode\GitHub\Create-Rules-Files\TestFiles\AppRule_Office2013.fxr, D:\PoSHCode\GitHub\Create-Rules-Files\TestFiles\AppRule_Visio2013Pro.fxr
+Compare-FslRuleFile -Files  ..\..\TestFiles\AppRule_Project2013Pro.fxr, ..\..\TestFiles\AppRule_Office2013.fxr, ..\..\TestFiles\AppRule_Visio2013Pro.fxr

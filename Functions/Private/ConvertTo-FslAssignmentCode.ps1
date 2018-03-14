@@ -9,76 +9,64 @@ function ConvertTo-FslAssignmentCode {
         [Switch]$Apply,
 
         [Parameter(
-            Position = 0,
+            Position = 1,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$Remove,
 
         [Parameter(
-            Position = 0,
+            Position = 2,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$User,
 
         [Parameter(
-            Position = 0,
+            Position = 3,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$Process,
 
         [Parameter(
-            Position = 0,
+            Position = 4,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$Group,
 
         [Parameter(
-            Position = 0,
+            Position = 5,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$Network,
 
         [Parameter(
-            Position = 0,
+            Position = 6,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$Computer,
 
         [Parameter(
-            Position = 0,
+            Position = 7,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$ADDistinguishedName,
 
         [Parameter(
-            Position = 0,
+            Position = 8,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$ApplyToProcessChildren,
 
         [Parameter(
-            Position = 0,
+            Position = 9,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Switch]$Pid,
+        [Switch]$ProcessId,
 
         [Parameter(
-            Position = 0,
+            Position = 10,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Switch]$MandatoryLevelMaskBit,
-
-        [Parameter(
-            Position = 0,
-            ValuefromPipelineByPropertyName = $true
-        )]
-        [Switch]$EnvironmentVariable,
-
-        [Parameter(
-            Position = 0,
-            ValuefromPipelineByPropertyName = $true
-        )]
-        [Switch]$MandatoryLevelShift
+        [Switch]$EnvironmentVariable
     )
 
     BEGIN {
@@ -109,7 +97,7 @@ function ConvertTo-FslAssignmentCode {
             $Computer { $codeToOutput = $codeToOutput -bor $ComputerBit }
             $ADDistinguishedName { $codeToOutput = $codeToOutput -bor $ADDistinguishedNameBit }
             $ApplyToProcessChildren { $codeToOutput = $codeToOutput -bor $ApplyToProcessChildrenBit }
-            $Pid { $codeToOutput = $codeToOutput -bor $PidBit }
+            $ProcessId { $codeToOutput = $codeToOutput -bor $PidBit }
             $MandatoryLevelMask { $codeToOutput = $codeToOutput -bor $MandatoryLevelMaskBit }
             $EnvironmentVariable { $codeToOutput = $codeToOutput -bor $EnvironmentVariableBit }
             $MandatoryLevelShift { $codeToOutput = $codeToOutput -bor $MandatoryLevelShiftBit }
