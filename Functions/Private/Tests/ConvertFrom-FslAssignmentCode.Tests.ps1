@@ -60,9 +60,7 @@ Describe ConvertFrom-FslAssignmentCode {
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
             $return.ProcessID | Should Be $false
-            $return.MandatoryLevelMask | Should Be $false
             $return.EnvironmentVariable | Should Be $false
-            $return.MandatoryLevelShift | Should Be $true
         }
 
         It 'Should return correctly from 0x00000011' {
@@ -78,9 +76,7 @@ Describe ConvertFrom-FslAssignmentCode {
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
             $return.ProcessID | Should Be $false
-            $return.MandatoryLevelMask | Should Be $false
             $return.EnvironmentVariable | Should Be $false
-            $return.MandatoryLevelShift | Should Be $false
         }
 
         It 'Should return correctly from 0x00000005' {
@@ -96,9 +92,7 @@ Describe ConvertFrom-FslAssignmentCode {
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
             $return.ProcessID | Should Be $false
-            $return.MandatoryLevelMask | Should Be $false
             $return.EnvironmentVariable | Should Be $false
-            $return.MandatoryLevelShift | Should Be $false
         }
 
         It 'Should return correctly from 0x00000006' {
@@ -114,9 +108,7 @@ Describe ConvertFrom-FslAssignmentCode {
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
             $return.ProcessID | Should Be $false
-            $return.MandatoryLevelMask | Should Be $false
             $return.EnvironmentVariable | Should Be $false
-            $return.MandatoryLevelShift | Should Be $true
         }
 
         It 'Should return correctly from 0x00000009' {
@@ -132,9 +124,7 @@ Describe ConvertFrom-FslAssignmentCode {
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
             $return.ProcessID | Should Be $false
-            $return.MandatoryLevelMask | Should Be $false
             $return.EnvironmentVariable | Should Be $false
-            $return.MandatoryLevelShift | Should Be $true
         }
 
         It 'Should return correctly from 0x0000000a' {
@@ -150,9 +140,7 @@ Describe ConvertFrom-FslAssignmentCode {
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
             $return.ProcessID | Should Be $false
-            $return.MandatoryLevelMask | Should Be $false
             $return.EnvironmentVariable | Should Be $false
-            $return.MandatoryLevelShift | Should Be $true
         }
 
         It 'Should return correctly from 0x00000109' {
@@ -168,9 +156,7 @@ Describe ConvertFrom-FslAssignmentCode {
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $true
             $return.ProcessID | Should Be $false
-            $return.MandatoryLevelMask | Should Be $false
             $return.EnvironmentVariable | Should Be $false
-            $return.MandatoryLevelShift | Should Be $true
         }
 
         It 'Should return correctly from 0x0000010a' {
@@ -186,9 +172,7 @@ Describe ConvertFrom-FslAssignmentCode {
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $true
             $return.ProcessID | Should Be $false
-            $return.MandatoryLevelMask | Should Be $false
             $return.EnvironmentVariable | Should Be $false
-            $return.MandatoryLevelShift | Should Be $true
         }
 
         It 'Should return correctly from 0x00000021' {
@@ -204,9 +188,7 @@ Describe ConvertFrom-FslAssignmentCode {
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
             $return.ProcessID | Should Be $false
-            $return.MandatoryLevelMask | Should Be $false
             $return.EnvironmentVariable | Should Be $false
-            $return.MandatoryLevelShift | Should Be $false
         }
 
         It 'Should return correctly from 0x00000022' {
@@ -222,9 +204,7 @@ Describe ConvertFrom-FslAssignmentCode {
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
             $return.ProcessID | Should Be $false
-            $return.MandatoryLevelMask | Should Be $false
             $return.EnvironmentVariable | Should Be $false
-            $return.MandatoryLevelShift | Should Be $true
         }
 
         It 'Should return correctly from 0x00000041' {
@@ -240,9 +220,7 @@ Describe ConvertFrom-FslAssignmentCode {
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
             $return.ProcessID | Should Be $false
-            $return.MandatoryLevelMask | Should Be $false
             $return.EnvironmentVariable | Should Be $false
-            $return.MandatoryLevelShift | Should Be $false
         }
 
         It 'Should return correctly from 0x00000042' {
@@ -258,9 +236,7 @@ Describe ConvertFrom-FslAssignmentCode {
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
             $return.ProcessID | Should Be $false
-            $return.MandatoryLevelMask | Should Be $false
             $return.EnvironmentVariable | Should Be $false
-            $return.MandatoryLevelShift | Should Be $true
         }
 
         It 'Should return correctly from 0x00000081' {
@@ -276,9 +252,7 @@ Describe ConvertFrom-FslAssignmentCode {
             $return.ADDistinguishedName | Should Be $true
             $return.ApplyToProcessChildren | Should Be $false
             $return.ProcessID | Should Be $false
-            $return.MandatoryLevelMask | Should Be $false
             $return.EnvironmentVariable | Should Be $false
-            $return.MandatoryLevelShift | Should Be $false
         }
 
         It 'Should return correctly from 0x00000082' {
@@ -294,9 +268,7 @@ Describe ConvertFrom-FslAssignmentCode {
             $return.ADDistinguishedName | Should Be $true
             $return.ApplyToProcessChildren | Should Be $false
             $return.ProcessID | Should Be $false
-            $return.MandatoryLevelMask | Should Be $false
             $return.EnvironmentVariable | Should Be $false
-            $return.MandatoryLevelShift | Should Be $true
         }
 
         It 'Should return correctly from 0x00002001' {
@@ -312,9 +284,7 @@ Describe ConvertFrom-FslAssignmentCode {
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
             $return.ProcessID | Should Be $false
-            $return.MandatoryLevelMask | Should Be $false
             $return.EnvironmentVariable | Should Be $true
-            $return.MandatoryLevelShift | Should Be $false
         }
 
         It 'Should return correctly from 0x00002002' {
@@ -330,9 +300,7 @@ Describe ConvertFrom-FslAssignmentCode {
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
             $return.ProcessID | Should Be $false
-            $return.MandatoryLevelMask | Should Be $false
             $return.EnvironmentVariable | Should Be $true
-            $return.MandatoryLevelShift | Should Be $true
         }
     }
 

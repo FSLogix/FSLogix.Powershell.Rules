@@ -126,7 +126,6 @@ function Add-FslAssignment {
             Write-Warning 'Assignment files should have an fxa extension'
         }
 
-
         $convertToFslAssignmentCodeParams = @{}
 
         if ($RuleSetApplies) {

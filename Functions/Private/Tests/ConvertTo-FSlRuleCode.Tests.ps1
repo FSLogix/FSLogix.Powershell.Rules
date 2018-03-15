@@ -7,8 +7,11 @@ Describe ConvertTo-FslRuleCode {
 
     Context -Name 'Output' {
 
-        BeforeAll{
+        BeforeAll {
+            [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
+            $convertToFslRuleCode = @{
 
+            }
         }
 
         It 'Does not throw' {
