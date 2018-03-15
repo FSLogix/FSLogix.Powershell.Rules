@@ -14,11 +14,9 @@ function Add-FslAssignment {
         [Parameter(
             Position = 1,
             ValuefromPipelineByPropertyName = $true,
-            ValuefromPipeline = $true,
-            Mandatory = $true
+            ValuefromPipeline = $true
         )]
-        [Validateset($true,$false)]
-        [System.String]$RuleSetApplies,
+        [Switch]$RuleSetApplies,
 
         [Parameter(
             ParameterSetName = 'User',
@@ -37,30 +35,42 @@ function Add-FslAssignment {
         [System.String]$GroupName,
 
         [Parameter(
-            ParameterSetName = 'Process',
+            ParameterSetName = 'User',
             Position = 4,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'Group',
+            Position = 4,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [System.String]$ADDistinguisedName,
+
+        [Parameter(
+            ParameterSetName = 'Executable',
+            Position = 5,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
         [System.String]$ProcessName,
 
         [Parameter(
-            ParameterSetName = 'Process',
-            Position = 5,
+            ParameterSetName = 'Executable',
+            Position = 6,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$IncludeChildProcess,
 
         [Parameter(
-            ParameterSetName = 'Process',
-            Position = 6,
+            ParameterSetName = 'Executable',
+            Position = 7,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$ProcessId,
 
         [Parameter(
             ParameterSetName = 'Network',
-            Position = 7,
+            Position = 8,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -68,7 +78,7 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'Computer',
-            Position = 8,
+            Position = 9,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -77,7 +87,7 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'OU',
-            Position = 9,
+            Position = 10,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -85,7 +95,7 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'EnvironmentVariable',
-            Position = 10,
+            Position = 11,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -94,32 +104,17 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'EnvironmentVariable',
-            Position = 11,
-            ValuefromPipelineByPropertyName = $true
-        )]
-        [datetime]$AssignedTime,
-
-        [Parameter(
-            ParameterSetName = 'EnvironmentVariable',
             Position = 12,
             ValuefromPipelineByPropertyName = $true
         )]
-        [datetime]$UnAssignedTime = (Get-Date),
+        [DateTime]$AssignedTime,
 
         [Parameter(
-            ParameterSetName = 'User',
+            ParameterSetName = 'EnvironmentVariable',
             Position = 13,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Parameter(
-            ParameterSetName = 'Group',
-            Position = 13,
-            ValuefromPipelineByPropertyName = $true
-        )]
-        [System.String]$ADDistinguisedName
-
-
-
+        [DateTime]$UnAssignedTime = (Get-Date)
     )
 
     BEGIN {
@@ -131,6 +126,55 @@ function Add-FslAssignment {
             Write-Warning 'Assignment files should have an fxa extension'
         }
 
+
+        $convertToFslAssignmentCodeParams = @{}
+
+        if ($RuleSetApplies) {
+            $convertToFslAssignmentCodeParams += @{ 'Apply' = $true }
+        }
+        else {
+            $convertToFslAssignmentCodeParams += @{ 'Remove' = $true }
+        }
+
+        switch ($PSCmdlet.ParameterSetName) {
+            User {
+                switch ($true) {
+                    $UserName {$convertToFslAssignmentCodeParams += @{ 'User' = $true }
+                    }
+                    $ADDistinguisedName {$convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
+                    }
+                }
+                break
+            }
+            Group {
+                switch ($true) {
+                    $GroupName {$convertToFslAssignmentCodeParams += @{ 'Group' = $true }
+                    }
+                    $ADDistinguisedName {$convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
+                    }
+                }
+                break
+            }
+            Executable {
+                switch ($true) {
+                    $ProcessName {$convertToFslAssignmentCodeParams += @{ 'Process' = $true }
+                    }
+                    $IncludeChildProcess {$convertToFslAssignmentCodeParams += @{ 'ApplyToProcessChildren' = $true }
+                    }
+                    $ProcessId {$convertToFslAssignmentCodeParams += @{ 'ProcessId' = $true }
+                    }
+                }
+                break
+            }
+            Network {}
+            Computer {}
+            OU {}
+            EnvironmentVariable {}
+        }
+
+        $assignmentCode = ConvertTo-FslAssignmentCode @convertToFslAssignmentCodeParams
+
+        Write-Output $assignmentCode
     } #Process
     END {} #End
 }  #function Add-FslAssignment
