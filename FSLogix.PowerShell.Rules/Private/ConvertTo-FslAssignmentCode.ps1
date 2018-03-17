@@ -81,9 +81,10 @@ function ConvertTo-FslAssignmentCode {
         $ADDistinguishedNameBit = 0x0080
         $ApplyToProcessChildrenBit = 0x0100
         $PidBit = 0x0200
-        $MandatoryLevelMaskBit = 0x1C00
         $EnvironmentVariableBit = 0x2000
-        $MandatoryLevelShiftBit = 10
+
+        #$MandatoryLevelMaskBit = 0x1C00
+        #$MandatoryLevelShiftBit = 10
     } # Begin
     PROCESS {
         $codeToOutput = 0
@@ -98,9 +99,10 @@ function ConvertTo-FslAssignmentCode {
             $ADDistinguishedName { $codeToOutput = $codeToOutput -bor $ADDistinguishedNameBit }
             $ApplyToProcessChildren { $codeToOutput = $codeToOutput -bor $ApplyToProcessChildrenBit }
             $ProcessId { $codeToOutput = $codeToOutput -bor $PidBit }
-            $MandatoryLevelMask { $codeToOutput = $codeToOutput -bor $MandatoryLevelMaskBit }
             $EnvironmentVariable { $codeToOutput = $codeToOutput -bor $EnvironmentVariableBit }
-            $MandatoryLevelShift { $codeToOutput = $codeToOutput -bor $MandatoryLevelShiftBit }
+
+            #$MandatoryLevelMask { $codeToOutput = $codeToOutput -bor $MandatoryLevelMaskBit }
+            #$MandatoryLevelShift { $codeToOutput = $codeToOutput -bor $MandatoryLevelShiftBit }
         }
 
         #convert code to hex string so it doesn't get outputted as an integer
