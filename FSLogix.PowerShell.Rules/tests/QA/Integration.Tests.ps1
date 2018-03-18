@@ -9,7 +9,7 @@ Describe Compare-FslRuleFile {
 
     BeforeAll{
         [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
-        $outputPath = TestDrive:\
+        $outputPath = 'TestDrive:\'
     }
 
     It 'Produces 6 files' {

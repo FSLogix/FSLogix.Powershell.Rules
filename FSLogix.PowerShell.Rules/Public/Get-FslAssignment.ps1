@@ -69,7 +69,3 @@ function Get-FslAssignment {
     } #Process
     END {} #End
 }  #function Get-FslAssignment
-
-. ..\Private\ConvertFrom-FslAssignmentCode.ps1
-
-Get-FslAssignment -Path "..\..\TestFiles\Assign.fxa" | Format-List

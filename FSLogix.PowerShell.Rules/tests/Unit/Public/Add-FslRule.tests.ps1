@@ -1,12 +1,13 @@
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
-$here = Split-Path $here
+$funcType = Split-Path $here -Leaf
 $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
-. "$here\$sut"
+$here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent 
+. "$here\$funcType\$sut"
 
 Describe Add-FSlRule {
 
     Context -Name 'Output' {
-        . ..\..\Private\ConvertTo-FslRuleCode.ps1
+        . "$here\Private\ConvertTo-FslRuleCode.ps1"
         Mock ConvertTo-FslRuleCode {'0x00000222'}
         Mock Add-Content { $null } -ParameterFilter { $Encoding -and $Encoding -eq 'Unicode' }
 
@@ -38,7 +39,7 @@ Describe Add-FSlRule {
 
     Context 'Pipeline' {
 
-        . ..\..\Private\ConvertTo-FslRuleCode.ps1
+        . "$here\Private\ConvertTo-FslRuleCode.ps1"
         #Mock ConvertTo-FslRuleCode { '0x00000221' }
         Mock Add-Content { $null } -ParameterFilter { $Encoding -and $Encoding -eq 'Unicode' }
 

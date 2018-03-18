@@ -1,7 +1,8 @@
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
-$here = Split-Path $here
+$funcType = Split-Path $here -Leaf
 $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
-. "$here\$sut"
+$here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent 
+. "$here\$funcType\$sut"
 
 Describe ConvertTo-FslRuleCode {
 
@@ -10,21 +11,28 @@ Describe ConvertTo-FslRuleCode {
         BeforeAll {
             [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
             $convertToFslRuleCode = @{
-
+                FolderOrKey = $true
+                FileOrValue = $true
+                ContainsUserVar = $true
+                CopyObject = $true
+                Persistent = $true
+                Redirect = $true
+                Hiding = $true
+                Printer = $true
+                SpecificData = $true
+                Java = $true
+                VolumeAutoMount = $true
+                HideFont = $true
             }
         }
 
         It 'Does not throw' {
             { ConvertTo-FslRuleCode @AddfslRuleParams  } | should not throw
         }
-        It 'Does not return an object' {
-            ( ConvertTo-FslRuleCode @AddfslRuleParams  | Measure-Object ).Count | Should Be 0
+        It 'Does return an object' {
+            ( ConvertTo-FslRuleCode @AddfslRuleParams  | Measure-Object ).Count | Should BeGreaterThan 0
         }
-        It 'Returns an object from passthru' {
-            $result = ConvertTo-FslRuleCode @AddfslRuleParams  -Passthru
-            $result.Count | Should BeLessThan 7
-            $result.Count | Should BeGreaterThan 2
-        }
+
         It 'Returns Some Verbose lines'{
             $verboseLine = ConvertTo-FslRuleCode @AddfslRuleParams  -Verbose 4>&1
             $verboseLine.count | Should BeGreaterThan 0
@@ -33,55 +41,43 @@ Describe ConvertTo-FslRuleCode {
 
     Context 'Pipeline' {
 
-        . ..\..\Private\ConvertTo-FslRuleCode.ps1
-        #Mock ConvertTo-FslRuleCode { '0x00000221' }
-        Mock Add-Content { $null } -ParameterFilter { $Encoding -and $Encoding -eq 'Unicode' }
-
         BeforeAll{
             [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
-            $AddfslRuleParams = @{
-                RuleFilePath = 'Testdrive:\temprule.fxr'
-                HidingType = 'File'
-                passthru = $true
-                Comment = 'Test'
+            $convertToFslRuleCode = @{
+                FolderOrKey = $true
+                FileOrValue = $true
+                ContainsUserVar = $true
+                CopyObject = $true
+                Persistent = $true
+                Redirect = $true
+                Hiding = $true
+                Printer = $true
+                SpecificData = $true
+                Java = $true
+                VolumeAutoMount = $true
+                HideFont = $true
             }
-        }
-
-
-        It 'Accepts values from the pipeline by value' {
-            $return = 'Testdrive:\madeup.txt' | ConvertTo-FslRuleCode @AddfslRuleParams
-            Assert-MockCalled Add-Content -Times 2 -Exactly -Scope It
-            #Assert-MockCalled ConvertTo-FslRuleCode -Times 1 -Exactly -Scope It
-            $return.SourceParent | Should Be 'Testdrive:\'
-            $return.Source | Should Be 'madeup.txt'
-            $return.DestParent | Should BeNullOrEmpty
-            $return.Dest | Should BeNullOrEmpty
-            $return.Flags | Should Be '0x00000222'
-            $return.binary | Should BeNullOrEmpty
-            $return.Comment | Should Be 'Test'
-
         }
 
         It 'Accepts value from the pipeline by property name' {
 
             $pipeObject = [PSCustomObject]@{
-                RuleFilePath = 'Testdrive:\temprule.fxr'
-                HidingType = 'File'
-                passthru = $true
-                Comment = 'Test'
-                FullName = 'Testdrive:\madeup.txt'
+                FolderOrKey = $true
+                FileOrValue = $true
+                ContainsUserVar = $true
+                CopyObject = $true
+                Persistent = $true
+                Redirect = $true
+                Hiding = $true
+                Printer = $true
+                SpecificData = $true
+                Java = $true
+                VolumeAutoMount = $true
+                HideFont = $true
             }
 
             $return =  $pipeObject | ConvertTo-FslRuleCode
-            Assert-MockCalled Add-Content -Times 2 -Exactly -Scope It
-            #Assert-MockCalled ConvertTo-FslRuleCode -Times 1 -Exactly -Scope It
-            $return.SourceParent | Should Be 'Testdrive:\'
-            $return.Source | Should Be 'madeup.txt'
-            $return.DestParent | Should BeNullOrEmpty
-            $return.Dest | Should BeNullOrEmpty
-            $return.Flags | Should Be '0x00000222'
-            $return.binary | Should BeNullOrEmpty
-            $return.Comment | Should Be 'Test'
+            $return | Should Be '0x00007F3B'
         }
     }
 

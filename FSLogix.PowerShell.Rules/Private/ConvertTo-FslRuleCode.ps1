@@ -7,56 +7,67 @@ function ConvertTo-FslRuleCode {
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$FolderOrKey,
+
         [Parameter(
             Position = 1,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$FileOrValue,
+
         [Parameter(
             Position = 2,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$ContainsUserVar,
+
         [Parameter(
             Position = 3,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$CopyObject,
+
         [Parameter(
             Position = 4,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$Persistent,
+
         [Parameter(
             Position = 5,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$Redirect,
+
         [Parameter(
             Position = 6,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$Hiding,
+
         [Parameter(
             Position = 7,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$Printer,
+
         [Parameter(
             Position = 8,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$SpecificData,
+
         [Parameter(
             Position = 9,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$Java,
+
         [Parameter(
             Position = 10,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$VolumeAutoMount,
+        
         [Parameter(
             Position = 11,
             ValuefromPipelineByPropertyName = $true
