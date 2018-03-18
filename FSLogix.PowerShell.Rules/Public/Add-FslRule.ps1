@@ -143,7 +143,7 @@ function Add-FslRule {
         $flags = ConvertTo-FslRuleCode @convertToFslRuleCodeParams
 
 
-        if ($flags -bor  $FRX_RULE_SRC_IS_A_FILE_OR_VALUE) {
+        if ($flags -band  $FRX_RULE_SRC_IS_A_FILE_OR_VALUE) {
             $sourceParent = Split-Path $FullName -Parent
             $source = Split-Path $FullName -Leaf
         }
