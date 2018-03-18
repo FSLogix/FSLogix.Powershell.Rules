@@ -79,11 +79,3 @@ function Compare-FslRuleFile {
     } #Process
     END {} #End
 }  #function Compare-FslRuleFile
-
-. .\Get-FslRule.ps1
-. .\Set-FslRule.ps1
-. .\Add-FslRule.ps1
-. ..\Private\ConvertTo-FslRuleCode.ps1
-. ..\Private\ConvertFrom-FslRuleCode.ps1
-
-Compare-FslRuleFile -Files  ..\..\TestFiles\AppRule_Project2013Pro.fxr, ..\..\TestFiles\AppRule_Office2013.fxr, ..\..\TestFiles\AppRule_Visio2013Pro.fxr
