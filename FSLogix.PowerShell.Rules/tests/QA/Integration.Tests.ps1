@@ -9,7 +9,7 @@ Describe Compare-FslRuleFile {
 
     BeforeAll{
         [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
-        $outputPath = 'C:\jimm\Output' #  'TestDrive:\'
+        $outputPath = 'TestDrive:\'
     }
 
     It 'Produces 6 files' {
@@ -22,7 +22,7 @@ Describe Compare-FslRuleFile {
         ( Get-ChildItem $outputPath -File ).count | Should Be 12
     }
     
-    It 'Produces 6 files' {
+    It 'Produces 4 files' {
         Compare-FslRuleFile -Files .\TestFiles\Office2016\Project2016.fxr, .\TestFiles\Office2016\OfficeProPlus2016.fxr -OutputPath $outputPath
         ( Get-ChildItem $outputPath -File ).count | Should Be 16
     }

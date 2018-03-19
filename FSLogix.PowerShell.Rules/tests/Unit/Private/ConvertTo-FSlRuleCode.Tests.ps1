@@ -34,7 +34,7 @@ Describe ConvertTo-FslRuleCode {
         }
 
         It 'Returns Some Verbose lines'{
-            $verboseLine = ConvertTo-FslRuleCode @AddfslRuleParams  -Verbose 4>&1
+            $verboseLine = ConvertTo-FslRuleCode @AddfslRuleParams -Verbose 4>&1
             $verboseLine.count | Should BeGreaterThan 0
         }
     }
