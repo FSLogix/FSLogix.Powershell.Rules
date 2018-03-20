@@ -21,7 +21,7 @@ function Get-FslAssignment {
         }
 
         #Get first line from assignment
-        $firstLine = Get-Content -Path $Path -First 1
+        $firstLine = Get-Content -Path $Path -TotalCount 1
 
         $metaData = $firstLine | ConvertFrom-String -Delimiter `t -PropertyNames Version, LicenseDays
 
