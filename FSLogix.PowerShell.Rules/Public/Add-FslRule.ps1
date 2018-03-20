@@ -74,7 +74,7 @@ function Add-FslRule {
             Position = 11,
             ValuefromPipelineByPropertyName = $true
         )]
-        [System.String]$Comment = 'Created By Powershell Script',
+        [System.String]$Comment = 'Created By PowerShell Script',
 
         [Parameter(
             Position = 13,
