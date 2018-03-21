@@ -114,7 +114,7 @@ function Add-FslAssignment {
             Position = 13,
             ValuefromPipelineByPropertyName = $true
         )]
-        [DateTime]$AssignedTime,
+        [Int]$AssignedTime = (Get-Date).ToFileTime(),
 
         [Parameter(
             ParameterSetName = 'EnvironmentVariable',
@@ -128,7 +128,7 @@ function Add-FslAssignment {
             Position = 15,
             ValuefromPipelineByPropertyName = $true
         )]
-        [DateTime]$UnAssignedTime = (Get-Date)
+        [Int]$UnAssignedTime = 0
     )
 
     BEGIN {

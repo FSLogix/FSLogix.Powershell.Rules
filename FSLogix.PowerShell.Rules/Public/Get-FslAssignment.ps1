@@ -48,6 +48,7 @@ function Get-FslAssignment {
                         }
                         UserName            = if ( $poshFlags.User ) { $assignment.IdString } else { $null }
                         GroupName           = if ( $poshFlags.Group ) { $assignment.FriendlyName } else { $null }
+                        ADDistinguisedName  = if ( $poshFlags.Group ) { $assignment.DistinguishedName } else {$null}
                         GroupSID            = if ( $poshFlags.Group ) { $assignment.IdString } else { $null }
                         ProcessName         = if ( $poshFlags.Process ) { $assignment.IdString } else { $null }
                         IncludeChildProcess = if ( $poshFlags.Process ) { $poshFlags.ApplyToProcessChildren } else { $null }
@@ -56,6 +57,8 @@ function Get-FslAssignment {
                         ComputerName        = if ( $poshFlags.Computer ) { $assignment.IdString } else { $null }
                         OU                  = if ( $poshFlags.ADDistinguishedName ) { $assignment.IdString } else { $null }
                         EnvironmentVariable = if ( $poshFlags.EnvironmentVariable ) { $assignment.IdString } else { $null }
+                        AssignedTime        = if (  $poshFlags.EnvironmentVariable ) { $assignment.AssignmentTime } else { $null }
+                        UnAssignedTime      = if (  $poshFlags.EnvironmentVariable ) { $assignment.UnAssignedTime } else { $null }
                         LicenseDays         = $metaData.LicenseDays
 
                     }
