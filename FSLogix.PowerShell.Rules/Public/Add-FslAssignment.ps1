@@ -35,20 +35,27 @@ function Add-FslAssignment {
         [System.String]$GroupName,
 
         [Parameter(
-            ParameterSetName = 'User',
+            ParameterSetName = 'Group',
             Position = 4,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [System.String]$GroupSID,
+
+        [Parameter(
+            ParameterSetName = 'User',
+            Position = 5,
             ValuefromPipelineByPropertyName = $true
         )]
         [Parameter(
             ParameterSetName = 'Group',
-            Position = 4,
+            Position = 5,
             ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$ADDistinguisedName,
 
         [Parameter(
             ParameterSetName = 'Executable',
-            Position = 5,
+            Position = 6,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -56,21 +63,21 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'Executable',
-            Position = 6,
+            Position = 7,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$IncludeChildProcess,
 
         [Parameter(
             ParameterSetName = 'Executable',
-            Position = 7,
+            Position = 8,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$ProcessId,
 
         [Parameter(
             ParameterSetName = 'Network',
-            Position = 8,
+            Position = 9,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -78,7 +85,7 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'Computer',
-            Position = 9,
+            Position = 10,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -87,7 +94,7 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'OU',
-            Position = 10,
+            Position = 11,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -95,7 +102,7 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'EnvironmentVariable',
-            Position = 11,
+            Position = 12,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -104,14 +111,21 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'EnvironmentVariable',
-            Position = 12,
+            Position = 13,
             ValuefromPipelineByPropertyName = $true
         )]
         [DateTime]$AssignedTime,
 
         [Parameter(
             ParameterSetName = 'EnvironmentVariable',
-            Position = 13,
+            Position = 14,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [DateTime]$LicenseDays = 0,
+
+        [Parameter(
+            ParameterSetName = 'EnvironmentVariable',
+            Position = 15,
             ValuefromPipelineByPropertyName = $true
         )]
         [DateTime]$UnAssignedTime = (Get-Date)

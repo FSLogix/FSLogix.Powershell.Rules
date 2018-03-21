@@ -47,7 +47,8 @@ function Get-FslAssignment {
                             $poshFlags.Apply { $true }
                         }
                         UserName            = if ( $poshFlags.User ) { $assignment.IdString } else { $null }
-                        GroupName           = if ( $poshFlags.Group ) { $assignment.IdString } else { $null }
+                        GroupName           = if ( $poshFlags.Group ) { $assignment.FriendlyName } else { $null }
+                        GroupSID            = if ( $poshFlags.Group ) { $assignment.IdString } else { $null }
                         ProcessName         = if ( $poshFlags.Process ) { $assignment.IdString } else { $null }
                         IncludeChildProcess = if ( $poshFlags.Process ) { $poshFlags.ApplyToProcessChildren } else { $null }
                         ProcessId           = if ( $poshFlags.Process ) { $poshFlags.ProcessId } else { $null }
