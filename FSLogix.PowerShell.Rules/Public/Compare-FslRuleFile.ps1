@@ -8,7 +8,7 @@ function Compare-FslRuleFile {
             ValuefromPipeline = $true,
             Mandatory = $true
         )]
-        [System.Array[]]$Files,
+        [System.Array]$Files,
 
         [Parameter(
             Position = 0,

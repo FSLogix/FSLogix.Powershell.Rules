@@ -13,7 +13,7 @@ Describe Compare-FslRuleFile {
     }
 
     It 'Produces 6 files' {
-        Compare-FslRuleFile -Files .\TestFiles\AppRule_Project2013Pro.fxr, .\TestFiles\AppRule_Office2013.fxr, .\TestFiles\AppRule_Visio2013Pro.fxr -OutputPath $outputPath
+        Compare-FslRuleFile -Files .\TestFiles\Office2016\AppRule_Project2013Pro.fxr, .\TestFiles\Office2016\AppRule_Office2013.fxr, .\TestFiles\Office2016\AppRule_Visio2013Pro.fxr -OutputPath $outputPath
         (Get-ChildItem $outputPath).count | Should Be 6
     }
 

@@ -83,7 +83,3 @@ function Get-FslRule {
     } #Process
     END {} #End
 }  #function Get-FslRule
-
-#. D:\PoSHCode\GitHub\Create-Rules-Files\Functions\Private\ConvertFrom-FslRuleCode.ps1
-
-#Get-FslRule -Path 'C:\Users\jsmoy\OneDrive\Documents\FSLogix Rule Sets\redirect.fxr'
