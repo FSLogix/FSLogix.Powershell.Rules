@@ -93,7 +93,7 @@ function Set-FslRule {
 
         #check file has correct filename extension
         if ($RuleFilePath -notlike "*.fxr") {
-            Write-Warning 'Rule files should have an fxr extension'
+            Write-Warning 'The Rule file should have an fxr extension'
         }
 
         Add-FslRule @PSBoundParameters

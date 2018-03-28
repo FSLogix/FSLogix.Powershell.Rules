@@ -130,9 +130,11 @@ function Add-FslAssignment {
         if ($AssignmentFilePath -notlike "*.fxa") {
             Write-Warning 'Assignment files should have an fxa extension'
         }
+        if ( -not ( Test-Path $AssignmentFilePath )){
+            Set-FslAssignment @PSBoundParameters
+        }
     } # Begin
     PROCESS {
-
 
         $convertToFslAssignmentCodeParams = @{}
 
@@ -167,10 +169,10 @@ function Add-FslAssignment {
                         $distinguishedName = $ADDistinguisedName
                     }
                 }
-                if ( $WellKnownSID ){
+                if ( $WellKnownSID ) {
                     $idString = $WellKnownSID
                 }
-                else{
+                else {
                     $idString = $GroupName
                 }
 
@@ -192,19 +194,61 @@ function Add-FslAssignment {
                 break
             }
             Network {
-
                 $convertToFslAssignmentCodeParams += @{ 'Network' = $true }
                 $idString = $IPAddress
-                
+                break             
             }
-            Computer {}
-            OU {}
-            EnvironmentVariable {}
+            Computer {
+                $convertToFslAssignmentCodeParams += @{ 'Computer' = $true }
+                $idString = $ComputerName
+                break
+            }
+            OU {
+                $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
+                $idString = $OU
+                break
+            }
+            EnvironmentVariable {
+                $convertToFslAssignmentCodeParams += @{ 'EnvironmentVariable' = $true }
+                $idString = $EnvironmentVariable
+                #No need to add assigned and unassigned time as they are already set by defaults if parameter set is env variable.
+                break
+            }
+        }
+
+        if ( -not $AssignedTime ){
+            $AssignedTime = 0
+        }
+
+        if ( -not $UnAssignedTime ){
+            $UnAssignedTime = 0
         }
 
         $assignmentCode = ConvertTo-FslAssignmentCode @convertToFslAssignmentCodeParams
 
-        Write-Output $assignmentCode
+        $message = "$assignmentCode`t$idString`t$DistinguishedName`t$FriendlyName`t$AssignedTime`t$UnAssignedTime"
+
+        $addContentParams = @{
+            'Path'     = $AssignmentFilePath
+            'Encoding' = 'Unicode'
+            'Value'    =  $message
+        }
+
+        Add-Content @addContentParams
+
+        Write-Verbose -Message "Written $message to $AssignmentFilePath"
+
+        if ($passThru) {
+            $passThruObject = [pscustomobject]@{
+                assignmentCode    = $assignmentCode
+                idString          = $idString
+                DistinguishedName = $DistinguishedName
+                FriendlyName      = $FriendlyName
+                AssignedTime      = $AssignedTime
+                UnAssignedTime    = $UnAssignedTime
+            }
+            Write-Output $passThruObject
+        }
     } #Process
     END {} #End
 }  #function Add-FslAssignment
