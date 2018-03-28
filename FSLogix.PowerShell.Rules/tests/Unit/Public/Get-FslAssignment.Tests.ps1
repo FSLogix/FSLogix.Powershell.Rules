@@ -53,6 +53,9 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
                 $result.EnvironmentVariable | Should Be $false
                 $result.LicenseDays | Should Be 0#>
             }
+            It 'Calls all Verifiable Mocks' {
+                Assert-VerifiableMocks
+            }
         } #Group
 
         Context 'User' {
@@ -77,6 +80,9 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
                 #$result.OU | Should Be $false
                 #$result.EnvironmentVariable | Should Be $false
                 #$result.LicenseDays | Should Be 0#>
+            }
+            It 'Calls all Verifiable Mocks' {
+                Assert-VerifiableMocks
             }
         } #User
 
@@ -104,6 +110,9 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
                 #$result.EnvironmentVariable | Should Be $false
                 #$result.LicenseDays | Should Be 0#>
             }
+            It 'Calls all Verifiable Mocks' {
+                Assert-VerifiableMocks
+            }
         } #Process
 
         Context 'Network' {
@@ -129,6 +138,9 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
                 #$result.OU | Should Be $false
                 #$result.EnvironmentVariable | Should Be $false
                 #$result.LicenseDays | Should Be 0#>
+            }
+            It 'Calls all Verifiable Mocks' {
+                Assert-VerifiableMocks
             }
         } #Network
     }
