@@ -20,13 +20,7 @@ function Get-FslAssignment {
             exit
         }
 
-        #Get first line from assignment
-        $firstLine = Get-Content -Path $Path -TotalCount 1
-
-        $metaData = $firstLine | ConvertFrom-String -Delimiter `t -PropertyNames Version, LicenseDays
-
-
-        #Grab txt file contaents apart from first line
+        #Grab txt file contents apart from first line
         $lines = Get-Content -Path $Path | Select-Object -Skip 1
 
         foreach ($line in $lines) {
@@ -59,8 +53,6 @@ function Get-FslAssignment {
                         EnvironmentVariable = if ( $poshFlags.EnvironmentVariable ) { $assignment.IdString } else { $null }
                         AssignedTime        = if (  $poshFlags.EnvironmentVariable ) { $assignment.AssignmentTime } else { $null }
                         UnAssignedTime      = if (  $poshFlags.EnvironmentVariable ) { $assignment.UnAssignedTime } else { $null }
-                        LicenseDays         = $metaData.LicenseDays
-
                     }
 
                     $output | ForEach-Object {
