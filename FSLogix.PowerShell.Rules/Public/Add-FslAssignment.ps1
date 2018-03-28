@@ -39,7 +39,7 @@ function Add-FslAssignment {
             Position = 4,
             ValuefromPipelineByPropertyName = $true
         )]
-        [System.String]$GroupSID,
+        [System.String]$WellKnownSID,
 
         [Parameter(
             ParameterSetName = 'User',
@@ -121,24 +121,18 @@ function Add-FslAssignment {
             Position = 14,
             ValuefromPipelineByPropertyName = $true
         )]
-        [DateTime]$LicenseDays = 0,
-
-        [Parameter(
-            ParameterSetName = 'EnvironmentVariable',
-            Position = 15,
-            ValuefromPipelineByPropertyName = $true
-        )]
         [Int]$UnAssignedTime = 0
     )
 
     BEGIN {
         Set-StrictMode -Version Latest
-    } # Begin
-    PROCESS {
         #check file has correct filename extension
         if ($AssignmentFilePath -notlike "*.fxa") {
             Write-Warning 'Assignment files should have an fxa extension'
         }
+    } # Begin
+    PROCESS {
+
 
         $convertToFslAssignmentCodeParams = @{}
 

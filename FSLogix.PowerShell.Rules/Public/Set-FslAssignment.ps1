@@ -13,15 +13,16 @@ function Set-FslAssignment {
 
     BEGIN {
         Set-StrictMode -Version Latest
+        #check file has correct filename extension
+        if ($AssignmentFilePath -notlike "*.fxa") {
+            Write-Warning 'Assignment files should have an fxa extension'
+        }
         $version = 1
         $minimumLicenseAssignedTime = 0
         Set-Content -Path $RuleFilePath -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop
     } # Begin
     PROCESS {
-        #check file has correct filename extension
-        if ($AssignmentFilePath -notlike "*.fxa") {
-            Write-Warning 'Assignment files should have an fxa extension'
-        }
+
 
 
     } #Process
