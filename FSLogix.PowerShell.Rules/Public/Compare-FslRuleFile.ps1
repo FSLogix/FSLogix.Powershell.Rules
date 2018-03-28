@@ -26,8 +26,7 @@ function Compare-FslRuleFile {
 
         foreach ($filepath in $Files) {
             if (-not (Test-Path $filepath)){
-                Write-Error "$filepath does not exist"
-                exit
+                Throw "$filepath does not exist"
             }
         }
 
@@ -36,7 +35,7 @@ function Compare-FslRuleFile {
 
             $referenceFile = $filepath
             $baseFileName = $filepath | Get-ChildItem | Select-Object -ExpandProperty BaseName
-            $rules = Get-FslRule $filepath
+            $rules = Get-FslRule -Path $filepath
             #Get hiding rules (only concerned with hiding rules that are registry keys)
             $refRule = $rules | Where-Object { $_.Flags -band $FRX_RULE_TYPE_HIDING -and $_.Flags -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY -and $_.FullName -like "HKLM*"} | Select-Object -ExpandProperty FullName
 
