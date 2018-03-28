@@ -148,18 +148,34 @@ function Add-FslAssignment {
                 switch ($true) {
                     $UserName {$convertToFslAssignmentCodeParams += @{ 'User' = $true }
                     }
-                    $ADDistinguisedName {$convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
+                    $ADDistinguisedName {
+                        $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
+                        $distinguishedName = $ADDistinguisedName
                     }
                 }
+
+                $idString = $UserName
+                $friendlyName = $UserName
                 break
             }
             Group {
                 switch ($true) {
                     $GroupName {$convertToFslAssignmentCodeParams += @{ 'Group' = $true }
                     }
-                    $ADDistinguisedName {$convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
+                    $ADDistinguisedName {
+                        $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
+                        $distinguishedName = $ADDistinguisedName
                     }
                 }
+                if ( $WellKnownSID ){
+                    $idString = $WellKnownSID
+                }
+                else{
+                    $idString = $GroupName
+                }
+
+                $friendlyName = $GroupName
+
                 break
             }
             Executable {
@@ -171,9 +187,16 @@ function Add-FslAssignment {
                     $ProcessId {$convertToFslAssignmentCodeParams += @{ 'ProcessId' = $true }
                     }
                 }
+
+                $idString = $ProcessName
                 break
             }
-            Network {}
+            Network {
+
+                $convertToFslAssignmentCodeParams += @{ 'Network' = $true }
+                $idString = $IPAddress
+                
+            }
             Computer {}
             OU {}
             EnvironmentVariable {}
