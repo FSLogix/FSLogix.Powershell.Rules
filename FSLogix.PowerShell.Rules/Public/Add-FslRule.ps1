@@ -87,14 +87,19 @@ function Add-FslRule {
     BEGIN {
         Set-StrictMode -Version Latest
 
+        if ($RuleFilePath -notlike "*.fxr") {
+            Write-Warning 'Rule files should have an fxr extension'
+        }
+        if ( -not ( Test-Path $RuleFilePath )){
+            Set-FslRule @PSBoundParameters
+        }
+
         $FRX_RULE_SRC_IS_A_FILE_OR_VALUE = 0x00000002
         $FRX_RULE_TYPE_REDIRECT = 0x00000100
     } # Begin
     PROCESS {
         #check file has correct filename extension
-        if ($RuleFilePath -notlike "*.fxr") {
-            Write-Warning 'Rule files should have an fxr extension'
-        }
+
 
         $convertToFslRuleCodeParams = @{
             'Persistent' = $true
