@@ -13,8 +13,7 @@ function Add-FslAssignment {
 
         [Parameter(
             Position = 1,
-            ValuefromPipelineByPropertyName = $true,
-            ValuefromPipeline = $true
+            ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$RuleSetApplies,
 
@@ -114,14 +113,14 @@ function Add-FslAssignment {
             Position = 13,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Int]$AssignedTime = (Get-Date).ToFileTime(),
+        [Int64]$AssignedTime = 0,
 
         [Parameter(
             ParameterSetName = 'EnvironmentVariable',
             Position = 14,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Int]$UnAssignedTime = 0
+        [Int64]$UnAssignedTime = 0
     )
 
     BEGIN {
@@ -136,6 +135,12 @@ function Add-FslAssignment {
     } # Begin
     PROCESS {
 
+        $assignmentCode = $null
+        $idString = $null
+        $DistinguishedName = $null
+        $FriendlyName = $null
+
+
         $convertToFslAssignmentCodeParams = @{}
 
         if ($RuleSetApplies) {
@@ -147,28 +152,27 @@ function Add-FslAssignment {
 
         switch ($PSCmdlet.ParameterSetName) {
             User {
-                switch ($true) {
-                    $UserName {$convertToFslAssignmentCodeParams += @{ 'User' = $true }
-                    }
-                    $ADDistinguisedName {
-                        $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
-                        $distinguishedName = $ADDistinguisedName
-                    }
+     
+                $convertToFslAssignmentCodeParams += @{ 'User' = $true }
+                
+                if ($ADDistinguisedName) {
+                    $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
+                    $distinguishedName = $ADDistinguisedName
                 }
-
+                
                 $idString = $UserName
                 $friendlyName = $UserName
                 break
             }
             Group {
-                switch ($true) {
-                    $GroupName {$convertToFslAssignmentCodeParams += @{ 'Group' = $true }
-                    }
-                    $ADDistinguisedName {
-                        $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
-                        $distinguishedName = $ADDistinguisedName
-                    }
+                
+                $convertToFslAssignmentCodeParams += @{ 'Group' = $true }
+                
+                if ( $ADDistinguisedName ){
+                    $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
+                    $distinguishedName = $ADDistinguisedName
                 }
+                
                 if ( $WellKnownSID ) {
                     $idString = $WellKnownSID
                 }
@@ -181,14 +185,16 @@ function Add-FslAssignment {
                 break
             }
             Executable {
-                switch ($true) {
-                    $ProcessName {$convertToFslAssignmentCodeParams += @{ 'Process' = $true }
-                    }
-                    $IncludeChildProcess {$convertToFslAssignmentCodeParams += @{ 'ApplyToProcessChildren' = $true }
-                    }
-                    $ProcessId {$convertToFslAssignmentCodeParams += @{ 'ProcessId' = $true }
-                    }
+   
+                $convertToFslAssignmentCodeParams += @{ 'Process' = $true }
+                
+                if ($IncludeChildProcess) {
+                    $convertToFslAssignmentCodeParams += @{ 'ApplyToProcessChildren' = $true }
                 }
+                if ($ProcessId) {
+                    $convertToFslAssignmentCodeParams += @{ 'ProcessId' = $true }
+                }
+                
 
                 $idString = $ProcessName
                 break
@@ -211,7 +217,9 @@ function Add-FslAssignment {
             EnvironmentVariable {
                 $convertToFslAssignmentCodeParams += @{ 'EnvironmentVariable' = $true }
                 $idString = $EnvironmentVariable
-                #No need to add assigned and unassigned time as they are already set by defaults if parameter set is env variable.
+                if ( $AssignedTime -eq 0 -and $convertToFslAssignmentCodeParams.Remove -eq $true ){
+                    $AssignedTime = (Get-Date).ToFileTime()
+                }
                 break
             }
         }
@@ -222,6 +230,14 @@ function Add-FslAssignment {
 
         if ( -not $UnAssignedTime ){
             $UnAssignedTime = 0
+        }
+
+        if ( -not (Test-Path variable:script:DistinguishedName) ){
+            $DistinguishedName = ''
+        }
+
+        if ( -not (Test-Path variable:script:Passthru) ){
+            $Passthru = $false
         }
 
         $assignmentCode = ConvertTo-FslAssignmentCode @convertToFslAssignmentCodeParams

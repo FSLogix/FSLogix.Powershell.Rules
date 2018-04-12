@@ -30,7 +30,7 @@ function Get-FslAssignment {
                     #Create a powershell object from the columns
                     $lineObj = $line | ConvertFrom-String -Delimiter `t -PropertyNames FlagsDec, IdString, DistinguishedName, FriendlyName, AssignedTime, UnAssignedTime
                     #ConvertFrom-String converts the hex value in flag to decimal, need to convert back to a hex string. Add in the comment and output it.
-                    $assignment = $lineObj | Select-Object -Property  IdString, DistinguishedName, FriendlyName, AssignmentTime, UnAssignedTime, @{n = 'Flags'; e = {'0x' + "{0:X8}" -f $lineObj.FlagsDec}}
+                    $assignment = $lineObj | Select-Object -Property  IdString, DistinguishedName, FriendlyName, AssignedTime, UnAssignedTime, @{n = 'Flags'; e = {'0x' + "{0:X8}" -f $lineObj.FlagsDec}}
 
                     $poshFlags = $assignment.Flags | ConvertFrom-FslAssignmentCode
 
@@ -51,8 +51,8 @@ function Get-FslAssignment {
                         ComputerName        = if ( $poshFlags.Computer ) { $assignment.IdString } else { $null }
                         OU                  = if ( $poshFlags.ADDistinguishedName ) { $assignment.IdString } else { $null }
                         EnvironmentVariable = if ( $poshFlags.EnvironmentVariable ) { $assignment.IdString } else { $null }
-                        AssignedTime        = if (  $poshFlags.EnvironmentVariable ) { $assignment.AssignmentTime } else { $null }
-                        UnAssignedTime      = if (  $poshFlags.EnvironmentVariable ) { $assignment.UnAssignedTime } else { $null }
+                        AssignedTime        = if ( $poshFlags.EnvironmentVariable ) { $assignment.AssignedTime } else { $null }
+                        UnAssignedTime      = if ( $poshFlags.EnvironmentVariable ) { $assignment.UnAssignedTime } else { $null }
                     }
 
                     $output | ForEach-Object {

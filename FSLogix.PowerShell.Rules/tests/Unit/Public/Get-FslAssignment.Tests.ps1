@@ -19,7 +19,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             }
 
             Mock Get-Content -MockWith { $assignment } -ParameterFilter { -not $TotalCount } -Verifiable
-            Mock Get-Content -MockWith { "1`t0" } -Verifiable -ParameterFilter { $TotalCount }
+           
     
             It 'Does not throw' {
                 { Get-FslAssignment -Path TestDrive:\Notexist.fxa } | Should Not Throw
@@ -37,7 +37,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             }
 
             Mock Get-Content -MockWith { $assignment } -ParameterFilter { -not $TotalCount } -Verifiable
-            Mock Get-Content -MockWith { "1`t0" } -Verifiable -ParameterFilter { $TotalCount }
+           
             It 'Returns Correct Flags for Group' {
                 $result = Get-FslAssignment -Path TestDrive:\Notexist.fxa
                 $result.RuleSetApplies | Should Be $true
@@ -65,7 +65,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             }
 
             Mock Get-Content -MockWith { $assignment } -ParameterFilter { -not $TotalCount } -Verifiable
-            Mock Get-Content -MockWith { "1`t0" } -Verifiable -ParameterFilter { $TotalCount }
+           
             It 'Returns Correct Flags for User' {
                 $result = Get-FslAssignment -Path TestDrive:\Notexist.fxa
                 $result.RuleSetApplies | Should Be $true
@@ -93,7 +93,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             }
 
             Mock Get-Content -MockWith { $assignment } -ParameterFilter { -not $TotalCount } -Verifiable
-            Mock Get-Content -MockWith { "1`t0" } -Verifiable -ParameterFilter { $TotalCount }
+           
 
             It 'Returns Correct Flags for Process' {
                 $result = Get-FslAssignment -Path TestDrive:\Notexist.fxa
@@ -122,7 +122,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             }
 
             Mock Get-Content -MockWith { $assignment } -ParameterFilter { -not $TotalCount } -Verifiable
-            Mock Get-Content -MockWith { "1`t0" } -Verifiable -ParameterFilter { $TotalCount }
+           
 
             It 'Returns Correct Flags for Network' {
                 $result = Get-FslAssignment -Path TestDrive:\Notexist.fxa

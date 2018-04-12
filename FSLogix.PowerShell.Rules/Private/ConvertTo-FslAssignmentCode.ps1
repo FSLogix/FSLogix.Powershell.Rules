@@ -108,7 +108,7 @@ function ConvertTo-FslAssignmentCode {
         #convert code to hex string so it doesn't get outputted as an integer
         $formattedCode = "0x{0:X8}" -f $codeToOutput
 
-        Write-Output $formattedCode
+        Write-Output $formattedCode.ToLower()
 
     } #Process
     END {} #End
