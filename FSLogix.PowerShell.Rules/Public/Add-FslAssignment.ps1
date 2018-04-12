@@ -134,6 +134,7 @@ function Add-FslAssignment {
             $minimumLicenseAssignedTime = 0
             Set-Content -Path $AssignmentFilePath -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop
         }
+
     } # Begin
     PROCESS {
 
@@ -167,6 +168,8 @@ function Add-FslAssignment {
                 break
             }
             Group {
+
+                
                 
                 $convertToFslAssignmentCodeParams += @{ 'Group' = $true }
                 
@@ -174,9 +177,15 @@ function Add-FslAssignment {
                     $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
                     $distinguishedName = $ADDistinguisedName
                 }
-                
-                if ( $WellKnownSID ) {
-                    $idString = $WellKnownSID
+
+                #Determine if the grouop has a Well Known SID
+                $wks = [Enum]::GetValues([System.Security.Principal.WellKnownSidType])
+                $account = New-Object System.Security.Principal.NTAccount($GroupName)
+                $sid = $account.Translate([System.Security.Principal.SecurityIdentifier])
+                $result = foreach ($s in $wks){ $sid.IsWellKnown($s)}
+
+                if ( $result -contains $true ) {
+                    $idString = $sid.Value
                 }
                 else {
                     $idString = $GroupName
