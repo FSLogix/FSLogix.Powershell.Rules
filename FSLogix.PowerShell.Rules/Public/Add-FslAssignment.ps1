@@ -130,7 +130,9 @@ function Add-FslAssignment {
             Write-Warning 'Assignment files should have an fxa extension'
         }
         if ( -not ( Test-Path $AssignmentFilePath )){
-            Set-FslAssignment @PSBoundParameters
+            $version = 1
+            $minimumLicenseAssignedTime = 0
+            Set-Content -Path $AssignmentFilePath -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop
         }
     } # Begin
     PROCESS {
