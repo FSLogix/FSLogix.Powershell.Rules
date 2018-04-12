@@ -178,7 +178,7 @@ function Add-FslAssignment {
                     $distinguishedName = $ADDistinguisedName
                 }
 
-                #Determine if the grouop has a Well Known SID
+                #Determine if the group has a Well Known SID
                 $wks = [Enum]::GetValues([System.Security.Principal.WellKnownSidType])
                 $account = New-Object System.Security.Principal.NTAccount($GroupName)
                 $sid = $account.Translate([System.Security.Principal.SecurityIdentifier])
