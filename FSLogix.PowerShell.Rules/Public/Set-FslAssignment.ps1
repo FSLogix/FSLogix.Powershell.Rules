@@ -132,6 +132,5 @@ function Set-FslAssignment {
 
     } #Process
     END {
-        $setContent = $false
     } #End
 }  #function Set-FslAssignment
