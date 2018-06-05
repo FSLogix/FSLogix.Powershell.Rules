@@ -20,16 +20,14 @@ function Set-FslRule {
         [System.String]$RuleFilePath,
 
         [Parameter(
-            ParameterSetName = 'Hiding',
             Mandatory = $true,
             Position = 3,
             ValuefromPipelineByPropertyName = $true
         )]
         [ValidateSet('FolderOrKey', 'FileOrValue', 'Font', 'Printer')]
-        [string]$HidingType,
+        [System.String]$HidingType,
 
         [Parameter(
-            ParameterSetName = 'Redirect',
             Mandatory = $true,
             Position = 6,
             ValuefromPipelineByPropertyName = $true
@@ -37,16 +35,14 @@ function Set-FslRule {
         [System.String]$RedirectDestPath,
 
         [Parameter(
-            ParameterSetName = 'Redirect',
             Mandatory = $true,
             Position = 7,
             ValuefromPipelineByPropertyName = $true
         )]
         [ValidateSet('FolderOrKey', 'FileOrValue')]
-        [string]$RedirectType,
+        [System.String]$RedirectType,
 
         [Parameter(
-            ParameterSetName = 'Redirect',
             Position = 8,
             ValuefromPipelineByPropertyName = $true
         )]
@@ -54,21 +50,19 @@ function Set-FslRule {
 
 
         [Parameter(
-            ParameterSetName = 'AppContainer',
             Mandatory = $true,
             Position = 9,
             ValuefromPipelineByPropertyName = $true
         )]
-        [string]$DiskFile,
+        [System.String]$DiskFile,
 
         [Parameter(
-            ParameterSetName = 'SpecifyValue',
             Mandatory = $true,
             Position = 10,
             ValuefromPipelineByPropertyName = $true
         )]
         [Alias('Binary')]
-        [string]$Data,
+        [System.String]$Data,
 
         [Parameter(
             Position = 11,
@@ -87,17 +81,34 @@ function Set-FslRule {
     BEGIN {
         Set-StrictMode -Version Latest
         $version = 1
+        $setContent = $true
         Set-Content -Path $RuleFilePath -Value $version -Encoding Unicode -ErrorAction Stop
     } # Begin
     PROCESS {
+
+        #Grab current parameters be VERY careful about moving this away from the top of the scriptas it's grabbing the PSItem which can change a lot
+        $Items = $PSItem
 
         #check file has correct filename extension
         if ($RuleFilePath -notlike "*.fxr") {
             Write-Warning 'The Rule file should have an fxr extension'
         }
 
-        Add-FslRule @PSBoundParameters
-
+        #Change Items object to hashtable for use in splatting
+        $addFslRuleParams = @{}
+        $Items | Get-Member -MemberType *Property | ForEach-Object { 
+            $addFslRuleParams.($_.name) = $Items.($_.name)
+        } 
+        
+        #Add first line if pipeline input
+        If ($setContent) {
+            Set-Content -Path $RuleFilePath -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop
+            Add-FslRule @addFslRuleParams -RuleFilePath $RuleFilePath
+            $setContent = $false
+        }
+        else {
+            Add-FslRule @addFslRuleParams -RuleFilePath $RuleFilePath
+        }
     } #Process
     END {} #End
 }  #function Set-FslRule
