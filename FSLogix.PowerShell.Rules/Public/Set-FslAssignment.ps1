@@ -125,17 +125,18 @@ function Set-FslAssignment {
     BEGIN {
         Set-StrictMode -Version Latest
 
-
         $version = 1
         $minimumLicenseAssignedTime = 0
         $setContent = $true
+
     } # Begin
     PROCESS {
         #check file has correct filename extension
         if ($AssignmentFilePath -notlike "*.fxa") {
             Write-Warning 'Assignment files should have an fxa extension'
         }
-
+        
+        #Add first line if pipeline input
         If ($setContent) {
             Set-Content -Path $AssignmentFilePath -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop
             Add-FslAssignment @PSBoundParameters
