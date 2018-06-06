@@ -1,5 +1,4 @@
 function Set-FslAssignment {
-    [CmdletBinding()]
 
 	<#
         .SYNOPSIS
@@ -10,23 +9,7 @@ function Set-FslAssignment {
             This will overwrite the contents of an existing file.
 
         .PARAMETER AssignmentFilePath
-            The description of a parameter. Add a .PARAMETER keyword for
-            each parameter in the function or script syntax.
-            Type the parameter name on the same line as the .PARAMETER keyword.
-            Type the parameter description on the lines following the .PARAMETER
-            keyword. Windows PowerShell interprets all text between the .PARAMETER
-            line and the next keyword or the end of the comment block as part of
-            the parameter description. The description can include paragraph breaks.
-            The Parameter keywords can appear in any order in the comment block, but
-            the function or script syntax determines the order in which the parameters
-            (and their descriptions) appear in help topic. To change the order,
-            change the syntax.
-            You can also specify a parameter description by placing a comment in the
-            function or script syntax immediately before the parameter variable name.
-            If you use both a syntax comment and a Parameter keyword, the description
-            associated with the Parameter keyword is used, and the syntax comment is
-            ignored.
-
+            The Target file path to set the assignment within
         .PARAMETER RuleSetApplies
             This determines whether a ruleset does or does not apply to users/groups/processes etc.  For instance when using a Hiding rule, applying that hiding rule to users will hide the file from the users assigned to it when applied.
         .PARAMETER UserName
@@ -34,32 +17,34 @@ function Set-FslAssignment {
         .PARAMETER GroupName
             Use this to tie the assignment of the rule to a specific group
         .PARAMETER WellKnownSID
-            The Well Known SID for groups such as Domain Admins are useful for cross-language 
+            The Well Known SID for groups such as Domain Admins are useful for cross-language assignments, if you use a group with a well known SID this will be automatically filled out, so mostly useful for pipeline input.
         .PARAMETER ADDistinguisedName
-
+            Full Distinguished name of AD component
         .PARAMETER ProcessName
-
+            Process name for the rule assignment, mostly used for redirect rules
         .PARAMETER IncludeChildProcess
-
+            If Process name is stated you can optionally include chile prcesses (recommended)
         .PARAMETER ProcessId
-
+            If you know process ID, but not name, used for troubleshooting mainly
         .PARAMETER IPAddress
-
+            Enter the IPv4 or IPv6 address. Partial strings are allowed. For example, if you enter 192.168, an address of 192.168.0.1 will be considered to match.
         .PARAMETER ComputerName
-
+            Enter the Full Distinguished Name of the computer object, or the computer name (wildcards accepted). Must be in the format ComputerName@Domain
         .PARAMETER OU
-
+            You can specify an Active Directory Container and the assignment will be effective for all of the objects in that container. Enter the Full Distinguished Name of the container.
         .PARAMETER EnvironmentVariable
-
+            By Specifying an environment variable, you can customize rules in various other ways. A very useful example for this option is when using it with RDSH, XenApp, or other remote sessions. You can use the Environment Variable CLIENTNAME to limit visibility to the device being used to access the RDSH or XenApp system. 
+            The environment variables that are supported are the ones that are present when the user's session is created. Environment variables set during logon are not supported.
         .PARAMETER AssignedTime
-
+            Only used for pipeline input
         .PARAMETER UnAssignedTime
-
+            Only used for pipeline input
         .EXAMPLE
             A sample command that uses the function or script, optionaly followed
             by sample output and a description. Repeat this keyword for each example.
     #>
-
+    
+    [CmdletBinding()]
     Param (
         [Parameter(
             Position = 0,
@@ -120,7 +105,7 @@ function Set-FslAssignment {
             Position = 10,
             ValuefromPipelineByPropertyName = $true
         )]
-        [System.Net.IPAddress]$IPAddress,
+        [System.String]$IPAddress,
 
         [Parameter(
             Position = 11,
