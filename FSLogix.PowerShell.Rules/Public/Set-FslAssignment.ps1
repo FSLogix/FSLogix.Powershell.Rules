@@ -3,7 +3,7 @@ function Set-FslAssignment {
 
 	<#
     .SYNOPSIS
-        Function to set the content of a FSLogix Rule assignment file.
+        Function to set the content of a FSLogix Rule assignment file.  This will overwrite the contents of an existing file
 
     .DESCRIPTION
         A detailed description of the function or script. This keyword can be used only once in each topic.
@@ -27,6 +27,32 @@ function Set-FslAssignment {
         ignored.
 
     .PARAMETER RuleSetApplies
+
+    .PARAMETER UserName
+
+    .PARAMETER GroupName
+
+    .PARAMETER WellKnownSID
+
+    .PARAMETER ADDistinguisedName
+
+    .PARAMETER ProcessName
+
+    .PARAMETER IncludeChildProcess
+
+    .PARAMETER ProcessId
+
+    .PARAMETER IPAddress
+
+    .PARAMETER ComputerName
+
+    .PARAMETER OU
+
+    .PARAMETER EnvironmentVariable
+
+    .PARAMETER AssignedTime
+
+    .PARAMETER UnAssignedTime
 
     .EXAMPLE
         A sample command that uses the function or script, optionaly followed
