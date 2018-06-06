@@ -17,7 +17,7 @@ function Add-FslAssignment {
         .PARAMETER GroupName
             Use this to tie the assignment of the rule to a specific group
         .PARAMETER WellKnownSID
-            The Well Known SID for groups such as Domain Admins are useful for cross-language assignments, if you use a group with a well known SID this will be automatically filled out, so mostly useful for pipeline input.
+            The Well Known SID for groups such as Domain Admins are useful for cross-language assignments, if you use a group with a well known SID in the groupname parameter this will be automatically filled out, so mostly useful for pipeline input.
         .PARAMETER ADDistinguisedName
             Full Distinguished name of AD component
         .PARAMETER ProcessName

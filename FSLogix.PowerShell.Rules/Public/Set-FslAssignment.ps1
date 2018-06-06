@@ -17,7 +17,7 @@ function Set-FslAssignment {
         .PARAMETER GroupName
             Use this to tie the assignment of the rule to a specific group
         .PARAMETER WellKnownSID
-            The Well Known SID for groups such as Domain Admins are useful for cross-language assignments, if you use a group with a well known SID this will be automatically filled out, so mostly useful for pipeline input.
+            The Well Known SID for groups such as Domain Admins are useful for cross-language assignments, if you use a group with a well known SID in the group name parameter this will be automatically filled out, so mostly useful for pipeline input.
         .PARAMETER ADDistinguisedName
             Full Distinguished name of AD component
         .PARAMETER ProcessName
@@ -43,7 +43,7 @@ function Set-FslAssignment {
             A sample command that uses the function or script, optionaly followed
             by sample output and a description. Repeat this keyword for each example.
     #>
-    
+
     [CmdletBinding()]
     Param (
         [Parameter(
