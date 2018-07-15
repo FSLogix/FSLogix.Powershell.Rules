@@ -25,12 +25,12 @@ function Get-FslRule {
         foreach ($line in $lines) {
             switch ($true) {
                 #Grab comment if this line is one.
-                $line.StartsWith('##') { 
+                $line.StartsWith('##') {
                     $comment = $line.TrimStart('#')
-                    break 
+                    break
                 }
-                #If line matches tab separated data with 5 columns. 
-                { $line -match "([^\t]*\t){5}" } { 
+                #If line matches tab separated data with 5 columns.
+                { $line -match "([^\t]*\t){5}" } {
                     #Create a powershell object from the columns
                     $lineObj = $line | ConvertFrom-String -Delimiter `t -PropertyNames SrcParent, Src, DestParent, Dest, FlagsDec, Binary
                     #ConvertFrom-String converts the hex value in flag to decimal, need to convert back to a hex string. Add in the comment and output it.
@@ -42,32 +42,32 @@ function Get-FslRule {
                     }
 
                     $output = [PSCustomObject]@{
-                        FullName = Join-Path $rulePlusComment.SrcParent $rulePlusComment.Src
-                        HidingType = if ($poshFlags.Hiding){
-                            switch( $true ){
-                                $poshFlags.Font {'Font';break}
-                                $poshFlags.Printer {'Printer';break}
-                                $poshFlags.FolderOrKey {'FolderOrKey';break}
-                                $poshFlags.FileOrValue {'FileOrValue';break}
-                            }
-                        }
-                        else{ $null }
-                        RedirectDestPath = if ($poshFlags.Redirect){ $destPath } else {$null}
-                        RedirectType = if ($poshFlags.Redirect){
-                            switch( $true ){
-                                $poshFlags.FolderOrKey {'FolderOrKey';break}
-                                $poshFlags.FileOrValue {'FileOrValue';break}
+                        FullName         = Join-Path $rulePlusComment.SrcParent $rulePlusComment.Src
+                        HidingType       = if ($poshFlags.Hiding -or $poshFlags.Font -or $poshFlags.Printer) {
+                            switch ( $true ) {
+                                $poshFlags.Font {'Font'; break}
+                                $poshFlags.Printer {'Printer'; break}
+                                $poshFlags.FolderOrKey {'FolderOrKey'; break}
+                                $poshFlags.FileOrValue {'FileOrValue'; break}
                             }
                         }
                         else { $null }
-                        CopyObject = if ($poshFlags.CopyObject){ $poshFlags.CopyObject } else {$null}
-                        DiskFile = if ($poshFlags.VolumeAutoMount){ $destPath } else {$null}
-                        Binary = $rulePlusComment.Binary
-                        Comment = $rulePlusComment.Comment
-                        Flags = $rulePlusComment.Flags
-                    }    
+                        RedirectDestPath = if ($poshFlags.Redirect) { $destPath } else {$null}
+                        RedirectType     = if ($poshFlags.Redirect) {
+                            switch ( $true ) {
+                                $poshFlags.FolderOrKey {'FolderOrKey'; break}
+                                $poshFlags.FileOrValue {'FileOrValue'; break}
+                            }
+                        }
+                        else { $null }
+                        CopyObject       = if ($poshFlags.CopyObject) { $poshFlags.CopyObject } else {$null}
+                        DiskFile         = if ($poshFlags.VolumeAutoMount) { $destPath } else {$null}
+                        Binary           = $rulePlusComment.Binary
+                        Comment          = $rulePlusComment.Comment
+                        #Flags            = $rulePlusComment.Flags
+                    }
 
-                    $output | ForEach-Object { 
+                    $output | ForEach-Object {
                         $Properties = $_.PSObject.Properties
                         @( $Properties | Where-Object { -not $_.Value } ) | ForEach-Object { $Properties.Remove($_.Name) }
                         Write-Output $_
@@ -75,8 +75,8 @@ function Get-FslRule {
 
                     break
                 }
-                Default { 
-                    Write-Error "Rule file element: $line Does not match a comment or a rule format" 
+                Default {
+                    Write-Error "Rule file element: $line Does not match a comment or a rule format"
                 }
             }
         }

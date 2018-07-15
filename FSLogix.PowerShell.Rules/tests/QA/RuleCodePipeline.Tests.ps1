@@ -1,5 +1,9 @@
-. ..\..\Private\ConvertFrom-FslRuleCode.ps1
-. ..\..\Private\ConvertTo-FslRuleCode.ps1
+$here = Split-Path -Parent $MyInvocation.MyCommand.Path
+$funcType = Split-Path $here -Leaf
+$sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
+$here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
+. "$here\FSLogix.PowerShell.Rules\Private\ConvertFrom-FslRuleCode.ps1"
+. "$here\FSLogix.PowerShell.Rules\Private\ConvertTo-FslRuleCode.ps1"
 
 Describe 'Pipeline conversion back and forth' {
 
@@ -13,5 +17,4 @@ Describe 'Pipeline conversion back and forth' {
             $code | ConvertFrom-FslRuleCode | ConvertTo-FslRuleCode | Should Be $code
         }
     }
-    
 }

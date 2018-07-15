@@ -1,14 +1,14 @@
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 #$funcType = Split-Path $here -Leaf
 $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
-$here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent 
+$here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
 #. "$here\$funcType\$sut"
 
 Import-Module -Name (Join-Path $here 'FSLogix.PowerShell.Rules.psd1') -Force
 
 InModuleScope 'FSLogix.PowerShell.Rules' {
 
-    Describe $sut.Trimend('.ps1') { 
+    Describe $sut.Trimend('.ps1') {
 
         Mock Test-Path -MockWith { $true } -Verifiable
 
@@ -19,8 +19,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             }
 
             Mock Get-Content -MockWith { $assignment } -ParameterFilter { -not $TotalCount } -Verifiable
-           
-    
+
             It 'Does not throw' {
                 { Get-FslAssignment -Path TestDrive:\Notexist.fxa } | Should Not Throw
             }
@@ -37,7 +36,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             }
 
             Mock Get-Content -MockWith { $assignment } -ParameterFilter { -not $TotalCount } -Verifiable
-           
+
             It 'Returns Correct Flags for Group' {
                 $result = Get-FslAssignment -Path TestDrive:\Notexist.fxa
                 $result.RuleSetApplies | Should Be $true
@@ -65,7 +64,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             }
 
             Mock Get-Content -MockWith { $assignment } -ParameterFilter { -not $TotalCount } -Verifiable
-           
+
             It 'Returns Correct Flags for User' {
                 $result = Get-FslAssignment -Path TestDrive:\Notexist.fxa
                 $result.RuleSetApplies | Should Be $true
@@ -93,7 +92,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             }
 
             Mock Get-Content -MockWith { $assignment } -ParameterFilter { -not $TotalCount } -Verifiable
-           
+
 
             It 'Returns Correct Flags for Process' {
                 $result = Get-FslAssignment -Path TestDrive:\Notexist.fxa
@@ -122,7 +121,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             }
 
             Mock Get-Content -MockWith { $assignment } -ParameterFilter { -not $TotalCount } -Verifiable
-           
+
 
             It 'Returns Correct Flags for Network' {
                 $result = Get-FslAssignment -Path TestDrive:\Notexist.fxa
