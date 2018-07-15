@@ -33,7 +33,7 @@ function Add-FslAssignment {
         .PARAMETER OU
             You can specify an Active Directory Container and the assignment will be effective for all of the objects in that container. Enter the Full Distinguished Name of the container.
         .PARAMETER EnvironmentVariable
-            By Specifying an environment variable, you can customize rules in various other ways. A very useful example for this option is when using it with RDSH, XenApp, or other remote sessions. You can use the Environment Variable CLIENTNAME to limit visibility to the device being used to access the RDSH or XenApp system. 
+            By Specifying an environment variable, you can customize rules in various other ways. A very useful example for this option is when using it with RDSH, XenApp, or other remote sessions. You can use the Environment Variable CLIENTNAME to limit visibility to the device being used to access the RDSH or XenApp system.
             The environment variables that are supported are the ones that are present when the user's session is created. Environment variables set during logon are not supported.
         .PARAMETER AssignedTime
             Only used for pipeline input
@@ -199,24 +199,24 @@ function Add-FslAssignment {
 
         switch ($PSCmdlet.ParameterSetName) {
             User {
-     
+
                 $convertToFslAssignmentCodeParams += @{ 'User' = $true }
-                
+
                 if ($ADDistinguisedName) {
                     $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
                     $distinguishedName = $ADDistinguisedName
                 }
-                
+
                 $idString = $UserName
                 $friendlyName = $UserName
                 break
             }
             Group {
 
-                
-                
+
+
                 $convertToFslAssignmentCodeParams += @{ 'Group' = $true }
-                
+
                 if ( $ADDistinguisedName ){
                     $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
                     $distinguishedName = $ADDistinguisedName
@@ -240,16 +240,16 @@ function Add-FslAssignment {
                 break
             }
             Executable {
-   
+
                 $convertToFslAssignmentCodeParams += @{ 'Process' = $true }
-                
+
                 if ($IncludeChildProcess) {
                     $convertToFslAssignmentCodeParams += @{ 'ApplyToProcessChildren' = $true }
                 }
                 if ($ProcessId) {
                     $convertToFslAssignmentCodeParams += @{ 'ProcessId' = $true }
                 }
-                
+
 
                 $idString = $ProcessName
                 break
@@ -257,7 +257,7 @@ function Add-FslAssignment {
             Network {
                 $convertToFslAssignmentCodeParams += @{ 'Network' = $true }
                 $idString = $IPAddress
-                break             
+                break
             }
             Computer {
                 $convertToFslAssignmentCodeParams += @{ 'Computer' = $true }

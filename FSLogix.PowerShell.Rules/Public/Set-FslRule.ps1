@@ -6,21 +6,18 @@ function Set-FslRule {
         [Parameter(
             Position = 1,
             ValuefromPipeline = $true,
-            ValuefromPipelineByPropertyName = $true,
-            Mandatory = $true
+            ValuefromPipelineByPropertyName = $true
         )]
         [Alias('Name')]
         [System.String]$FullName,
 
         [Parameter(
             Position = 2,
-            Mandatory = $true,
             ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$RuleFilePath,
 
         [Parameter(
-            Mandatory = $true,
             Position = 3,
             ValuefromPipelineByPropertyName = $true
         )]
@@ -28,14 +25,12 @@ function Set-FslRule {
         [System.String]$HidingType,
 
         [Parameter(
-            Mandatory = $true,
             Position = 6,
             ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$RedirectDestPath,
 
         [Parameter(
-            Mandatory = $true,
             Position = 7,
             ValuefromPipelineByPropertyName = $true
         )]
@@ -50,14 +45,12 @@ function Set-FslRule {
 
 
         [Parameter(
-            Mandatory = $true,
             Position = 9,
             ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$DiskFile,
 
         [Parameter(
-            Mandatory = $true,
             Position = 10,
             ValuefromPipelineByPropertyName = $true
         )]
@@ -96,13 +89,13 @@ function Set-FslRule {
 
         #Change Items object to hashtable for use in splatting
         $addFslRuleParams = @{}
-        $Items | Get-Member -MemberType *Property | ForEach-Object { 
+        $Items | Get-Member -MemberType *Property | ForEach-Object {
             $addFslRuleParams.($_.name) = $Items.($_.name)
-        } 
-        
+        }
+
         #Add first line if pipeline input
         If ($setContent) {
-            Set-Content -Path $RuleFilePath -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop
+            Set-Content -Path $RuleFilePath -Value $version -Encoding Unicode -ErrorAction Stop
             Add-FslRule @addFslRuleParams -RuleFilePath $RuleFilePath
             $setContent = $false
         }

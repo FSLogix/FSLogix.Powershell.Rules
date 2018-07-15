@@ -42,7 +42,7 @@ function Get-FslRule {
                     }
 
                     $output = [PSCustomObject]@{
-                        FullName         = Join-Path $rulePlusComment.SrcParent $rulePlusComment.Src
+                        FullName         = (Join-Path $rulePlusComment.SrcParent $rulePlusComment.Src).trimend('\')
                         HidingType       = if ($poshFlags.Hiding -or $poshFlags.Font -or $poshFlags.Printer) {
                             switch ( $true ) {
                                 $poshFlags.Font {'Font'; break}
