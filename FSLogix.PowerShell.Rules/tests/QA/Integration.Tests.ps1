@@ -16,18 +16,21 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
         }
 
         It 'Produces 6 files' {
-            Compare-FslRuleFile -Files (Get-ChildItem (Join-Path $here tests\QA\TestFiles\Office2016Pro)).FullName -OutputPath $outputPath
-                (Get-ChildItem $outputPath).count | Should Be 6
+            New-Item -Path $outputPath -Name "Office2016" -ItemType "directory"
+            Compare-FslRuleFile -Files (Get-ChildItem (Join-Path $here tests\QA\TestFiles\Office2016)).FullName -OutputPath (Join-Path $outputPath 'Office2016')
+                (Get-ChildItem (Join-Path $outputPath 'Office2016')).count | Should Be 6
             }
 
         It 'Produces 6 files' {
-            Compare-FslRuleFile -Files .\TestFiles\Office2013\Project2013.fxr, .\TestFiles\Office2013\Office2013.fxr, .\TestFiles\Office2013\Visio2013.fxr -OutputPath $outputPath
-            ( Get-ChildItem $outputPath -File ).count | Should Be 12
+            New-Item -Path $outputPath -Name "Office2013" -ItemType "directory"
+            Compare-FslRuleFile -Files (Get-ChildItem (Join-Path $here tests\QA\TestFiles\Office2013)).FullName -OutputPath (Join-Path $outputPath 'Office2013')
+            ( Get-ChildItem (Join-Path $outputPath 'Office2013') -File ).count | Should Be 6
         }
 
         It 'Produces 4 files' {
-            Compare-FslRuleFile -Files .\TestFiles\Office2016\Project2016.fxr, .\TestFiles\Office2016\OfficeProPlus2016.fxr -OutputPath $outputPath
-            ( Get-ChildItem $outputPath -File ).count | Should Be 16
+            New-Item -Path $outputPath -Name "Office2016Pro" -ItemType "directory"
+            Compare-FslRuleFile -Files (Get-ChildItem (Join-Path $here tests\QA\TestFiles\Office2016Pro)).FullName -OutputPath (Join-Path $outputPath 'Office2016Pro')
+            ( Get-ChildItem (Join-Path $outputPath 'Office2016Pro') -File ).count | Should Be 4
         }
 
     }
