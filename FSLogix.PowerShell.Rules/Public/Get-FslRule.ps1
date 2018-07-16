@@ -39,22 +39,22 @@ function Get-FslRule {
                     $poshFlags =  $rulePlusComment.Flags | ConvertFrom-FslRuleCode
                     if ($rulePlusComment.DestParent){
                         $destPath = try {
-                            Join-Path $rulePlusComment.DestParent $rulePlusComment.Dest -ErrorAction Stop
+                            (Join-Path $rulePlusComment.DestParent $rulePlusComment.Dest -ErrorAction Stop).TrimEnd('\')
                         }
                         catch {
-                            [system.io.fileinfo]($rulePlusComment.DestParent.TrimEnd('\', '/') + '\' + $rulePlusComment.Dest.TrimStart('\', '/'))
+                            [system.io.fileinfo]($rulePlusComment.DestParent.TrimEnd('\', '/') + '\' + $rulePlusComment.Dest.TrimStart('\', '/').TrimEnd('\'))
                         }
                     }
-
-                    $output = [PSCustomObject]@{
-                        FullName = {
-                            try {
+                    $fullnameJoin = try {
                                 (Join-Path $rulePlusComment.SrcParent $rulePlusComment.Src -ErrorAction Stop).TrimEnd('\')
                             }
                             catch {
-                                [system.io.fileinfo]($rulePlusComment.SrcParent.TrimEnd('\', '/') + '\' + $rulePlusComment.Src.TrimStart('\', '/'))
+                                [system.io.fileinfo]($rulePlusComment.SrcParent.TrimEnd('\', '/') + '\' + $rulePlusComment.Src.TrimStart('\', '/')).TrimEnd('\')
                             }
-                        }
+
+                    $output = [PSCustomObject]@{
+                        FullName         = $fullnameJoin
+
                         HidingType       = if ($poshFlags.Hiding -or $poshFlags.Font -or $poshFlags.Printer) {
                             switch ( $true ) {
                                 $poshFlags.Font {'Font'; break}

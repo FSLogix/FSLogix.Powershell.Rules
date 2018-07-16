@@ -178,6 +178,14 @@ function Add-FslRule {
         Add-Content @addContentParams -Value "##$Comment"
         Write-Verbose -Message "Written $Comment to $RuleFilePath"
 
+        If ($CopyObject -and $RedirectType -eq 'FolderOrKey') {
+            $SourceParent = $SourceParent.TrimEnd('\') + '\'
+            $destParent = $destParent.TrimEnd('\') + '\'
+        }
+        else {
+            $destParent = $destParent.TrimEnd('\')
+        }
+
         $message = "$SourceParent`t$Source`t$DestParent`t$Dest`t$Flags`t$binary"
 
         Add-Content @addContentParams -Value $message
