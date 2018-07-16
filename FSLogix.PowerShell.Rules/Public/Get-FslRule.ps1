@@ -38,11 +38,23 @@ function Get-FslRule {
 
                     $poshFlags =  $rulePlusComment.Flags | ConvertFrom-FslRuleCode
                     if ($rulePlusComment.DestParent){
-                        $destPath = Join-Path $rulePlusComment.DestParent $rulePlusComment.Dest
+                        $destPath = try {
+                            Join-Path $rulePlusComment.DestParent $rulePlusComment.Dest -ErrorAction Stop
+                        }
+                        catch {
+                            [system.io.fileinfo]($rulePlusComment.DestParent.TrimEnd('\', '/') + '\' + $rulePlusComment.Dest.TrimStart('\', '/'))
+                        }
                     }
 
                     $output = [PSCustomObject]@{
-                        FullName         = (Join-Path $rulePlusComment.SrcParent $rulePlusComment.Src).trimend('\')
+                        FullName = {
+                            try {
+                                (Join-Path $rulePlusComment.SrcParent $rulePlusComment.Src -ErrorAction Stop).TrimEnd('\')
+                            }
+                            catch {
+                                [system.io.fileinfo]($rulePlusComment.SrcParent.TrimEnd('\', '/') + '\' + $rulePlusComment.Src.TrimStart('\', '/'))
+                            }
+                        }
                         HidingType       = if ($poshFlags.Hiding -or $poshFlags.Font -or $poshFlags.Printer) {
                             switch ( $true ) {
                                 $poshFlags.Font {'Font'; break}
