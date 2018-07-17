@@ -1,14 +1,19 @@
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 #$funcType = Split-Path $here -Leaf
-$sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
-$here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
+$global:sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
+$global:here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
 #. "$here\$funcType\$sut"
 
-Import-Module -Name (Join-Path $here 'FSLogix.PowerShell.Rules.psd1') -Force
+Import-Module -Name (Join-Path $global:here 'FSLogix.PowerShell.Rules.psd1') -Force
 
-InModuleScope 'FSLogix.PowerShell.Rules' -Tag 'Unit' {
+InModuleScope 'FSLogix.PowerShell.Rules' {
 
-    Describe $sut.Trimend('.ps1') {
+    Describe $global:sut.Trimend('.ps1') -Tag 'Unit' {
+
+        AfterAll {
+            Remove-Variable -Name 'here' -Scope Global
+            Remove-Variable -Name 'sut' -Scope Global
+        }
 
         Mock Test-Path -MockWith { $true } -Verifiable
 
@@ -25,7 +30,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' -Tag 'Unit' {
             }
 
             It 'Calls all Verifiable Mocks' {
-                Assert-VerifiableMocks
+                Assert-VerifiableMock
             }
         }
 
@@ -41,7 +46,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' -Tag 'Unit' {
                 $result = Get-FslAssignment -Path TestDrive:\Notexist.fxa
                 $result.RuleSetApplies | Should Be $true
                 $result.GroupName | Should Be 'BUILTIN\Backup Operators'
-                $result.GroupSID | Should Be 'S-1-5-32-551'
+                $result.WellKnownSID | Should Be 'S-1-5-32-551'
                 <#$result.UserName | Should Be $false
                 $result.ProcessName | Should Be $false
                 $result.IncludeChildProcess | Should Be $false
@@ -53,7 +58,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' -Tag 'Unit' {
                 $result.LicenseDays | Should Be 0#>
             }
             It 'Calls all Verifiable Mocks' {
-                Assert-VerifiableMocks
+                Assert-VerifiableMock
             }
         } #Group
 
@@ -81,7 +86,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' -Tag 'Unit' {
                 #$result.LicenseDays | Should Be 0#>
             }
             It 'Calls all Verifiable Mocks' {
-                Assert-VerifiableMocks
+                Assert-VerifiableMock
             }
         } #User
 
@@ -110,7 +115,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' -Tag 'Unit' {
                 #$result.LicenseDays | Should Be 0#>
             }
             It 'Calls all Verifiable Mocks' {
-                Assert-VerifiableMocks
+                Assert-VerifiableMock
             }
         } #Process
 
@@ -139,7 +144,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' -Tag 'Unit' {
                 #$result.LicenseDays | Should Be 0#>
             }
             It 'Calls all Verifiable Mocks' {
-                Assert-VerifiableMocks
+                Assert-VerifiableMock
             }
         } #Network
     }

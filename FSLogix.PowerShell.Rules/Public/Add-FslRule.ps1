@@ -90,12 +90,14 @@ function Add-FslRule {
         $FRX_RULE_SRC_IS_A_FILE_OR_VALUE = 0x00000002
         $FRX_RULE_TYPE_REDIRECT = 0x00000100
 
+
+    } # Begin
+    PROCESS {
+
         if ( -not ( Test-Path $RuleFilePath )) {
             $version = 1
             Set-Content -Path $RuleFilePath -Value $version -Encoding Unicode -ErrorAction Stop
         }
-    } # Begin
-    PROCESS {
         #check file has correct filename extension
         if ($RuleFilePath -notlike "*.fxr") {
             Write-Warning 'Rule files should have an fxr extension'

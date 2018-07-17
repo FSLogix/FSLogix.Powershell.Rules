@@ -1,16 +1,21 @@
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 #$funcType = Split-Path $here -Leaf
-$sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
-$here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
+$global:sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
+$global:here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
 #. "$here\$funcType\$sut"
 
-Import-Module -Name (Join-Path $here 'FSLogix.PowerShell.Rules.psd1') -Force
+Import-Module -Name (Join-Path $global:here 'FSLogix.PowerShell.Rules.psd1') -Force
 
 InModuleScope 'FSLogix.PowerShell.Rules' {
 
-    Describe $sut.Trimend('.ps1') -Tag 'Unit' {
+    Describe $global:sut.Trimend('.ps1') -Tag 'Unit' {
 
-        $assignOriginal = '..\..\QA\TestFiles\AllAssign\Assign.fxa'
+        AfterAll {
+            Remove-Variable -Name 'here' -Scope Global
+            Remove-Variable -Name 'sut' -Scope Global
+        }
+
+        $assignOriginal = Join-Path $global:here Tests\QA\TestFiles\AllAssign\Assign.fxa
         $assignTest = 'TestDrive:\Assignpipe.fxa'
 
         It 'Gives back the same file as you feed it from Get-FslAssignment' {

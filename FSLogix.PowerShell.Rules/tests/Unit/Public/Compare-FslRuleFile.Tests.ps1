@@ -1,16 +1,21 @@
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
-$sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
-$here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
+$global:sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
+$global:here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
 
-Import-Module -Name (Join-Path $here 'FSLogix.PowerShell.Rules.psd1') -Force
+Import-Module -Name (Join-Path $global:here 'FSLogix.PowerShell.Rules.psd1') -Force
 
 InModuleScope 'FSLogix.PowerShell.Rules' {
 
-    Describe $sut.Trimend('.ps1') -Tag 'Unit' {
+    Describe $global:sut.Trimend('.ps1') -Tag 'Unit' {
+
+        AfterAll {
+            Remove-Variable -Name 'here' -Scope Global
+            Remove-Variable -Name 'sut' -Scope Global
+        }
 
         BeforeAll {
             [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
-            $files = (Get-ChildItem ..\..\QA\TestFiles\Office2016).FullName #  "TestDrive:\VisioNotExist.fxr", "TestDrive:\ProjectNotExist.fxr", "TestDrive:\OfficeNotExist.fxr"
+            $files = (Get-ChildItem $global:here\Tests\QA\TestFiles\CustomerSamples\Office2016).FullName #  "TestDrive:\VisioNotExist.fxr", "TestDrive:\ProjectNotExist.fxr", "TestDrive:\OfficeNotExist.fxr"
         }
         <#
 
@@ -103,7 +108,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             }
 
             It 'Calls all Verifiable Mocks' {
-                Assert-VerifiableMocks
+                Assert-VerifiableMock
             }
         }
 
