@@ -5,7 +5,7 @@ $here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
 . "$here\FSLogix.PowerShell.Rules\Private\ConvertFrom-FslAssignmentCode.ps1"
 . "$here\FSLogix.PowerShell.Rules\Private\ConvertTo-FslAssignmentCode.ps1"
 
-Describe 'Pipeline conversion back and forth' {
+Describe 'Pipeline conversion back and forth' -Tag 'QA' {
 
     BeforeAll {
         [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]

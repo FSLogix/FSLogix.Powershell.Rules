@@ -1,12 +1,12 @@
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
-$here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent 
+$here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
 
 Import-Module -Name (Join-Path $here 'FSLogix.PowerShell.Rules.psd1') -Force
 
 InModuleScope 'FSLogix.PowerShell.Rules' {
 
-    Describe $sut.Trimend('.ps1') {
+    Describe $sut.Trimend('.ps1') -Tag 'Unit' {
 
         BeforeAll {
             [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
@@ -87,14 +87,14 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
         } -Verifiable -ParameterFilter { $path -eq $files[2] }
 
         #>
-    
+
         Context 'Return values' {
 
             Mock -CommandName Set-FslRule -MockWith {} -Verifiable
             Mock -CommandName Test-Path -MockWith { $true } -Verifiable
 
             It 'Should Not Throw' {
-                
+
                 { Compare-FslRuleFile -Files $files -OutputPath TestDrive:\ }  | Should Not Throw
             }
 

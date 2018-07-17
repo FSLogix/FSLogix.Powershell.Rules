@@ -6,7 +6,7 @@ $here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
 
 Import-Module -Name (Join-Path $here 'FSLogix.PowerShell.Rules.psd1') -Force
 
-InModuleScope 'FSLogix.PowerShell.Rules' {
+InModuleScope 'FSLogix.PowerShell.Rules' -Tag 'Unit' {
 
     Describe $sut.Trimend('.ps1') {
 

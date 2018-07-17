@@ -8,7 +8,7 @@ Import-Module -Name (Join-Path $global:here 'FSLogix.PowerShell.Rules.psd1') -Fo
 
 InModuleScope 'FSLogix.PowerShell.Rules' {
 
-    Describe Compare-FslRuleFile {
+    Describe Compare-FslRuleFile -Tag 'QA' {
 
         AfterAll {
             Remove-Variable -Name 'here' -Scope Global
