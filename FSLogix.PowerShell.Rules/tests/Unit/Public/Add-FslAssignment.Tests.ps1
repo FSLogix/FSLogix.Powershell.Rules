@@ -15,6 +15,11 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             Remove-Variable -Name 'sut' -Scope Global
         }
 
+        $AddFslAssignmentParams = @{
+
+        }
+
+
     }
 
 }

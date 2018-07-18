@@ -15,7 +15,7 @@ function ConvertFrom-FslRuleCode {
         Set-StrictMode -Version Latest
         $FRX_RULE_SRC_IS_A_DIR_OR_KEY = 0x00000001
         $FRX_RULE_SRC_IS_A_FILE_OR_VALUE = 0x00000002
-        $FRX_RULE_CONTAINS_USER_VARS = 0x00000008
+        #$FRX_RULE_CONTAINS_USER_VARS = 0x00000008
         $FRX_RULE_SHOULD_COPY_FILE = 0x00000010
         $FRX_RULE_IS_PERSISTANT = 0x00000020
         $FRX_RULE_TYPE_REDIRECT = 0x00000100
@@ -63,7 +63,7 @@ function ConvertFrom-FslRuleCode {
         $outObject = [PSCustomObject]@{
             'FolderOrKey'     = $folderOrKey
             'FileOrValue'     = $fileOrValue
-            'ContainsUserVar' = $containsUserVar
+            #'ContainsUserVar' = $containsUserVar
             'CopyObject'      = $copyObject
             #'Persistent'      = $persistent
             'Redirect'        = $redirect

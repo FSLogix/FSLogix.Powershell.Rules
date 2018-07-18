@@ -24,8 +24,6 @@ function Add-FslAssignment {
             Process name for the rule assignment, mostly used for redirect rules
         .PARAMETER IncludeChildProcess
             If Process name is stated you can optionally include chile prcesses (recommended)
-        .PARAMETER ProcessId
-            If you know process ID, but not name, used for troubleshooting mainly
         .PARAMETER IPAddress
             Enter the IPv4 or IPv6 address. Partial strings are allowed. For example, if you enter 192.168, an address of 192.168.0.1 will be considered to match.
         .PARAMETER ComputerName
@@ -111,12 +109,14 @@ function Add-FslAssignment {
         )]
         [Switch]$IncludeChildProcess,
 
+        <#
         [Parameter(
             ParameterSetName = 'Executable',
             Position = 8,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$ProcessId,
+        #>
 
         [Parameter(
             ParameterSetName = 'Network',
@@ -244,9 +244,9 @@ function Add-FslAssignment {
                 if ($IncludeChildProcess) {
                     $convertToFslAssignmentCodeParams += @{ 'ApplyToProcessChildren' = $true }
                 }
-                if ($ProcessId) {
-                    $convertToFslAssignmentCodeParams += @{ 'ProcessId' = $true }
-                }
+                #if ($ProcessId) {
+                #    $convertToFslAssignmentCodeParams += @{ 'ProcessId' = $true }
+                #}
 
 
                 $idString = $ProcessName
