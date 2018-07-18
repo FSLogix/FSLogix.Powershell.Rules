@@ -98,9 +98,10 @@ function ConvertTo-FslAssignmentCode {
             $Computer { $codeToOutput = $codeToOutput -bor $ComputerBit }
             $ADDistinguishedName { $codeToOutput = $codeToOutput -bor $ADDistinguishedNameBit }
             $ApplyToProcessChildren { $codeToOutput = $codeToOutput -bor $ApplyToProcessChildrenBit }
-            $ProcessId { $codeToOutput = $codeToOutput -bor $PidBit }
+            #$ProcessId { $codeToOutput = $codeToOutput -bor $PidBit } #Can't get the GUI to produce a pid code
             $EnvironmentVariable { $codeToOutput = $codeToOutput -bor $EnvironmentVariableBit }
 
+            #The Mandatory bits are in the original code, but not used
             #$MandatoryLevelMask { $codeToOutput = $codeToOutput -bor $MandatoryLevelMaskBit }
             #$MandatoryLevelShift { $codeToOutput = $codeToOutput -bor $MandatoryLevelShiftBit }
         }

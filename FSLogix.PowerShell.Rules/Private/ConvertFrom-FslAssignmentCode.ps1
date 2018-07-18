@@ -39,8 +39,10 @@ function ConvertFrom-FslAssignmentCode {
             'Computer'               = if ( $AssignmentCode -band $Computer ) { $true } else { $false }
             'ADDistinguishedName'    = if ( $AssignmentCode -band $ADDistinguishedName ) { $true } else { $false }
             'ApplyToProcessChildren' = if ( $AssignmentCode -band $ApplyToProcessChildren ) { $true } else { $false }
-            'ProcessId'              = if ( $AssignmentCode -band $ProcessID ) { $true } else { $false }
+            #'ProcessId'              = if ( $AssignmentCode -band $ProcessID ) { $true } else { $false } #Can't get the GUI to produce a pid code
             'EnvironmentVariable'    = if ( $AssignmentCode -band $EnvironmentVariable ) { $true } else { $false }
+
+            #The Mandatory bits are in the original code, but not used
             #'MandatoryLevelShift'    = if ( $AssignmentCode -band $MandatoryLevelShift ) { $true } else { $false }
             #'MandatoryLevelMask'     = if ( $AssignmentCode -band $MandatoryLevelMask ) { $true } else { $false }
         }
