@@ -14,11 +14,13 @@ function ConvertTo-FslRuleCode {
         )]
         [Switch]$FileOrValue,
 
+        <#
         [Parameter(
             Position = 2,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$ContainsUserVar,
+        #>
 
         [Parameter(
             Position = 3,
@@ -89,7 +91,7 @@ function ConvertTo-FslRuleCode {
         Set-StrictMode -Version Latest
         $FRX_RULE_SRC_IS_A_DIR_OR_KEY = 0x00000001
         $FRX_RULE_SRC_IS_A_FILE_OR_VALUE = 0x00000002
-        $FRX_RULE_CONTAINS_USER_VARS = 0x00000008
+        #$FRX_RULE_CONTAINS_USER_VARS = 0x00000008
         $FRX_RULE_SHOULD_COPY_FILE = 0x00000010
         $FRX_RULE_IS_PERSISTANT = 0x00000020
         $FRX_RULE_TYPE_REDIRECT = 0x00000100
@@ -114,7 +116,7 @@ function ConvertTo-FslRuleCode {
         switch ($true) {
             $FolderOrKey { $codeToOutput = $codeToOutput -bor $FRX_RULE_SRC_IS_A_DIR_OR_KEY }
             $FileOrValue { $codeToOutput = $codeToOutput -bor $FRX_RULE_SRC_IS_A_FILE_OR_VALUE }
-            $ContainsUserVar { $codeToOutput = $codeToOutput -bor $FRX_RULE_CONTAINS_USER_VARS }
+            #$ContainsUserVar { $codeToOutput = $codeToOutput -bor $FRX_RULE_CONTAINS_USER_VARS }
             $CopyObject { $codeToOutput = $codeToOutput -bor $FRX_RULE_SHOULD_COPY_FILE }
             $Persistent { $codeToOutput = $codeToOutput -bor $FRX_RULE_IS_PERSISTANT }
             $Redirect { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_REDIRECT }

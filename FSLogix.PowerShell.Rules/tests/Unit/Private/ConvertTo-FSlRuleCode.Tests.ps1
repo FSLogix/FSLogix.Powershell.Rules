@@ -64,7 +64,7 @@ Describe ConvertTo-FslRuleCode -Tag 'Unit' {
             $pipeObject = [PSCustomObject]@{
                 FolderOrKey = $true
                 FileOrValue = $true
-                ContainsUserVar = $true
+                #ContainsUserVar = $true
                 CopyObject = $true
                 #Persistent = $true
                 Redirect = $true
@@ -77,7 +77,7 @@ Describe ConvertTo-FslRuleCode -Tag 'Unit' {
             }
 
             $return =  $pipeObject | ConvertTo-FslRuleCode
-            $return | Should Be '0x00007F1B'
+            $return | Should Be '0x00007F13'
         }
     }
 

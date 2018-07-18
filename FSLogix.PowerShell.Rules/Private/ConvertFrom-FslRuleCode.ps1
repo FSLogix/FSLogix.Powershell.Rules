@@ -35,8 +35,8 @@ function ConvertFrom-FslRuleCode {
             { -not ( $RuleCode -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY ) } { $folderOrKey = $false}
             { $RuleCode -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE } {$fileOrValue = $true}
             { -not ( $RuleCode -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE ) } { $fileOrValue = $false }
-            { $RuleCode -band $FRX_RULE_CONTAINS_USER_VARS } { $containsUserVar = $true }
-            { -not ( $RuleCode -band $FRX_RULE_CONTAINS_USER_VARS ) } { $containsUserVar = $false }
+            #{ $RuleCode -band $FRX_RULE_CONTAINS_USER_VARS } { $containsUserVar = $true }
+            #{ -not ( $RuleCode -band $FRX_RULE_CONTAINS_USER_VARS ) } { $containsUserVar = $false }
             { $RuleCode -band $FRX_RULE_SHOULD_COPY_FILE } { $copyObject = $true }
             { -not ( $RuleCode -band $FRX_RULE_SHOULD_COPY_FILE ) } { $copyObject = $false }
             { $RuleCode -band $FRX_RULE_IS_PERSISTANT } { $persistent = $true}
