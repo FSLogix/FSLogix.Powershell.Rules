@@ -15,7 +15,7 @@ Describe ConvertTo-FslRuleCode -Tag 'Unit' {
                 FileOrValue = $true
                 ContainsUserVar = $true
                 CopyObject = $true
-                Persistent = $true
+                #Persistent = $true
                 Redirect = $true
                 Hiding = $true
                 Printer = $true
@@ -48,7 +48,7 @@ Describe ConvertTo-FslRuleCode -Tag 'Unit' {
                 FileOrValue = $true
                 ContainsUserVar = $true
                 CopyObject = $true
-                Persistent = $true
+                #Persistent = $true
                 Redirect = $true
                 Hiding = $true
                 Printer = $true
@@ -66,7 +66,7 @@ Describe ConvertTo-FslRuleCode -Tag 'Unit' {
                 FileOrValue = $true
                 ContainsUserVar = $true
                 CopyObject = $true
-                Persistent = $true
+                #Persistent = $true
                 Redirect = $true
                 Hiding = $true
                 Printer = $true
@@ -77,7 +77,7 @@ Describe ConvertTo-FslRuleCode -Tag 'Unit' {
             }
 
             $return =  $pipeObject | ConvertTo-FslRuleCode
-            $return | Should Be '0x00007F3B'
+            $return | Should Be '0x00007F1B'
         }
     }
 

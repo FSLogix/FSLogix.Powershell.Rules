@@ -34,6 +34,11 @@ function Get-FslAssignment {
 
                     $poshFlags = $assignment.Flags | ConvertFrom-FslAssignmentCode
 
+                    if ($poshFlags.PSObject.Properties -contains 'java'){
+                        Write-Error 'Please use the cmdlet Get-FslJavaAssignment to get assignments for java files'
+                        exit
+                    }
+
                     $output = [PSCustomObject]@{
 
                         RuleSetApplies      = switch ( $true ) {
@@ -43,10 +48,10 @@ function Get-FslAssignment {
                         UserName            = if ( $poshFlags.User ) { $assignment.IdString } else { $null }
                         GroupName           = if ( $poshFlags.Group ) { $assignment.FriendlyName } else { $null }
                         ADDistinguisedName  = if ( $poshFlags.Group ) { $assignment.DistinguishedName } else {$null}
-                        WellKnownSID            = if ( $poshFlags.Group ) { $assignment.IdString } else { $null }
+                        WellKnownSID        = if ( $poshFlags.Group ) { $assignment.IdString } else { $null }
                         ProcessName         = if ( $poshFlags.Process ) { $assignment.IdString } else { $null }
                         IncludeChildProcess = if ( $poshFlags.Process ) { $poshFlags.ApplyToProcessChildren } else { $null }
-                        ProcessId           = if ( $poshFlags.Process ) { $poshFlags.ProcessId } else { $null }
+                        #ProcessId           = if ( $poshFlags.Process ) { $poshFlags.ProcessId } else { $null }
                         IPAddress           = if ( $poshFlags.Network ) { $assignment.IdString } else { $null }
                         ComputerName        = if ( $poshFlags.Computer ) { $assignment.IdString } else { $null }
                         OU                  = if ( $poshFlags.ADDistinguishedName ) { $assignment.IdString } else { $null }

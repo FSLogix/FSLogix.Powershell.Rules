@@ -60,7 +60,7 @@ Describe ConvertFrom-FslAssignmentCode -Tag 'Unit' {
             $return.Computer | Should Be $false
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
-            $return.ProcessID | Should Be $false
+            #$return.ProcessID | Should Be $false
             $return.EnvironmentVariable | Should Be $false
         }
 
@@ -76,7 +76,7 @@ Describe ConvertFrom-FslAssignmentCode -Tag 'Unit' {
             $return.Computer | Should Be $false
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
-            $return.ProcessID | Should Be $false
+            #$return.ProcessID | Should Be $false
             $return.EnvironmentVariable | Should Be $false
         }
 
@@ -92,7 +92,7 @@ Describe ConvertFrom-FslAssignmentCode -Tag 'Unit' {
             $return.Computer | Should Be $false
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
-            $return.ProcessID | Should Be $false
+            #$return.ProcessID | Should Be $false
             $return.EnvironmentVariable | Should Be $false
         }
 
@@ -108,7 +108,7 @@ Describe ConvertFrom-FslAssignmentCode -Tag 'Unit' {
             $return.Computer | Should Be $false
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
-            $return.ProcessID | Should Be $false
+            #$return.ProcessID | Should Be $false
             $return.EnvironmentVariable | Should Be $false
         }
 
@@ -124,7 +124,7 @@ Describe ConvertFrom-FslAssignmentCode -Tag 'Unit' {
             $return.Computer | Should Be $false
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
-            $return.ProcessID | Should Be $false
+            #$return.ProcessID | Should Be $false
             $return.EnvironmentVariable | Should Be $false
         }
 
@@ -140,7 +140,7 @@ Describe ConvertFrom-FslAssignmentCode -Tag 'Unit' {
             $return.Computer | Should Be $false
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
-            $return.ProcessID | Should Be $false
+            #$return.ProcessID | Should Be $false
             $return.EnvironmentVariable | Should Be $false
         }
 
@@ -156,7 +156,7 @@ Describe ConvertFrom-FslAssignmentCode -Tag 'Unit' {
             $return.Computer | Should Be $false
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $true
-            $return.ProcessID | Should Be $false
+            #$return.ProcessID | Should Be $false
             $return.EnvironmentVariable | Should Be $false
         }
 
@@ -172,7 +172,7 @@ Describe ConvertFrom-FslAssignmentCode -Tag 'Unit' {
             $return.Computer | Should Be $false
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $true
-            $return.ProcessID | Should Be $false
+            #$return.ProcessID | Should Be $false
             $return.EnvironmentVariable | Should Be $false
         }
 
@@ -188,7 +188,7 @@ Describe ConvertFrom-FslAssignmentCode -Tag 'Unit' {
             $return.Computer | Should Be $false
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
-            $return.ProcessID | Should Be $false
+            #$return.ProcessID | Should Be $false
             $return.EnvironmentVariable | Should Be $false
         }
 
@@ -204,7 +204,7 @@ Describe ConvertFrom-FslAssignmentCode -Tag 'Unit' {
             $return.Computer | Should Be $false
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
-            $return.ProcessID | Should Be $false
+            #$return.ProcessID | Should Be $false
             $return.EnvironmentVariable | Should Be $false
         }
 
@@ -220,7 +220,7 @@ Describe ConvertFrom-FslAssignmentCode -Tag 'Unit' {
             $return.Computer | Should Be $true
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
-            $return.ProcessID | Should Be $false
+            #$return.ProcessID | Should Be $false
             $return.EnvironmentVariable | Should Be $false
         }
 
@@ -236,7 +236,7 @@ Describe ConvertFrom-FslAssignmentCode -Tag 'Unit' {
             $return.Computer | Should Be $true
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
-            $return.ProcessID | Should Be $false
+            #$return.ProcessID | Should Be $false
             $return.EnvironmentVariable | Should Be $false
         }
 
@@ -252,7 +252,7 @@ Describe ConvertFrom-FslAssignmentCode -Tag 'Unit' {
             $return.Computer | Should Be $false
             $return.ADDistinguishedName | Should Be $true
             $return.ApplyToProcessChildren | Should Be $false
-            $return.ProcessID | Should Be $false
+            #$return.ProcessID | Should Be $false
             $return.EnvironmentVariable | Should Be $false
         }
 
@@ -268,7 +268,7 @@ Describe ConvertFrom-FslAssignmentCode -Tag 'Unit' {
             $return.Computer | Should Be $false
             $return.ADDistinguishedName | Should Be $true
             $return.ApplyToProcessChildren | Should Be $false
-            $return.ProcessID | Should Be $false
+            #$return.ProcessID | Should Be $false
             $return.EnvironmentVariable | Should Be $false
         }
 
@@ -284,7 +284,7 @@ Describe ConvertFrom-FslAssignmentCode -Tag 'Unit' {
             $return.Computer | Should Be $false
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
-            $return.ProcessID | Should Be $false
+            #$return.ProcessID | Should Be $false
             $return.EnvironmentVariable | Should Be $true
         }
 
@@ -300,7 +300,7 @@ Describe ConvertFrom-FslAssignmentCode -Tag 'Unit' {
             $return.Computer | Should Be $false
             $return.ADDistinguishedName | Should Be $false
             $return.ApplyToProcessChildren | Should Be $false
-            $return.ProcessID | Should Be $false
+            #$return.ProcessID | Should Be $false
             $return.EnvironmentVariable | Should Be $true
         }
     }

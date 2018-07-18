@@ -80,7 +80,7 @@ function ConvertTo-FslAssignmentCode {
         $ComputerBit = 0x0040
         $ADDistinguishedNameBit = 0x0080
         $ApplyToProcessChildrenBit = 0x0100
-        $PidBit = 0x0200
+        #$PidBit = 0x0200
         $EnvironmentVariableBit = 0x2000
 
         #$MandatoryLevelMaskBit = 0x1C00

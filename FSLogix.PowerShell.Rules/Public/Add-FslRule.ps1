@@ -104,7 +104,7 @@ function Add-FslRule {
         }
 
         $convertToFslRuleCodeParams = @{
-            'Persistent' = $true
+            #'Persistent' = $true
             'CopyObject' = $CopyObject
         }
 

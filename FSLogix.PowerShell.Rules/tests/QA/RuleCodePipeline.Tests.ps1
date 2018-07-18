@@ -9,7 +9,7 @@ Describe 'Pipeline conversion back and forth' -Tag 'QA' {
 
     BeforeAll {
         [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
-        $ruleCodes = '0x00000221', '0x00000222', '0x00000420', '0x00000122', '0x00000132', '0x00000131', '0x00000121', '0x00000822', '0x00002020'
+        $ruleCodes = '0x00000221', '0x00000222', '0x00000420', '0x00000122', '0x00000132', '0x00000131', '0x00000121', '0x00000822', '0x00002020', '0x00001000'
     }
 
     foreach ($code in $ruleCodes){

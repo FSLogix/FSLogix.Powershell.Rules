@@ -173,7 +173,7 @@ function Add-FslAssignment {
         if ($AssignmentFilePath -notlike "*.fxa") {
             Write-Warning 'Assignment files should have an fxa extension'
         }
-        if ( -not ( Test-Path $AssignmentFilePath )){
+        if ( -not ( Test-Path $AssignmentFilePath )) {
             $version = 1
             $minimumLicenseAssignedTime = 0
             Set-Content -Path $AssignmentFilePath -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop
@@ -213,11 +213,9 @@ function Add-FslAssignment {
             }
             Group {
 
-
-
                 $convertToFslAssignmentCodeParams += @{ 'Group' = $true }
 
-                if ( $ADDistinguisedName ){
+                if ( $ADDistinguisedName ) {
                     $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
                     $distinguishedName = $ADDistinguisedName
                 }
@@ -226,7 +224,7 @@ function Add-FslAssignment {
                 $wks = [Enum]::GetValues([System.Security.Principal.WellKnownSidType])
                 $account = New-Object System.Security.Principal.NTAccount($GroupName)
                 $sid = $account.Translate([System.Security.Principal.SecurityIdentifier])
-                $result = foreach ($s in $wks){ $sid.IsWellKnown($s)}
+                $result = foreach ($s in $wks) { $sid.IsWellKnown($s)}
 
                 if ( $result -contains $true ) {
                     $idString = $sid.Value
@@ -272,26 +270,26 @@ function Add-FslAssignment {
             EnvironmentVariable {
                 $convertToFslAssignmentCodeParams += @{ 'EnvironmentVariable' = $true }
                 $idString = $EnvironmentVariable
-                if ( $AssignedTime -eq 0 -and $convertToFslAssignmentCodeParams.Remove -eq $true ){
+                if ( $AssignedTime -eq 0 -and $convertToFslAssignmentCodeParams.Remove -eq $true ) {
                     $AssignedTime = (Get-Date).ToFileTime()
                 }
                 break
             }
         }
 
-        if ( -not $AssignedTime ){
+        if ( -not $AssignedTime ) {
             $AssignedTime = 0
         }
 
-        if ( -not $UnAssignedTime ){
+        if ( -not $UnAssignedTime ) {
             $UnAssignedTime = 0
         }
 
-        if ( -not (Test-Path variable:script:DistinguishedName) ){
+        if ( -not (Test-Path variable:script:DistinguishedName) ) {
             $DistinguishedName = ''
         }
 
-        if ( -not (Test-Path variable:script:Passthru) ){
+        if ( -not (Test-Path variable:script:Passthru) ) {
             $Passthru = $false
         }
 
@@ -302,7 +300,7 @@ function Add-FslAssignment {
         $addContentParams = @{
             'Path'     = $AssignmentFilePath
             'Encoding' = 'Unicode'
-            'Value'    =  $message
+            'Value'    = $message
         }
 
         Add-Content @addContentParams
