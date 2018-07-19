@@ -22,7 +22,6 @@ function Compare-FslFilePath {
     } # Begin
     PROCESS {
 
-
         foreach ($filepath in $Files) {
             if (-not (Test-Path $filepath)){
                 Write-Error "$filepath does not exist"

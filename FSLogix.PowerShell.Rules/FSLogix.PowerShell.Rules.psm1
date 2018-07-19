@@ -4,9 +4,10 @@
 
 $Public  = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -ErrorAction SilentlyContinue )
 $Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction SilentlyContinue )
+$Type = @( Get-ChildItem -Path $PSScriptRoot\Types\*.ps1 -ErrorAction SilentlyContinue)
 
 #Dot source the files
-Foreach($import in @($Public + $Private))
+Foreach($import in @($Type + $Public + $Private))
 {
     Try
     {

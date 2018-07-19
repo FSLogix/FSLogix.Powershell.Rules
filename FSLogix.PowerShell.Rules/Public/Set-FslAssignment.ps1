@@ -1,6 +1,6 @@
 function Set-FslAssignment {
 
-	<#
+    <#
         .SYNOPSIS
             Sets the content of a FSLogix Rule assignment file.
 
@@ -33,7 +33,7 @@ function Set-FslAssignment {
         .PARAMETER OU
             You can specify an Active Directory Container and the assignment will be effective for all of the objects in that container. Enter the Full Distinguished Name of the container.
         .PARAMETER EnvironmentVariable
-            By Specifying an environment variable, you can customize rules in various other ways. A very useful example for this option is when using it with RDSH, XenApp, or other remote sessions. You can use the Environment Variable CLIENTNAME to limit visibility to the device being used to access the RDSH or XenApp system. 
+            By Specifying an environment variable, you can customize rules in various other ways. A very useful example for this option is when using it with RDSH, XenApp, or other remote sessions. You can use the Environment Variable CLIENTNAME to limit visibility to the device being used to access the RDSH or XenApp system.
             The environment variables that are supported are the ones that are present when the user's session is created. Environment variables set during logon are not supported.
         .PARAMETER AssignedTime
             Only used for pipeline input
@@ -142,6 +142,7 @@ function Set-FslAssignment {
 
     BEGIN {
         Set-StrictMode -Version Latest
+        $CommandLineParameters = $PSBoundParameters | Start-FixPSBoundParameters
 
         $version = 1
         $minimumLicenseAssignedTime = 0
@@ -151,27 +152,29 @@ function Set-FslAssignment {
     PROCESS {
 
         #Grab current parameters be VERY careful about moving this away from the top of the scriptas it's grabbing the PSItem which can change a lot
-        $Items = $PSItem
+        $BoundParameters = $CommandLineParameters | Reset-PSBoundParameters $PSBoundParameters
 
         #check file has correct filename extension
         if ($AssignmentFilePath -notlike "*.fxa") {
             Write-Warning 'Assignment files should have an fxa extension'
         }
 
+        <#
         #Change Items object to hashtable for use in splatting
         $addFslAssignmentParams = @{}
-        $Items | Get-Member -MemberType *Property | ForEach-Object { 
+        $Items | Get-Member -MemberType *Property | ForEach-Object {
             $addFslAssignmentParams.($_.name) = $Items.($_.name)
-        } 
-        
+        }
+        #>
+
         #Add first line if pipeline input
         If ($setContent) {
             Set-Content -Path $AssignmentFilePath -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop
-            Add-FslAssignment @addFslAssignmentParams -AssignmentFilePath $AssignmentFilePath
+            Add-FslAssignment @BoundParameters   # -AssignmentFilePath $AssignmentFilePath
             $setContent = $false
         }
         else {
-            Add-FslAssignment @addFslAssignmentParams -AssignmentFilePath $AssignmentFilePath
+            Add-FslAssignment @BoundParameters # -AssignmentFilePath $AssignmentFilePath
         }
 
     } #Process

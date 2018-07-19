@@ -21,12 +21,12 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
                 [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
                 $files = Get-ChildItem -Path "$global:here\tests\QA\TestFiles\CustomerSamples\OfficeInSameFolder" -File -Filter *.xml
                 [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
-                $out = 'C:\jimm\Output'
+                $out = 'Testdrive:\'
                 Import-Module -Name (Join-Path $global:here 'FSLogix.PowerShell.Rules.psd1')
             }
 
             It 'Does Not Throw' {
-               # { Compare-FslFilePath -Files $files.FullName -OutputPath $out } | Should Not Throw
+                { Compare-FslFilePath -Files $files.FullName -OutputPath $out } | Should Not Throw
             }
         }
     }
