@@ -8,14 +8,14 @@ function Set-FslRule {
             ValuefromPipeline = $true,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Alias('Name')]
-        [System.String]$FullName,
+        [System.String]$RuleFilePath,
 
         [Parameter(
             Position = 2,
             ValuefromPipelineByPropertyName = $true
         )]
-        [System.String]$RuleFilePath,
+        [Alias('Name')]
+        [System.String]$FullName,
 
         [Parameter(
             Position = 3,
@@ -67,14 +67,21 @@ function Set-FslRule {
             Position = 13,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Switch]$Passthru
+        [Switch]$Passthru,
+
+        [Parameter(
+            Position = 14,
+            ValuefromPipeline = $true,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [PSTypeName('FSLogix.Rule')]$RuleObject
     )
 
 
     BEGIN {
         Set-StrictMode -Version Latest
         #fix $PSBoundparameters bug
-        $CommandLineParameters = $PSBoundParameters | Start-FixPSBoundParameters
+        #$CommandLineParameters = $PSBoundParameters | Start-FixPSBoundParameters
         $version = 1
         $setContent = $true
     } # Begin
@@ -82,7 +89,7 @@ function Set-FslRule {
 
         #Grab current parameters be VERY careful about moving this away from the top of the scriptas it's grabbing the PSItem which can change a lot
         #$Items = $PSItem
-        $BoundParameters = $CommandLineParameters | Reset-PSBoundParameters $PSBoundParameters
+        #$BoundParameters = $CommandLineParameters | Reset-PSBoundParameters $PSBoundParameters
 
         #check file has correct filename extension
         if ($RuleFilePath -notlike "*.fxr") {
@@ -100,11 +107,11 @@ function Set-FslRule {
         #Add first line if pipeline input
         If ($setContent) {
             Set-Content -Path $RuleFilePath -Value $version -Encoding Unicode -ErrorAction Stop
-            Add-FslRule @BoundParameters   # -RuleFilePath $RuleFilePath
+            Add-FslRule @PSBoundParameters   # -RuleFilePath $RuleFilePath
             $setContent = $false
         }
         else {
-            Add-FslRule @BoundParameters    #-RuleFilePath $RuleFilePath
+            Add-FslRule @PSBoundParameters    #-RuleFilePath $RuleFilePath
         }
     } #Process
     END {} #End

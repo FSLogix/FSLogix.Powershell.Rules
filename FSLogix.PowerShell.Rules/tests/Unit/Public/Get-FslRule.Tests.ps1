@@ -15,7 +15,16 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             Remove-Variable -Name 'sut' -Scope Global
         }
 
-        #Get-FslRule -Path ..\..\QA\TestFiles\Office2016\AppRule_Office2013.fxr
+        BeforeAll {
+            [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
+            $result = Get-FslRule -Path ( Join-Path $global:here tests\QA\TestFiles\AllHiding\Hiding.fxr )
+        }
+
+        It 'outputs the right type' {
+            $first = $result | select-object -First 1
+            $first.psobject.typenames | Should Contain 'FSLogix.Rule'
+        }
+
     }
 
 

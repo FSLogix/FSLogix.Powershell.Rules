@@ -53,6 +53,7 @@ function Get-FslRule {
                             }
 
                     $output = [PSCustomObject]@{
+                        PSTypeName       = "FSLogix.Rule"
                         FullName         = $fullnameJoin
 
                         HidingType       = if ($poshFlags.Hiding -or $poshFlags.Font -or $poshFlags.Printer) {
@@ -78,14 +79,15 @@ function Get-FslRule {
                         Comment          = $rulePlusComment.Comment
                         #Flags            = $rulePlusComment.Flags
                     }
-
+<#
                     $output | ForEach-Object {
                         $Properties = $_.PSObject.Properties
                         @( $Properties | Where-Object { -not $_.Value } ) | ForEach-Object { $Properties.Remove($_.Name) }
                         Write-Output $_
                     }
-
+#>                  Write-Output $output
                     break
+
                 }
                 Default {
                     Write-Error "Rule file element: $line Does not match a comment or a rule format"

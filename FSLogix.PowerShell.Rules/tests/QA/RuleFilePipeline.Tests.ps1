@@ -28,8 +28,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             $path = Join-Path $global:here 'tests\QA\TestFiles\AllHiding\redirect.fxr'
             $redirect = Get-Content $path
 
-            $rules = Get-FslRule -Path $path
-            $rules | Set-FslRule -RuleFilePath Testdrive:\redirect.fxr
+            Get-FslRule -Path $path | Set-FslRule -RuleFilePath Testdrive:\redirect.fxr
             $redirectTarget = Get-Content Testdrive:\redirect.fxr
 
             Compare-Object -ReferenceObject $redirect -DifferenceObject $redirectTarget | Measure-Object | Select-Object -ExpandProperty Count | Should Be 0

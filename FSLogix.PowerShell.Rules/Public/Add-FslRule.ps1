@@ -5,19 +5,38 @@ function Add-FslRule {
 
         [Parameter(
             Position = 1,
-            ValuefromPipeline = $true,
+            Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [System.String]$RuleFilePath,
+
+        [Parameter(
+            ParameterSetName = 'Hiding',
+            Position = 2,
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'Redirect',
+            Position = 2,
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'AppContainer',
+            Position = 2,
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'SpecifyValue',
+            Position = 2,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
         [Alias('Name')]
         [System.String]$FullName,
-
-        [Parameter(
-            Position = 2,
-            Mandatory = $true,
-            ValuefromPipelineByPropertyName = $true
-        )]
-        [System.String]$RuleFilePath,
 
         [Parameter(
             ParameterSetName = 'Hiding',
@@ -80,9 +99,16 @@ function Add-FslRule {
             Position = 13,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Switch]$Passthru
-    )
+        [Switch]$Passthru,
 
+        [Parameter(
+            ParameterSetName = 'RuleObjectPipeline',
+            Position = 14,
+            ValuefromPipeline = $true,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [PSTypeName('FSLogix.Rule')]$RuleObject
+    )
 
     BEGIN {
         Set-StrictMode -Version Latest
@@ -143,6 +169,39 @@ function Add-FslRule {
             SpecifyValue {
                 $convertToFslRuleCodeParams += @{ 'SpecificData' = $true }
                 break
+            }
+            RuleObjectPipeline {
+                if ($RuleObject.HidingType) {
+                    switch ($true) {
+                        { $RuleObject.HidingType -eq 'Font' } { $convertToFslRuleCodeParams += @{ 'HideFont' = $true }
+                        }
+                        { $RuleObject.HidingType -eq 'Printer' } { $convertToFslRuleCodeParams += @{ 'Printer' = $true }
+                        }
+                        { $RuleObject.HidingType -eq 'FileOrValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
+                        }
+                        { $RuleObject.HidingType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
+                        }
+                        { $RuleObject.HidingType -ne 'Font' -and $RuleObject.HidingType -ne 'Printer' } { $convertToFslRuleCodeParams += @{ 'Hiding' = $true }
+                        }
+                    }
+                }
+                if ($RuleObject.RedirectType) {
+                    $convertToFslRuleCodeParams += @{ 'Redirect' = $true }
+                    switch ($true) {
+                        { $RuleObject.RedirectType -eq 'FileOrValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
+                        }
+                        { $RuleObject.RedirectType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
+                        }
+                    }
+                }
+                if ($RuleObject.DiskFile) {
+                    $convertToFslRuleCodeParams += @{ 'VolumeAutomount' = $true }
+                }
+                if ($Data) {
+                    $convertToFslRuleCodeParams += @{ 'VolumeAutomount' = $true }
+                }
+                $FullName = $RuleObject.FullName
+                $RedirectDestPath = $RuleObject.RedirectDestPath
             }
 
         }
@@ -206,7 +265,6 @@ function Add-FslRule {
             }
             Write-Output $passThruObject
         }
-
     } #Process
     END {} #End
 }  #function Add-FslRule
