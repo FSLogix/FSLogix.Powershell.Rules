@@ -71,7 +71,6 @@ function Add-FslRule {
         )]
         [Switch]$CopyObject,
 
-
         [Parameter(
             ParameterSetName = 'AppContainer',
             Mandatory = $true,
@@ -129,10 +128,7 @@ function Add-FslRule {
             Write-Warning 'Rule files should have an fxr extension'
         }
 
-        $convertToFslRuleCodeParams = @{
-            #'Persistent' = $true
-            'CopyObject' = $CopyObject
-        }
+        $convertToFslRuleCodeParams = @{}
 
         switch ($PSCmdlet.ParameterSetName) {
 
@@ -158,6 +154,10 @@ function Add-FslRule {
                     }
                     { $RedirectType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
                     }
+                }
+                $convertToFslRuleCodeParams = @{
+                    #'Persistent' = $true
+                    'CopyObject' = $CopyObject
                 }
 
                 break
@@ -197,8 +197,11 @@ function Add-FslRule {
                 if ($RuleObject.DiskFile) {
                     $convertToFslRuleCodeParams += @{ 'VolumeAutomount' = $true }
                 }
-                if ($Data) {
-                    $convertToFslRuleCodeParams += @{ 'VolumeAutomount' = $true }
+                if ($RuleObject.Data) {
+                    $convertToFslRuleCodeParams += @{ 'SpecificData' = $true }
+                }
+                if ($RuleObject.CopyObject) {
+                    $convertToFslRuleCodeParams += @{ 'CopyObject' = $true }
                 }
                 $FullName = $RuleObject.FullName
                 $RedirectDestPath = $RuleObject.RedirectDestPath
@@ -239,7 +242,13 @@ function Add-FslRule {
         Add-Content @addContentParams -Value "##$Comment"
         Write-Verbose -Message "Written $Comment to $RuleFilePath"
 
-        If ($CopyObject -and $RedirectType -eq 'FolderOrKey') {
+        #if ( $convertToFslRuleCodeParams.ContainsKey( 'CopyObject' ) ) {
+        #    $copyTest = $convertToFslRuleCodeParams.CopyObject
+        #}
+
+        If ($convertToFslRuleCodeParams.ContainsKey( 'CopyObject' ) -and
+            $convertToFslRuleCodeParams.ContainsKey( 'Redirect' ) -and
+            $convertToFslRuleCodeParams.ContainsKey( 'FolderOrKey' ) ) {
             $SourceParent = $SourceParent.TrimEnd('\') + '\'
             $destParent = $destParent.TrimEnd('\') + '\'
         }

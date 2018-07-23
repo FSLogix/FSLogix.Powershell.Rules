@@ -5,19 +5,42 @@ function Set-FslRule {
 
         [Parameter(
             Position = 1,
-            ValuefromPipeline = $true,
+            Mandatory = $true,
+            ValueFromPipeline = $true,
             ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$RuleFilePath,
 
         [Parameter(
+            ParameterSetName = 'Hiding',
             Position = 2,
-            ValuefromPipelineByPropertyName = $true
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'Redirect',
+            Position = 2,
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'AppContainer',
+            Position = 2,
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'SpecifyValue',
+            Position = 2,
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
         )]
         [Alias('Name')]
         [System.String]$FullName,
 
         [Parameter(
+            ParameterSetName = 'Hiding',
+            Mandatory = $true,
             Position = 3,
             ValuefromPipelineByPropertyName = $true
         )]
@@ -25,19 +48,24 @@ function Set-FslRule {
         [System.String]$HidingType,
 
         [Parameter(
+            ParameterSetName = 'Redirect',
+            Mandatory = $true,
             Position = 6,
             ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$RedirectDestPath,
 
         [Parameter(
+            ParameterSetName = 'Redirect',
+            Mandatory = $true,
             Position = 7,
             ValuefromPipelineByPropertyName = $true
         )]
         [ValidateSet('FolderOrKey', 'FileOrValue')]
-        [System.String]$RedirectType,
+        [string]$RedirectType,
 
         [Parameter(
+            ParameterSetName = 'Redirect',
             Position = 8,
             ValuefromPipelineByPropertyName = $true
         )]
@@ -45,23 +73,27 @@ function Set-FslRule {
 
 
         [Parameter(
+            ParameterSetName = 'AppContainer',
+            Mandatory = $true,
             Position = 9,
             ValuefromPipelineByPropertyName = $true
         )]
-        [System.String]$DiskFile,
+        [string]$DiskFile,
 
         [Parameter(
+            ParameterSetName = 'SpecifyValue',
+            Mandatory = $true,
             Position = 10,
             ValuefromPipelineByPropertyName = $true
         )]
         [Alias('Binary')]
-        [System.String]$Data,
+        [string]$Data,
 
         [Parameter(
             Position = 11,
             ValuefromPipelineByPropertyName = $true
         )]
-        [System.String]$Comment = 'Created By Powershell Script',
+        [System.String]$Comment = 'Created By PowerShell Script',
 
         [Parameter(
             Position = 13,
@@ -70,6 +102,7 @@ function Set-FslRule {
         [Switch]$Passthru,
 
         [Parameter(
+            ParameterSetName = 'RuleObjectPipeline',
             Position = 14,
             ValuefromPipeline = $true,
             ValuefromPipelineByPropertyName = $true

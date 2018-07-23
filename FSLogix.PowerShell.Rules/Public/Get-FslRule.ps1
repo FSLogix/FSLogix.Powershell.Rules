@@ -76,6 +76,7 @@ function Get-FslRule {
                         CopyObject       = if ($poshFlags.CopyObject) { $poshFlags.CopyObject } else {$null}
                         DiskFile         = if ($poshFlags.VolumeAutoMount) { $destPath } else {$null}
                         Binary           = $rulePlusComment.Binary
+                        Data             = $null
                         Comment          = $rulePlusComment.Comment
                         #Flags            = $rulePlusComment.Flags
                     }
