@@ -1,2 +1,6 @@
 start.ps1
 demo.ps1
+BuildOutput
+.build
+PSDepend.build.psd1
+.build.ps1
