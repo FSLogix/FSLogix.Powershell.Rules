@@ -37,6 +37,7 @@ function Compare-FslFilePath {
 
         $dupes = $allFiles | Group-Object | Where-Object { $_.Count -gt 1 } | Select-Object -ExpandProperty Name
 
+        $uniqueFiles = @{}
 
         foreach ($filepath in $Files){
 

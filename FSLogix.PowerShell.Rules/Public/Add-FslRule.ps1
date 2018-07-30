@@ -6,7 +6,6 @@ function Add-FslRule {
         [Parameter(
             Position = 1,
             Mandatory = $true,
-            ValueFromPipeline = $true,
             ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$RuleFilePath,
@@ -14,24 +13,28 @@ function Add-FslRule {
         [Parameter(
             ParameterSetName = 'Hiding',
             Position = 2,
+            ValueFromPipeline = $true,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
         [Parameter(
             ParameterSetName = 'Redirect',
             Position = 2,
+            ValueFromPipeline = $true,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
         [Parameter(
             ParameterSetName = 'AppContainer',
             Position = 2,
+            ValueFromPipeline = $true,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
         [Parameter(
             ParameterSetName = 'SpecifyValue',
             Position = 2,
+            ValueFromPipeline = $true,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]

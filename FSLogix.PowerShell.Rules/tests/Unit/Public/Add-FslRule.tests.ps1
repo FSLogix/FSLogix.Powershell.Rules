@@ -46,7 +46,7 @@ Describe Add-FSlRule -Tag 'Unit' {
         BeforeAll{
             [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
             $AddfslRuleParams = @{
-                RuleFilePath = 'Testdrive:\temprule.fxr'
+                RuleFilePath = 'Testdrive:\madeup.fxr'
                 HidingType   = 'FileOrValue'
                 passthru     = $true
                 Comment      = 'Test'
