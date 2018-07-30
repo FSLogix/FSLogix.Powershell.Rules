@@ -17,7 +17,7 @@ function ConvertFrom-FslRuleCode {
         $FRX_RULE_SRC_IS_A_FILE_OR_VALUE = 0x00000002
         #$FRX_RULE_CONTAINS_USER_VARS = 0x00000008
         $FRX_RULE_SHOULD_COPY_FILE = 0x00000010
-        $FRX_RULE_IS_PERSISTANT = 0x00000020
+        #$FRX_RULE_IS_PERSISTANT = 0x00000020
         $FRX_RULE_TYPE_REDIRECT = 0x00000100
         $FRX_RULE_TYPE_HIDING = 0x00000200
         $FRX_RULE_TYPE_HIDE_PRINTER = 0x00000400
@@ -39,8 +39,8 @@ function ConvertFrom-FslRuleCode {
             #{ -not ( $RuleCode -band $FRX_RULE_CONTAINS_USER_VARS ) } { $containsUserVar = $false }
             { $RuleCode -band $FRX_RULE_SHOULD_COPY_FILE } { $copyObject = $true }
             { -not ( $RuleCode -band $FRX_RULE_SHOULD_COPY_FILE ) } { $copyObject = $false }
-            { $RuleCode -band $FRX_RULE_IS_PERSISTANT } { $persistent = $true}
-            { -not ( $RuleCode -band $FRX_RULE_IS_PERSISTANT ) } { $persistent = $false }
+            #{ $RuleCode -band $FRX_RULE_IS_PERSISTANT } { $persistent = $true}
+            #{ -not ( $RuleCode -band $FRX_RULE_IS_PERSISTANT ) } { $persistent = $false }
             { $RuleCode -band $FRX_RULE_TYPE_REDIRECT } { $redirect = $true}
             { -not ( $RuleCode -band $FRX_RULE_TYPE_REDIRECT ) } { $redirect = $false }
             { $RuleCode -band $FRX_RULE_TYPE_HIDING } { $hiding = $true}

@@ -22,7 +22,7 @@ function ConvertFrom-FslAssignmentCode {
         $Computer                   = 0x0040
         $ADDistinguishedName        = 0x0080
         $ApplyToProcessChildren     = 0x0100
-        $ProcessID                  = 0x0200
+        #$ProcessID                  = 0x0200
         $EnvironmentVariable        = 0x2000
         #$MandatoryLevelShift        = 10
         #$MandatoryLevelMask         = 0x1C00
