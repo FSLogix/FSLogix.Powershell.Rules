@@ -14,6 +14,11 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             'Testdrive:\pipe.fxa' | Get-FslLicenseDay | Select-Object -ExpandProperty LicenseDay | Should -Be 0
         }
 
+        It 'Has working parameter alias' {
+            Set-Content -Path Testdrive:\alias.fxa -Value "1`t20"
+            (Get-FslLicenseDay -AssignmentFilePath 'Testdrive:\alias.fxa').LicenseDay | Should -Be 20
+        }
+
         It 'Gets correct License days back'{
             Set-Content -Path Testdrive:\Correct.fxa -Value "1`t90"
             Add-Content -Path Testdrive:\Correct.fxa -Value "Doesn't Matter"
