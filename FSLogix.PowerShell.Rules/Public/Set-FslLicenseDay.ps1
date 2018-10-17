@@ -10,7 +10,7 @@ function Set-FslLicenseDay {
             Mandatory = $true
         )]
         [Alias('AssignmentFilePath')]
-        [System.String]$Path
+        [System.String]$Path,
 
         [Parameter(
             Position = 1,
