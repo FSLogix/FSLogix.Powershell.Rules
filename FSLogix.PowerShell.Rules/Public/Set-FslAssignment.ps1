@@ -51,7 +51,8 @@ function Set-FslAssignment {
             ValuefromPipelineByPropertyName = $true,
             ValuefromPipeline = $true
         )]
-        [System.String]$AssignmentFilePath,
+        [Alias('AssignmentFilePath')]
+        [System.String]$Path,
 
         [Parameter(
             Position = 1,
