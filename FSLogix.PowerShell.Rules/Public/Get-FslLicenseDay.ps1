@@ -18,15 +18,21 @@ function Get-FslLicenseDay {
     PROCESS {
         if (-not (Test-Path $Path)) {
             Write-Error "$Path not found."
-            exit
+            break
+        }
+
+        If ((Get-ChildItem -Path $Path).Extension -ne '.fxa'){
+            Write-Warning 'Assignment file extension should be .fxa'
         }
 
         $firstLine = Get-Content -Path $Path -TotalCount 1
 
-        [int]$licenseDay = $firstLine.Split("`t")[-1]
-
-        if ($null -eq $licenseDay){
-            Write-Error "Bad data on first line of $path"
+        try{
+            [int]$licenseDay = $firstLine.Split("`t")[-1]
+        }
+        catch{
+             Write-Error "Bad data on first line of $Path"
+             break
         }
 
         $output = [pscustomobject]@{
@@ -38,5 +44,3 @@ function Get-FslLicenseDay {
     } #Process
     END {} #End
 }  #function Get-FslLicenseDay
-
-Get-FslLicenseDay -Path 'D:\PoSHCode\GitHub\FSLogix.Powershell.Rules\FSLogix.PowerShell.Rules\tests\QA\TestFiles\AllAssign\Assign.fxa'
