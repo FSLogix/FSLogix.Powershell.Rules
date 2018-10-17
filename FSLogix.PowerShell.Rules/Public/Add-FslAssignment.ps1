@@ -110,15 +110,6 @@ function Add-FslAssignment {
         )]
         [Switch]$IncludeChildProcess,
 
-        <#
-        [Parameter(
-            ParameterSetName = 'Executable',
-            Position = 8,
-            ValuefromPipelineByPropertyName = $true
-        )]
-        [Switch]$ProcessId,
-        #>
-
         [Parameter(
             ParameterSetName = 'Network',
             Position = 9,
@@ -165,7 +156,15 @@ function Add-FslAssignment {
             Position = 14,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Int64]$UnAssignedTime = 0
+        [Int64]$UnAssignedTime = 0,
+
+  
+        [Parameter(
+            ParameterSetName = 'AssignmentObjectPipeline',
+            ValuefromPipeline = $true,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [PSTypeName('FSLogix.Assignment')]$InputObject
     )
 
     BEGIN {
@@ -245,10 +244,6 @@ function Add-FslAssignment {
                 if ($IncludeChildProcess) {
                     $convertToFslAssignmentCodeParams += @{ 'ApplyToProcessChildren' = $true }
                 }
-                #if ($ProcessId) {
-                #    $convertToFslAssignmentCodeParams += @{ 'ProcessId' = $true }
-                #}
-
 
                 $idString = $ProcessName
                 break

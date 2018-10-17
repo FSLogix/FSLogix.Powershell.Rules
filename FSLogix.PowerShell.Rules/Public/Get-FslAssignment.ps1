@@ -40,7 +40,7 @@ function Get-FslAssignment {
                     }
 
                     $output = [PSCustomObject]@{
-
+                        PSTypeName       = "FSLogix.Assignment"
                         RuleSetApplies      = switch ( $true ) {
                             $poshFlags.Remove { $false }
                             $poshFlags.Apply { $true }
@@ -60,11 +60,13 @@ function Get-FslAssignment {
                         UnAssignedTime      = if ( $poshFlags.EnvironmentVariable ) { $assignment.UnAssignedTime } else { $null }
                     }
 
-                    $output | ForEach-Object {
-                        $Properties = $_.PSObject.Properties
-                        @( $Properties | Where-Object { -not $_.Value } ) | ForEach-Object { $Properties.Remove($_.Name) }
-                        $_
-                    }
+                    # $output | ForEach-Object {
+                    #     $Properties = $_.PSObject.Properties
+                    #     @( $Properties | Where-Object { -not $_.Value } ) | ForEach-Object { $Properties.Remove($_.Name) }
+                    #     $_
+                    # }
+                    
+                    Write-Output $output
                 } #if
             } #foreach
     } #Process

@@ -1,7 +1,7 @@
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 #$funcType = Split-Path $here -Leaf
-$sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
+$global:sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 $global:here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
 #. "$here\$funcType\$sut"
 
@@ -10,10 +10,11 @@ Import-Module -Name (Join-Path $global:here 'FSLogix.PowerShell.Rules.psd1') -Fo
 InModuleScope 'FSLogix.PowerShell.Rules' {
 
 
-    Describe 'Compare-FslFilePath' -Tag 'Long' {
+    Describe $global:sut.Trimend('.ps1') -Tag 'Long' {
 
         AfterAll {
             Remove-Variable -Name 'here' -Scope Global
+            Remove-Variable -Name 'sut' -Scope Global
         }
 
         BeforeAll {

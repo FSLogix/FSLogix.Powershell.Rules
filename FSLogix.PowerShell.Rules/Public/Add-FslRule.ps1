@@ -105,7 +105,6 @@ function Add-FslRule {
 
         [Parameter(
             ParameterSetName = 'RuleObjectPipeline',
-            Position = 14,
             ValuefromPipeline = $true,
             ValuefromPipelineByPropertyName = $true
         )]
@@ -117,7 +116,6 @@ function Add-FslRule {
 
         $FRX_RULE_SRC_IS_A_FILE_OR_VALUE = 0x00000002
         $FRX_RULE_TYPE_REDIRECT = 0x00000100
-
 
     } # Begin
     PROCESS {
