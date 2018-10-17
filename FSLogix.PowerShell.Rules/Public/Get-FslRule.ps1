@@ -80,13 +80,8 @@ function Get-FslRule {
                         Comment          = $rulePlusComment.Comment
                         #Flags            = $rulePlusComment.Flags
                     }
-<#
-                    $output | ForEach-Object {
-                        $Properties = $_.PSObject.Properties
-                        @( $Properties | Where-Object { -not $_.Value } ) | ForEach-Object { $Properties.Remove($_.Name) }
-                        Write-Output $_
-                    }
-#>                  Write-Output $output
+
+                Write-Output $output
                     break
 
                 }

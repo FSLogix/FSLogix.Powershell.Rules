@@ -1,13 +1,18 @@
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
-$sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
-$here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
+$Global:sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
+$Global:here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
 
 
-Import-Module -Name (Join-Path $here 'FSLogix.PowerShell.Rules.psd1') -Force
+Import-Module -Name (Join-Path $Global:here 'FSLogix.PowerShell.Rules.psd1') -Force
 
 InModuleScope 'FSLogix.PowerShell.Rules' {
 
-    Describe $sut.Trimend('.ps1') -Tag 'Unit' {
+    Describe $Global:sut.Trimend('.ps1') -Tag 'Unit' {
+
+        AfterAll {
+            Remove-Variable -Name 'here' -Scope Global
+            Remove-Variable -Name 'sut' -Scope Global        
+        }
 
         It 'Takes Pipline Input'{
             Set-Content -Path Testdrive:\pipe.fxa -Value "1`t0"

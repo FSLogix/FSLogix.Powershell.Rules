@@ -8,7 +8,7 @@ function Add-FslAssignment {
             This function can add to FSLogix assignment file contents, the assignment file should have the same basename as the matching rule file.
             This will not overwrite the contents of an existing file.
 
-        .PARAMETER AssignmentFilePath
+        .PARAMETER Path
             The Target file path to set the assignment within
         .PARAMETER RuleSetApplies
             This determines whether a ruleset does or does not apply to users/groups/processes etc.  For instance when using a Hiding rule, applying that hiding rule to users will hide the file from the users assigned to it when applied.
@@ -51,7 +51,8 @@ function Add-FslAssignment {
             ValuefromPipeline = $true,
             Mandatory = $true
         )]
-        [System.String]$AssignmentFilePath,
+        [Alias('AssignmentFilePath')]
+        [System.String]$Path,
 
         [Parameter(
             Position = 1,
@@ -170,13 +171,13 @@ function Add-FslAssignment {
     BEGIN {
         Set-StrictMode -Version Latest
         #check file has correct filename extension
-        if ($AssignmentFilePath -notlike "*.fxa") {
+        if ($Path -notlike "*.fxa") {
             Write-Warning 'Assignment files should have an fxa extension'
         }
-        if ( -not ( Test-Path $AssignmentFilePath )) {
+        if ( -not ( Test-Path $Path )) {
             $version = 1
             $minimumLicenseAssignedTime = 0
-            Set-Content -Path $AssignmentFilePath -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop
+            Set-Content -Path $Path -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop
         }
 
     } # Begin
@@ -298,14 +299,14 @@ function Add-FslAssignment {
         $message = "$assignmentCode`t$idString`t$DistinguishedName`t$FriendlyName`t$AssignedTime`t$UnAssignedTime"
 
         $addContentParams = @{
-            'Path'     = $AssignmentFilePath
+            'Path'     = $Path
             'Encoding' = 'Unicode'
             'Value'    = $message
         }
 
         Add-Content @addContentParams
 
-        Write-Verbose -Message "Written $message to $AssignmentFilePath"
+        Write-Verbose -Message "Written $message to $Path"
 
         if ($passThru) {
             $passThruObject = [pscustomobject]@{

@@ -156,7 +156,7 @@ function Set-FslAssignment {
         $BoundParameters = $CommandLineParameters | Reset-PSBoundParameters $PSBoundParameters
 
         #check file has correct filename extension
-        if ($AssignmentFilePath -notlike "*.fxa") {
+        if ($Path -notlike "*.fxa") {
             Write-Warning 'Assignment files should have an fxa extension'
         }
 
@@ -170,12 +170,12 @@ function Set-FslAssignment {
 
         #Add first line if pipeline input
         If ($setContent) {
-            Set-Content -Path $AssignmentFilePath -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop
-            Add-FslAssignment @BoundParameters   # -AssignmentFilePath $AssignmentFilePath
+            Set-Content -Path $Path -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop
+            Add-FslAssignment @BoundParameters 
             $setContent = $false
         }
         else {
-            Add-FslAssignment @BoundParameters # -AssignmentFilePath $AssignmentFilePath
+            Add-FslAssignment @BoundParameters
         }
 
     } #Process

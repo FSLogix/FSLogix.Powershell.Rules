@@ -9,7 +9,7 @@ Import-Module -Name (Join-Path $global:here 'FSLogix.PowerShell.Rules.psd1') -Fo
 
 InModuleScope 'FSLogix.PowerShell.Rules' {
 
-    Describe 'Get Rule to Set Rule should result in the same file' -Tag 'QA' {
+    Describe 'Get Rule to Set Rule should result in the same file' -Tag 'Long' {
 
         AfterAll {
             Remove-Variable -Name 'here' -Scope Global
