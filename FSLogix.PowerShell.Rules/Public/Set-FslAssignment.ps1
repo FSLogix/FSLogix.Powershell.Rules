@@ -46,105 +46,145 @@ function Set-FslAssignment {
 
     [CmdletBinding()]
     Param (
+
         [Parameter(
-            Position = 0,
+            Position = 1,
             ValuefromPipelineByPropertyName = $true,
-            ValuefromPipeline = $true
+            ValuefromPipeline = $true,
+            Mandatory = $true
         )]
         [Alias('AssignmentFilePath')]
         [System.String]$Path,
 
         [Parameter(
-            Position = 1,
+            ParameterSetName = 'User',
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'Group',
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'Executable',
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'Network',
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'Computer',
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'OU',
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'EnvironmentVariable',
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$RuleSetApplies,
 
         [Parameter(
-            Position = 2,
-            ValuefromPipelineByPropertyName = $true
+            ParameterSetName = 'User',
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
         )]
         [System.String]$UserName,
 
         [Parameter(
-            Position = 3,
-            ValuefromPipelineByPropertyName = $true
+            ParameterSetName = 'Group',
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
         )]
         [System.String]$GroupName,
 
         [Parameter(
-            Position = 4,
+            ParameterSetName = 'Group',
             ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$WellKnownSID,
 
         [Parameter(
-            Position = 6,
+            ParameterSetName = 'User',
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'Group',
             ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$ADDistinguisedName,
 
         [Parameter(
-            Position = 7,
-            ValuefromPipelineByPropertyName = $true
+            ParameterSetName = 'Executable',
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
         )]
         [System.String]$ProcessName,
 
         [Parameter(
-            Position = 8,
+            ParameterSetName = 'Executable',
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$IncludeChildProcess,
 
         [Parameter(
-            Position = 9,
-            ValuefromPipelineByPropertyName = $true
-        )]
-        [Switch]$ProcessId,
-
-        [Parameter(
-            Position = 10,
-            ValuefromPipelineByPropertyName = $true
+            ParameterSetName = 'Network',
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
         )]
         [System.String]$IPAddress,
 
         [Parameter(
-            Position = 11,
-            ValuefromPipelineByPropertyName = $true
+            ParameterSetName = 'Computer',
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
         )]
         [ValidatePattern(".*@.*")]
         [System.String]$ComputerName,
 
         [Parameter(
-            Position = 12,
-            ValuefromPipelineByPropertyName = $true
+            ParameterSetName = 'OU',
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
         )]
         [System.String]$OU,
 
         [Parameter(
-            Position = 13,
-            ValuefromPipelineByPropertyName = $true
+            ParameterSetName = 'EnvironmentVariable',
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
         )]
         [ValidatePattern(".*=.*")]
         [System.String]$EnvironmentVariable,
 
         [Parameter(
-            Position = 14,
+            ParameterSetName = 'EnvironmentVariable',
             ValuefromPipelineByPropertyName = $true
         )]
         [Int64]$AssignedTime = 0,
 
         [Parameter(
-            Position = 15,
+            ParameterSetName = 'EnvironmentVariable',
             ValuefromPipelineByPropertyName = $true
         )]
-        [Int64]$UnAssignedTime = 0
-    )
+        [Int64]$UnAssignedTime = 0,
 
+        [Parameter(
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Switch]$PassThru,
+
+        [Parameter(
+            ParameterSetName = 'AssignmentObjectPipeline',
+            ValuefromPipeline = $true,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [PSTypeName('FSLogix.Assignment')]$InputObject
+    )
     BEGIN {
         Set-StrictMode -Version Latest
-        $CommandLineParameters = $PSBoundParameters | Start-FixPSBoundParameters
-
         $version = 1
         $minimumLicenseAssignedTime = 0
         $setContent = $true
@@ -153,7 +193,7 @@ function Set-FslAssignment {
     PROCESS {
 
         #Grab current parameters be VERY careful about moving this away from the top of the scriptas it's grabbing the PSItem which can change a lot
-        $BoundParameters = $CommandLineParameters | Reset-PSBoundParameters $PSBoundParameters
+        #$BoundParameters = $CommandLineParameters | Reset-PSBoundParameters $PSBoundParameters
 
         #check file has correct filename extension
         if ($Path -notlike "*.fxa") {
@@ -171,11 +211,11 @@ function Set-FslAssignment {
         #Add first line if pipeline input
         If ($setContent) {
             Set-Content -Path $Path -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop
-            Add-FslAssignment @BoundParameters 
+            Add-FslAssignment @PSBoundParameters
             $setContent = $false
         }
         else {
-            Add-FslAssignment @BoundParameters
+            Add-FslAssignment @PSBoundParameters
         }
 
     } #Process

@@ -239,72 +239,72 @@ function Add-FslAssignment {
 
             $convertToFslAssignmentCodeParams += @{ 'User' = $true }
 
-            if ($ADDistinguisedName) {
+            if ($allFields.ADDistinguisedName) {
                 $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
-                $distinguishedName = $ADDistinguisedName
+                $distinguishedName = $allFields.ADDistinguisedName
             }
 
-            $idString = $UserName
-            $friendlyName = $UserName
+            $idString = $allFields.UserName
+            $friendlyName = $allFields.UserName
         }
 
         if ( $allFields.GroupName ) {
 
             $convertToFslAssignmentCodeParams += @{ 'Group' = $true }
 
-            if ( $ADDistinguisedName ) {
+            if ( $allFields.ADDistinguisedName ) {
                 $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
-                $distinguishedName = $ADDistinguisedName
+                $distinguishedName = $allFields.ADDistinguisedName
             }
 
             #Determine if the group has a Well Known SID
-            $wks = [Enum]::GetValues([System.Security.Principal.WellKnownSidType])
-            $account = New-Object System.Security.Principal.NTAccount($GroupName)
+            $wellknownSids = [Enum]::GetValues([System.Security.Principal.WellKnownSidType])
+            $account = New-Object System.Security.Principal.NTAccount($allFields.GroupName)
             $sid = $account.Translate([System.Security.Principal.SecurityIdentifier])
-            $result = foreach ($s in $wks) { $sid.IsWellKnown($s)}
+            $result = foreach ($s in $wellknownSids) { $sid.IsWellKnown($s)}
 
             if ( $result -contains $true ) {
                 $idString = $sid.Value
             }
             else {
-                $idString = $GroupName
+                $idString = $allFields.GroupName
             }
 
-            $friendlyName = $GroupName
+            $friendlyName = $allFields.GroupName
         }
 
-        if ($allFields.ProcessName) {
+        if ( $allFields.ProcessName ) {
 
             $convertToFslAssignmentCodeParams += @{ 'Process' = $true }
 
-            if ($IncludeChildProcess) {
+            if ($allFields.IncludeChildProcess) {
                 $convertToFslAssignmentCodeParams += @{ 'ApplyToProcessChildren' = $true }
             }
 
-            $idString = $ProcessName
+            $idString = $allFields.ProcessName
 
         }
 
-        if ($allFields.IPAddress) {
+        if ( $allFields.IPAddress ) {
             $convertToFslAssignmentCodeParams += @{ 'Network' = $true }
-            $idString = $IPAddress
+            $idString = $allFields.IPAddress
         }
 
-        if ($allFields.ComputerName) {
+        if ( $allFields.ComputerName ) {
             $convertToFslAssignmentCodeParams += @{ 'Computer' = $true }
-            $idString = $ComputerName
+            $idString = $allFields.ComputerName
         }
 
-        if ($allFields.OU) {
+        if ( $allFields.OU ) {
             $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
-            $idString = $OU
+            $idString = $allFields.OU
         }
 
-        if ($allFields.EnvironmentVariable) {
+        if ( $allFields.EnvironmentVariable ) {
             $convertToFslAssignmentCodeParams += @{ 'EnvironmentVariable' = $true }
-            $idString = $EnvironmentVariable
-            if ( $AssignedTime -eq 0 -and $convertToFslAssignmentCodeParams.Remove -eq $true ) {
-                $AssignedTime = (Get-Date).ToFileTime()
+            $idString = $allFields.EnvironmentVariable
+            if ( $allFields.AssignedTime -eq 0 -and $convertToFslAssignmentCodeParams.Remove -eq $true ) {
+                $allFields.AssignedTime = (Get-Date).ToFileTime()
             }
         }
 
@@ -312,9 +312,15 @@ function Add-FslAssignment {
         if ( -not $allFields.AssignedTime ) {
             $AssignedTime = 0
         }
+        else {
+             $AssignedTime = $allFields.AssignedTime
+        }
 
         if ( -not $allFields.UnAssignedTime ) {
             $UnAssignedTime = 0
+        }
+        else {
+            $UnAssignedTime = $allFields.UnAssignedTime
         }
 
         if ( -not (Test-Path variable:script:DistinguishedName) ) {
