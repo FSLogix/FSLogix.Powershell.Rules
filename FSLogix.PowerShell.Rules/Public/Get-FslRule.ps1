@@ -56,9 +56,9 @@ function Get-FslRule {
                         PSTypeName       = "FSLogix.Rule"
                         FullName         = $fullnameJoin
 
-                        HidingType       = if ($poshFlags.Hiding -or $poshFlags.Font -or $poshFlags.Printer) {
+                        HidingType       = if ($poshFlags.Hiding -or $poshFlags.HideFont -or $poshFlags.Printer) {
                             switch ( $true ) {
-                                $poshFlags.Font {'Font'; break}
+                                $poshFlags.HideFont {'Font'; break}
                                 $poshFlags.Printer {'Printer'; break}
                                 $poshFlags.FolderOrKey {'FolderOrKey'; break}
                                 $poshFlags.FileOrValue {'FileOrValue'; break}

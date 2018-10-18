@@ -76,7 +76,7 @@ function ConvertTo-FslRuleCode {
             Position = 11,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Switch]$Font
+        [Switch]$HideFont
 
         <#
         [Parameter(
@@ -123,7 +123,7 @@ function ConvertTo-FslRuleCode {
             $SpecificData { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_SPECIFIC_DATA }
             $Java { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_JAVA }
             $VolumeAutomount { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_VOLUME_AUTOMOUNT }
-            $Font { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_HIDE_FONT }
+            $HideFont { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_HIDE_FONT }
         }
 
         #convert code to hex string so it doesn't get outputted as an integer

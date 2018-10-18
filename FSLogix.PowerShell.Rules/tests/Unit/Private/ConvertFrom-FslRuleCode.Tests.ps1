@@ -17,7 +17,7 @@ Describe $sut.TrimEnd('.ps1') {
         $result.SpecificData    | Should -BeFalse
         $result.Java            | Should -BeFalse
         $result.VolumeAutoMount | Should -BeFalse
-        $result.Font            | Should -BeFalse
+        $result.HideFont            | Should -BeFalse
     }
 
     It 'Hides Value or File 0x00000222' {
@@ -32,7 +32,7 @@ Describe $sut.TrimEnd('.ps1') {
         $result.SpecificData    | Should -BeFalse
         $result.Java            | Should -BeFalse
         $result.VolumeAutoMount | Should -BeFalse
-        $result.Font            | Should -BeFalse
+        $result.HideFont            | Should -BeFalse
     }
 
     It 'Hides Font 0x00004020' {
@@ -47,7 +47,7 @@ Describe $sut.TrimEnd('.ps1') {
         $result.SpecificData    | Should -BeFalse
         $result.Java            | Should -BeFalse
         $result.VolumeAutoMount | Should -BeFalse
-        $result.Font            | Should -BeTrue
+        $result.HideFont            | Should -BeTrue
     }
 
     It 'Hides Printer 0x00000420' {
@@ -62,7 +62,7 @@ Describe $sut.TrimEnd('.ps1') {
         $result.SpecificData    | Should -BeFalse
         $result.Java            | Should -BeFalse
         $result.VolumeAutoMount | Should -BeFalse
-        $result.Font            | Should -BeFalse
+        $result.HideFont            | Should -BeFalse
     }
 
     It 'Is Java 0x00001000' {
@@ -77,7 +77,7 @@ Describe $sut.TrimEnd('.ps1') {
         $result.SpecificData    | Should -BeFalse
         $result.Java            | Should -BeTrue
         $result.VolumeAutoMount | Should -BeFalse
-        $result.Font            | Should -BeFalse
+        $result.HideFont            | Should -BeFalse
     }
 
     It 'Redirects Value or File 0x00000122' {
@@ -92,7 +92,7 @@ Describe $sut.TrimEnd('.ps1') {
         $result.SpecificData    | Should -BeFalse
         $result.Java            | Should -BeFalse
         $result.VolumeAutoMount | Should -BeFalse
-        $result.Font            | Should -BeFalse
+        $result.HideFont            | Should -BeFalse
     }
 
     It 'Redirects Folder or Key 0x00000121' {
@@ -107,7 +107,7 @@ Describe $sut.TrimEnd('.ps1') {
         $result.SpecificData    | Should -BeFalse
         $result.Java            | Should -BeFalse
         $result.VolumeAutoMount | Should -BeFalse
-        $result.Font            | Should -BeFalse
+        $result.HideFont            | Should -BeFalse
     }
 
     It 'Redirects Value or File with copy 0x00000132' {
@@ -122,7 +122,7 @@ Describe $sut.TrimEnd('.ps1') {
         $result.SpecificData    | Should -BeFalse
         $result.Java            | Should -BeFalse
         $result.VolumeAutoMount | Should -BeFalse
-        $result.Font            | Should -BeFalse
+        $result.HideFont            | Should -BeFalse
     }
 
     It 'Redirects Folder or Key with copy 0x00000131' {

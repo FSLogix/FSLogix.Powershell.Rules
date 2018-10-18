@@ -41,38 +41,19 @@ Describe ConvertTo-FslRuleCode -Tag 'Unit' {
 
     Context 'Pipeline' {
 
-        BeforeAll {
-            [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
-            $convertToFslRuleCode = @{
-                FolderOrKey     = $true
-                FileOrValue     = $true
-                ContainsUserVar = $true
-                CopyObject      = $true
-                Redirect        = $true
-                Hiding          = $true
-                Printer         = $true
-                SpecificData    = $true
-                Java            = $true
-                VolumeAutoMount = $true
-                Font            = $true
-            }
-        }
-
         It 'Accepts value from the pipeline by property name' {
 
             $pipeObject = [PSCustomObject]@{
                 FolderOrKey     = $true
                 FileOrValue     = $true
-                #ContainsUserVar = $true
                 CopyObject      = $true
-                #Persistent = $true
                 Redirect        = $true
                 Hiding          = $true
                 Printer         = $true
                 SpecificData    = $true
                 Java            = $true
                 VolumeAutoMount = $true
-                Font            = $true
+                HideFont        = $true
             }
 
             $return = $pipeObject | ConvertTo-FslRuleCode
@@ -92,7 +73,7 @@ Describe ConvertTo-FslRuleCode -Tag 'Unit' {
                 SpecificData    = $true
                 Java            = $true
                 VolumeAutoMount = $true
-                Font            = $true
+                HideFont        = $true
             }
         } 
     }
