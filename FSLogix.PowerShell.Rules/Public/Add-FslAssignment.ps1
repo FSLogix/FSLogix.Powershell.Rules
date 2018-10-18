@@ -55,14 +55,37 @@ function Add-FslAssignment {
         [System.String]$Path,
 
         [Parameter(
-            Position = 1,
+            ParameterSetName = 'User',
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'Group',
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'Executable',
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'Network',
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'Computer',
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'OU',
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Parameter(
+            ParameterSetName = 'EnvironmentVariable',
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$RuleSetApplies,
 
         [Parameter(
             ParameterSetName = 'User',
-            Position = 2,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -70,7 +93,6 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'Group',
-            Position = 3,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -78,26 +100,22 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'Group',
-            Position = 4,
             ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$WellKnownSID,
 
         [Parameter(
             ParameterSetName = 'User',
-            Position = 5,
             ValuefromPipelineByPropertyName = $true
         )]
         [Parameter(
             ParameterSetName = 'Group',
-            Position = 5,
             ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$ADDistinguisedName,
 
         [Parameter(
             ParameterSetName = 'Executable',
-            Position = 6,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -105,14 +123,12 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'Executable',
-            Position = 7,
             ValuefromPipelineByPropertyName = $true
         )]
         [Switch]$IncludeChildProcess,
 
         [Parameter(
             ParameterSetName = 'Network',
-            Position = 9,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -120,7 +136,6 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'Computer',
-            Position = 10,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -129,7 +144,6 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'OU',
-            Position = 11,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -137,7 +151,6 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'EnvironmentVariable',
-            Position = 12,
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
@@ -146,19 +159,17 @@ function Add-FslAssignment {
 
         [Parameter(
             ParameterSetName = 'EnvironmentVariable',
-            Position = 13,
             ValuefromPipelineByPropertyName = $true
         )]
         [Int64]$AssignedTime = 0,
 
         [Parameter(
             ParameterSetName = 'EnvironmentVariable',
-            Position = 14,
             ValuefromPipelineByPropertyName = $true
         )]
         [Int64]$UnAssignedTime = 0,
 
-  
+
         [Parameter(
             ParameterSetName = 'AssignmentObjectPipeline',
             ValuefromPipeline = $true,
@@ -181,6 +192,11 @@ function Add-FslAssignment {
 
     } # Begin
     PROCESS {
+
+        switch ($PSCmdlet.ParameterSetName) {
+            condition {  }
+            Default {}
+        }
 
         $assignmentCode = $null
         $idString = $null
