@@ -11,18 +11,18 @@ Describe ConvertTo-FslRuleCode -Tag 'Unit' {
         BeforeAll {
             [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
             $convertToFslRuleCode = @{
-                FolderOrKey = $true
-                FileOrValue = $true
+                FolderOrKey     = $true
+                FileOrValue     = $true
                 ContainsUserVar = $true
-                CopyObject = $true
+                CopyObject      = $true
                 #Persistent = $true
-                Redirect = $true
-                Hiding = $true
-                Printer = $true
-                SpecificData = $true
-                Java = $true
+                Redirect        = $true
+                Hiding          = $true
+                Printer         = $true
+                SpecificData    = $true
+                Java            = $true
                 VolumeAutoMount = $true
-                HideFont = $true
+                HideFont        = $true
             }
         }
 
@@ -33,7 +33,7 @@ Describe ConvertTo-FslRuleCode -Tag 'Unit' {
             ( ConvertTo-FslRuleCode @AddfslRuleParams  | Measure-Object ).Count | Should BeGreaterThan 0
         }
 
-        It 'Returns Some Verbose lines'{
+        It 'Returns Some Verbose lines' {
             $verboseLine = ConvertTo-FslRuleCode @AddfslRuleParams -Verbose 4>&1
             $verboseLine.count | Should BeGreaterThan 0
         }
@@ -41,44 +41,59 @@ Describe ConvertTo-FslRuleCode -Tag 'Unit' {
 
     Context 'Pipeline' {
 
-        BeforeAll{
+        BeforeAll {
             [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
             $convertToFslRuleCode = @{
-                FolderOrKey = $true
-                FileOrValue = $true
+                FolderOrKey     = $true
+                FileOrValue     = $true
                 ContainsUserVar = $true
-                CopyObject = $true
-                #Persistent = $true
-                Redirect = $true
-                Hiding = $true
-                Printer = $true
-                SpecificData = $true
-                Java = $true
+                CopyObject      = $true
+                Redirect        = $true
+                Hiding          = $true
+                Printer         = $true
+                SpecificData    = $true
+                Java            = $true
                 VolumeAutoMount = $true
-                HideFont = $true
+                Font            = $true
             }
         }
 
         It 'Accepts value from the pipeline by property name' {
 
             $pipeObject = [PSCustomObject]@{
-                FolderOrKey = $true
-                FileOrValue = $true
+                FolderOrKey     = $true
+                FileOrValue     = $true
                 #ContainsUserVar = $true
-                CopyObject = $true
+                CopyObject      = $true
                 #Persistent = $true
-                Redirect = $true
-                Hiding = $true
-                Printer = $true
-                SpecificData = $true
-                Java = $true
+                Redirect        = $true
+                Hiding          = $true
+                Printer         = $true
+                SpecificData    = $true
+                Java            = $true
                 VolumeAutoMount = $true
-                HideFont = $true
+                Font            = $true
             }
 
-            $return =  $pipeObject | ConvertTo-FslRuleCode
+            $return = $pipeObject | ConvertTo-FslRuleCode
             $return | Should Be '0x00007F13'
         }
     }
 
+    Context 'Rule Code Validation' {
+        It 'tests' {
+            $params = @{
+                FolderOrKey     = $true
+                FileOrValue     = $true
+                CopyObject      = $true
+                Redirect        = $true
+                Hiding          = $true
+                Printer         = $true
+                SpecificData    = $true
+                Java            = $true
+                VolumeAutoMount = $true
+                Font            = $true
+            }
+        } 
+    }
 }

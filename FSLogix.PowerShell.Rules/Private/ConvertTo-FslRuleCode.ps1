@@ -76,7 +76,7 @@ function ConvertTo-FslRuleCode {
             Position = 11,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Switch]$HideFont
+        [Switch]$Font
 
         <#
         [Parameter(
@@ -101,7 +101,6 @@ function ConvertTo-FslRuleCode {
         $FRX_RULE_TYPE_JAVA = 0x00001000
         $FRX_RULE_TYPE_VOLUME_AUTOMOUNT = 0x00002000
         $FRX_RULE_TYPE_HIDE_FONT = 0x00004000
-        #$FRX_RULE_TYPE_MASK                = 0x00007F00
     } # Begin
     PROCESS {
         $codeToOutput = 0
@@ -116,7 +115,6 @@ function ConvertTo-FslRuleCode {
         switch ($true) {
             $FolderOrKey { $codeToOutput = $codeToOutput -bor $FRX_RULE_SRC_IS_A_DIR_OR_KEY }
             $FileOrValue { $codeToOutput = $codeToOutput -bor $FRX_RULE_SRC_IS_A_FILE_OR_VALUE }
-            #$ContainsUserVar { $codeToOutput = $codeToOutput -bor $FRX_RULE_CONTAINS_USER_VARS }
             $CopyObject { $codeToOutput = $codeToOutput -bor $FRX_RULE_SHOULD_COPY_FILE }
             $Persistent { $codeToOutput = $codeToOutput -bor $FRX_RULE_IS_PERSISTANT }
             $Redirect { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_REDIRECT }
@@ -125,11 +123,10 @@ function ConvertTo-FslRuleCode {
             $SpecificData { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_SPECIFIC_DATA }
             $Java { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_JAVA }
             $VolumeAutomount { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_VOLUME_AUTOMOUNT }
-            $HideFont { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_HIDE_FONT }
-            #$Mask               { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_MASK }
+            $Font { $codeToOutput = $codeToOutput -bor $FRX_RULE_TYPE_HIDE_FONT }
         }
 
-        #convert code to hex so it doesn't get outputted as an integer
+        #convert code to hex string so it doesn't get outputted as an integer
         $formattedCode = "0x{0:X8}" -f $codeToOutput
 
         Write-Output $formattedCode
