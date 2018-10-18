@@ -192,21 +192,10 @@ function Set-FslAssignment {
     } # Begin
     PROCESS {
 
-        #Grab current parameters be VERY careful about moving this away from the top of the scriptas it's grabbing the PSItem which can change a lot
-        #$BoundParameters = $CommandLineParameters | Reset-PSBoundParameters $PSBoundParameters
-
         #check file has correct filename extension
         if ($Path -notlike "*.fxa") {
             Write-Warning 'Assignment files should have an fxa extension'
         }
-
-        <#
-        #Change Items object to hashtable for use in splatting
-        $addFslAssignmentParams = @{}
-        $Items | Get-Member -MemberType *Property | ForEach-Object {
-            $addFslAssignmentParams.($_.name) = $Items.($_.name)
-        }
-        #>
 
         #Add first line if pipeline input
         If ($setContent) {
