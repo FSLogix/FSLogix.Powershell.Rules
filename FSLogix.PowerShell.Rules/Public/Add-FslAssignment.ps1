@@ -46,7 +46,7 @@ function Add-FslAssignment {
     Param (
 
         [Parameter(
-            Position = 0,
+            Position = 1,
             ValuefromPipelineByPropertyName = $true,
             ValuefromPipeline = $true,
             Mandatory = $true
@@ -169,6 +169,10 @@ function Add-FslAssignment {
         )]
         [Int64]$UnAssignedTime = 0,
 
+        [Parameter(
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [Switch]$PassThru,
 
         [Parameter(
             ParameterSetName = 'AssignmentObjectPipeline',
@@ -193,116 +197,128 @@ function Add-FslAssignment {
     } # Begin
     PROCESS {
 
-        switch ($PSCmdlet.ParameterSetName) {
-            condition {  }
-            Default {}
-        }
+        $convertToFslAssignmentCodeParams = @{}
 
         $assignmentCode = $null
         $idString = $null
         $DistinguishedName = $null
         $FriendlyName = $null
 
+        if ($PSCmdlet.ParameterSetName -eq 'AssignmentObjectPipeline') {
+            $allFields = $InputObject
+        }
+        else {
+            $allFields = [PSCustomObject]@{
 
-        $convertToFslAssignmentCodeParams = @{}
+                RuleSetApplies      = $RuleSetApplies
+                UserName            = $UserName
+                GroupName           = $GroupName
+                ADDistinguisedName  = $ADDistinguisedName
+                WellKnownSID        = $WellKnownSID
+                ProcessName         = $ProcessName
+                IncludeChildProcess = $IncludeChildProcess
+                IPAddress           = $IPAddress
+                ComputerName        = $ComputerName
+                OU                  = $OU
+                EnvironmentVariable = $EnvironmentVariable
+                AssignedTime        = $AssignedTime
+                UnAssignedTime      = $UnAssignedTime
 
-        if ($RuleSetApplies) {
+            }
+        }
+
+        if ($allFields.RuleSetApplies) {
             $convertToFslAssignmentCodeParams += @{ 'Apply' = $true }
         }
         else {
             $convertToFslAssignmentCodeParams += @{ 'Remove' = $true }
         }
 
-        switch ($PSCmdlet.ParameterSetName) {
-            User {
 
-                $convertToFslAssignmentCodeParams += @{ 'User' = $true }
+        if ($allFields.UserName) {
 
-                if ($ADDistinguisedName) {
-                    $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
-                    $distinguishedName = $ADDistinguisedName
-                }
+            $convertToFslAssignmentCodeParams += @{ 'User' = $true }
 
-                $idString = $UserName
-                $friendlyName = $UserName
-                break
-            }
-            Group {
-
-                $convertToFslAssignmentCodeParams += @{ 'Group' = $true }
-
-                if ( $ADDistinguisedName ) {
-                    $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
-                    $distinguishedName = $ADDistinguisedName
-                }
-
-                #Determine if the group has a Well Known SID
-                $wks = [Enum]::GetValues([System.Security.Principal.WellKnownSidType])
-                $account = New-Object System.Security.Principal.NTAccount($GroupName)
-                $sid = $account.Translate([System.Security.Principal.SecurityIdentifier])
-                $result = foreach ($s in $wks) { $sid.IsWellKnown($s)}
-
-                if ( $result -contains $true ) {
-                    $idString = $sid.Value
-                }
-                else {
-                    $idString = $GroupName
-                }
-
-                $friendlyName = $GroupName
-
-                break
-            }
-            Executable {
-
-                $convertToFslAssignmentCodeParams += @{ 'Process' = $true }
-
-                if ($IncludeChildProcess) {
-                    $convertToFslAssignmentCodeParams += @{ 'ApplyToProcessChildren' = $true }
-                }
-
-                $idString = $ProcessName
-                break
-            }
-            Network {
-                $convertToFslAssignmentCodeParams += @{ 'Network' = $true }
-                $idString = $IPAddress
-                break
-            }
-            Computer {
-                $convertToFslAssignmentCodeParams += @{ 'Computer' = $true }
-                $idString = $ComputerName
-                break
-            }
-            OU {
+            if ($ADDistinguisedName) {
                 $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
-                $idString = $OU
-                break
+                $distinguishedName = $ADDistinguisedName
             }
-            EnvironmentVariable {
-                $convertToFslAssignmentCodeParams += @{ 'EnvironmentVariable' = $true }
-                $idString = $EnvironmentVariable
-                if ( $AssignedTime -eq 0 -and $convertToFslAssignmentCodeParams.Remove -eq $true ) {
-                    $AssignedTime = (Get-Date).ToFileTime()
-                }
-                break
+
+            $idString = $UserName
+            $friendlyName = $UserName
+        }
+
+        if ( $allFields.GroupName ) {
+
+            $convertToFslAssignmentCodeParams += @{ 'Group' = $true }
+
+            if ( $ADDistinguisedName ) {
+                $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
+                $distinguishedName = $ADDistinguisedName
+            }
+
+            #Determine if the group has a Well Known SID
+            $wks = [Enum]::GetValues([System.Security.Principal.WellKnownSidType])
+            $account = New-Object System.Security.Principal.NTAccount($GroupName)
+            $sid = $account.Translate([System.Security.Principal.SecurityIdentifier])
+            $result = foreach ($s in $wks) { $sid.IsWellKnown($s)}
+
+            if ( $result -contains $true ) {
+                $idString = $sid.Value
+            }
+            else {
+                $idString = $GroupName
+            }
+
+            $friendlyName = $GroupName
+        }
+
+        if ($allFields.ProcessName) {
+
+            $convertToFslAssignmentCodeParams += @{ 'Process' = $true }
+
+            if ($IncludeChildProcess) {
+                $convertToFslAssignmentCodeParams += @{ 'ApplyToProcessChildren' = $true }
+            }
+
+            $idString = $ProcessName
+
+        }
+
+        if ($allFields.IPAddress) {
+            $convertToFslAssignmentCodeParams += @{ 'Network' = $true }
+            $idString = $IPAddress
+        }
+
+        if ($allFields.ComputerName) {
+            $convertToFslAssignmentCodeParams += @{ 'Computer' = $true }
+            $idString = $ComputerName
+        }
+
+        if ($allFields.OU) {
+            $convertToFslAssignmentCodeParams += @{ 'ADDistinguishedName' = $true }
+            $idString = $OU
+        }
+
+        if ($allFields.EnvironmentVariable) {
+            $convertToFslAssignmentCodeParams += @{ 'EnvironmentVariable' = $true }
+            $idString = $EnvironmentVariable
+            if ( $AssignedTime -eq 0 -and $convertToFslAssignmentCodeParams.Remove -eq $true ) {
+                $AssignedTime = (Get-Date).ToFileTime()
             }
         }
 
-        if ( -not $AssignedTime ) {
+
+        if ( -not $allFields.AssignedTime ) {
             $AssignedTime = 0
         }
 
-        if ( -not $UnAssignedTime ) {
+        if ( -not $allFields.UnAssignedTime ) {
             $UnAssignedTime = 0
         }
 
         if ( -not (Test-Path variable:script:DistinguishedName) ) {
             $DistinguishedName = ''
-        }
-
-        if ( -not (Test-Path variable:script:Passthru) ) {
-            $Passthru = $false
         }
 
         $assignmentCode = ConvertTo-FslAssignmentCode @convertToFslAssignmentCodeParams
@@ -321,8 +337,8 @@ function Add-FslAssignment {
 
         if ($passThru) {
             $passThruObject = [pscustomobject]@{
-                assignmentCode    = $assignmentCode
-                idString          = $idString
+                AssignmentCode    = $assignmentCode
+                IdString          = $idString
                 DistinguishedName = $DistinguishedName
                 FriendlyName      = $FriendlyName
                 AssignedTime      = $AssignedTime
