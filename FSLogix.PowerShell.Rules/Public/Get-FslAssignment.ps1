@@ -51,7 +51,6 @@ function Get-FslAssignment {
                         WellKnownSID        = if ( $poshFlags.Group ) { $assignment.IdString } else { $null }
                         ProcessName         = if ( $poshFlags.Process ) { $assignment.IdString } else { $null }
                         IncludeChildProcess = if ( $poshFlags.Process ) { $poshFlags.ApplyToProcessChildren } else { $null }
-                        #ProcessId           = if ( $poshFlags.Process ) { $poshFlags.ProcessId } else { $null }
                         IPAddress           = if ( $poshFlags.Network ) { $assignment.IdString } else { $null }
                         ComputerName        = if ( $poshFlags.Computer ) { $assignment.IdString } else { $null }
                         OU                  = if ( $poshFlags.ADDistinguishedName ) { $assignment.IdString } else { $null }
@@ -59,13 +58,7 @@ function Get-FslAssignment {
                         AssignedTime        = if ( $poshFlags.EnvironmentVariable ) { $assignment.AssignedTime } else { $null }
                         UnAssignedTime      = if ( $poshFlags.EnvironmentVariable ) { $assignment.UnAssignedTime } else { $null }
                     }
-
-                    # $output | ForEach-Object {
-                    #     $Properties = $_.PSObject.Properties
-                    #     @( $Properties | Where-Object { -not $_.Value } ) | ForEach-Object { $Properties.Remove($_.Name) }
-                    #     $_
-                    # }
-                    
+                   
                     Write-Output $output
                 } #if
             } #foreach
