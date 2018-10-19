@@ -150,14 +150,14 @@ function Add-FslRule {
             }
             Redirect {
                 $convertToFslRuleCodeParams += @{ 'Redirect' = $true }
+
                 switch ($true) {
                     { $RedirectType -eq 'FileOrValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
                     }
                     { $RedirectType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
                     }
                 }
-                $convertToFslRuleCodeParams = @{
-                    #'Persistent' = $true
+                $convertToFslRuleCodeParams += @{
                     'CopyObject' = $CopyObject
                 }
 
@@ -242,10 +242,6 @@ function Add-FslRule {
 
         Add-Content @addContentParams -Value "##$Comment"
         Write-Verbose -Message "Written $Comment to $RuleFilePath"
-
-        #if ( $convertToFslRuleCodeParams.ContainsKey( 'CopyObject' ) ) {
-        #    $copyTest = $convertToFslRuleCodeParams.CopyObject
-        #}
 
         If ($convertToFslRuleCodeParams.ContainsKey( 'CopyObject' ) -and
             $convertToFslRuleCodeParams.ContainsKey( 'Redirect' ) -and
