@@ -15,10 +15,31 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             Remove-Variable -Name 'sut' -Scope Global
         }
 
-        $AddFslAssignmentParams = @{
 
+        It 'Adds a timestamp' {
+            $AddFslAssignmentParams = @{
+                Path                = 'Testdrive:\Timestamp.fxa'
+                EnvironmentVariable = 'CLIENTNAME=PC1'
+                PassThru            = $true
+            }
+
+            $result = Add-FslAssignment @AddFslAssignmentParams
+            $result.AssignedTime | should -Not -Be 0
+            [System.DateTime]$result.AssignedTime | should -BeOfType [System.DateTime]
         }
 
+        It 'Does Not Add a timestamp' {
+            $AddFslAssignmentParams = @{
+                Path                = 'Testdrive:\Timestamp.fxa'
+                EnvironmentVariable = 'CLIENTNAME=PC1'
+                PassThru            = $true
+                RuleSetApplies      = $true
+            }
+
+            $result = Add-FslAssignment @AddFslAssignmentParams
+            $result.AssignedTime | should -Be 0
+        }
+        
 
     }
 
