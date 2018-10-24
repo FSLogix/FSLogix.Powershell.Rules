@@ -1,4 +1,4 @@
-function Remove-FslIndividualLine {
+function Remove-FslLine {
     [CmdletBinding()]
 
     Param (
@@ -32,15 +32,15 @@ function Remove-FslIndividualLine {
     PROCESS {
 
         switch ($Type) {
-            Assignment {  
+            Assignment {
                 Get-FslAssignment $Path | Where-Object {$_.$Category -ne $Name} | Set-FslAssignment $Path
             }
-            Rule { 
-                Get-FslRule $Path | Where-Object {$_.$Category -ne $Name} | Set-FslRule $Path 
+            Rule {
+                Get-FslRule $Path | Where-Object {$_.$Category -ne $Name} | Set-FslRule $Path
             }
             Default {}
         }
-        
+
     } #Process
     END {} #End
-}  #function Remove-FslIndividualLine
+}  #function Remove-FslLine

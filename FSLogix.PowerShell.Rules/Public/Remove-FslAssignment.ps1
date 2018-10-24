@@ -18,7 +18,7 @@ function Remove-FslAssignment {
         [alias('FullName')]
         [System.String]$Name,
 
- 
+
         [Parameter(
             ValuefromPipelineByPropertyName = $true
         )]
@@ -46,11 +46,11 @@ function Remove-FslAssignment {
 
 
         switch ($true) {
-            {$assignments.UserName -contains $Name} { 
+            {$assignments.UserName -contains $Name} {
                 $lines = $assignments | Where-Object {$_.Username -eq $Name}
                 foreach ($line in $lines) {
                     If ($PSCmdlet.ShouldProcess("UserName Assignment $Name")) {
-                        Remove-FslIndividualLine -Path $Path -Category Username -Name $Name -Type Assignment
+                        Remove-FslLine -Path $Path -Category Username -Name $Name -Type Assignment
                     }
                 }
             }
@@ -64,14 +64,8 @@ function Remove-FslAssignment {
             Default {}
         }
 
-        If ($PSCmdlet.ShouldProcess("$category Assignment $name")) {
-            Write-Output 'Should'
-        }
+        $licenceDay | Set-FslLicenseDay -Path $Path
 
-
-        $licenceDay | Set-FslLicenseDay -Path $Path 
-
-        
     } #Process
     END {} #End
 }  #function Remove-FslAssignment

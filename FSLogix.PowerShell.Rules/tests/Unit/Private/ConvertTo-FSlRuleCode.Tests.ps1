@@ -75,6 +75,6 @@ Describe ConvertTo-FslRuleCode -Tag 'Unit' {
                 VolumeAutoMount = $true
                 HideFont        = $true
             }
-        } 
+        }
     }
 }
