@@ -55,10 +55,10 @@ function Get-FslAssignment {
                         ComputerName        = if ( $poshFlags.Computer ) { $assignment.IdString } else { $null }
                         OU                  = if ( $poshFlags.ADDistinguishedName ) { $assignment.IdString } else { $null }
                         EnvironmentVariable = if ( $poshFlags.EnvironmentVariable ) { $assignment.IdString } else { $null }
-                        AssignedTime        = if ( $poshFlags.EnvironmentVariable ) { $assignment.AssignedTime } else { $null }
-                        UnAssignedTime      = if ( $poshFlags.EnvironmentVariable ) { $assignment.UnAssignedTime } else { $null }
+                        AssignedTime        = if ( $poshFlags.EnvironmentVariable ) { [DateTime]::FromFileTime($assignment.AssignedTime) } else { $null }
+                        UnAssignedTime      = if ( $poshFlags.EnvironmentVariable ) { [DateTime]::FromFileTime($assignment.UnAssignedTime) } else { $null }
                     }
-                   
+
                     Write-Output $output
                 } #if
             } #foreach

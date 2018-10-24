@@ -157,17 +157,17 @@ function Add-FslAssignment {
         [ValidatePattern(".*=.*")]
         [System.String]$EnvironmentVariable,
 
-        [Parameter(
-            ParameterSetName = 'EnvironmentVariable',
-            ValuefromPipelineByPropertyName = $true
-        )]
-        [Int64]$AssignedTime = 0,
+        # [Parameter(
+        #     ParameterSetName = 'EnvironmentVariable',
+        #     ValuefromPipelineByPropertyName = $true
+        # )]
+        # [Int64]$AssignedTime = 0,
 
-        [Parameter(
-            ParameterSetName = 'EnvironmentVariable',
-            ValuefromPipelineByPropertyName = $true
-        )]
-        [Int64]$UnAssignedTime = 0,
+        # [Parameter(
+        #     ParameterSetName = 'EnvironmentVariable',
+        #     ValuefromPipelineByPropertyName = $true
+        # )]
+        # [Int64]$UnAssignedTime = 0,
 
         [Parameter(
             ValuefromPipelineByPropertyName = $true
@@ -313,14 +313,14 @@ function Add-FslAssignment {
             $AssignedTime = 0
         }
         else {
-             $AssignedTime = $allFields.AssignedTime
+             $AssignedTime = $allFields.AssignedTime.ToFileTime()
         }
 
         if ( -not $allFields.UnAssignedTime ) {
             $UnAssignedTime = 0
         }
         else {
-            $UnAssignedTime = $allFields.UnAssignedTime
+            $UnAssignedTime = $allFields.UnAssignedTime.ToFileTime()
         }
 
         if ( -not (Test-Path variable:script:DistinguishedName) ) {

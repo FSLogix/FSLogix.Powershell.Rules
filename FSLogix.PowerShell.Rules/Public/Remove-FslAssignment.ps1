@@ -59,7 +59,44 @@ function Remove-FslAssignment {
             {$assignments.IPAddress -contains $Name} { $category = 'IPAddress' }
             {$assignments.ComputerName -contains $Name} { $category = 'ComputerName' }
             {$assignments.OU -contains $Name} { $category = 'OU' }
-            {$assignments.EnvironmentVariable -contains $Name} { $category = 'EnvironmentVariable' }
+            {$assignments.EnvironmentVariable -contains $Name} {
+                $lines = $assignments | Where-Object {$_.EnvironmentVariable -eq $Name}
+
+                foreach ($line in $lines) {
+
+                    $unassignMinimum = ([date.time]$line.timestamp).AddDays($licenceDay)
+                    $now = Get-Date
+
+                    switch ($true) {
+                        {$licenseday -ne 0 -and
+                            $line.timestamp -ne 0 -and
+                            $unassignMinimum -gt $now -and
+                            $Force -eq $false
+                        } {
+                            #If check for license time has failed and force isn't present, throw an error.
+                            $daysLeft = $unassignMinimum.DayOfYear() - ([date.time]$line.timestamp).DayOfYear()
+                            Write-Error "License agreement violation detected $daysLeft of $licenseday before license can be reassigned."
+                            break
+                        }
+                        {$licenseday -ne 0 -and
+                            $line.timestamp -ne 0 -and
+                            $unassignMinimum -lt $now
+                        } {
+                            #If license reassignment time has been passed keep line, but add unassigned time
+                            If ($PSCmdlet.ShouldProcess("Environment Variable Assignment $Name")) {
+                                Remove-FslLine -Path $Path -Category EnvironmentVariable -Name $Name -Type Assignment
+                                $line | Add-FslAssignment -UnAssignedTime (Get-Date) -Path $Path
+                            }
+                            break
+                        }
+                        Default {
+                            If ($PSCmdlet.ShouldProcess("Environment Variable Assignment $Name")) {
+                                Remove-FslLine -Path $Path -Category EnvironmentVariable -Name $Name -Type Assignment
+                            }
+                        }
+                    }
+                }
+            }
 
             Default {}
         }
