@@ -8,7 +8,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
 
     Describe $global:sut.TrimEnd('.ps1') -Tag 'Unit' {
 
-        $path = Join-Path $here 'tests\QA\TestFiles\AllAssign\Notepad++.fxa'
+        $path = Join-Path $here 'tests\QA\TestFiles\AllAssign\ClientName.fxa'
         $name = 'Fake'
 
         It 'First test' {

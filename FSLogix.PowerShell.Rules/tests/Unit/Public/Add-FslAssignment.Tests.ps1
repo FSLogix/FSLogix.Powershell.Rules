@@ -24,8 +24,8 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             }
 
             $result = Add-FslAssignment @AddFslAssignmentParams
-            $result.AssignedTime | should -Not -Be 0
-            [System.DateTime]$result.AssignedTime | should -BeOfType [System.DateTime]
+            $result.AssignedTime | should -Not -BeNullOrEmpty
+            [DateTime]::FromFileTime($result.AssignedTime) | should -BeOfType [System.DateTime]
         }
 
         It 'Does Not Add a timestamp' {
@@ -39,7 +39,7 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             $result = Add-FslAssignment @AddFslAssignmentParams
             $result.AssignedTime | should -Be 0
         }
-        
+
 
     }
 

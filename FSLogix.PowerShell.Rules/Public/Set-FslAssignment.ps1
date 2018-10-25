@@ -35,10 +35,6 @@ function Set-FslAssignment {
         .PARAMETER EnvironmentVariable
             By Specifying an environment variable, you can customize rules in various other ways. A very useful example for this option is when using it with RDSH, XenApp, or other remote sessions. You can use the Environment Variable CLIENTNAME to limit visibility to the device being used to access the RDSH or XenApp system.
             The environment variables that are supported are the ones that are present when the user's session is created. Environment variables set during logon are not supported.
-        .PARAMETER AssignedTime
-            Only used for pipeline input
-        .PARAMETER UnAssignedTime
-            Only used for pipeline input
         .EXAMPLE
             A sample command that uses the function or script, optionaly followed
             by sample output and a description. Repeat this keyword for each example.
@@ -158,18 +154,6 @@ function Set-FslAssignment {
         )]
         [ValidatePattern(".*=.*")]
         [System.String]$EnvironmentVariable,
-
-        [Parameter(
-            ParameterSetName = 'EnvironmentVariable',
-            ValuefromPipelineByPropertyName = $true
-        )]
-        [Int64]$AssignedTime = 0,
-
-        [Parameter(
-            ParameterSetName = 'EnvironmentVariable',
-            ValuefromPipelineByPropertyName = $true
-        )]
-        [Int64]$UnAssignedTime = 0,
 
         [Parameter(
             ValuefromPipelineByPropertyName = $true
