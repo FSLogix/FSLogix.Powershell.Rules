@@ -18,7 +18,10 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             $path = Join-Path $global:here 'tests\QA\TestFiles\AllAssign\Assign.fxa'
             $hiding = Get-Content $path
 
+            $ld = Get-FslLicenseDay -Path $path
+
             Get-FslAssignment -Path $path | Set-FslAssignment -AssignmentFilePath Testdrive:\Assign.fxa
+            $ld | Set-FslLicenseDay -Path Testdrive:\Assign.fxa
             $hidingTarget = Get-Content Testdrive:\Assign.fxa
 
             Compare-Object -ReferenceObject $hiding -DifferenceObject $hidingTarget | Measure-Object | Select-Object -ExpandProperty Count | Should Be 0

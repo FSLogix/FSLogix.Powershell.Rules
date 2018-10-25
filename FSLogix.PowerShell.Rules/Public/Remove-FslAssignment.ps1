@@ -39,7 +39,7 @@ function Remove-FslAssignment {
             Write-Warning 'Assignment files should have an fxa filename extension'
         }
 
-        $licenceDay = Get-FslLicenseDay -Path $Path
+        $licenceDay = (Get-FslLicenseDay -Path $Path).LicenseDay
 
         $assignments = Get-FslAssignment -Path $Path
 
@@ -64,34 +64,35 @@ function Remove-FslAssignment {
 
                 foreach ($line in $lines) {
 
-                    $unassignMinimum = ([date.time]$line.timestamp).AddDays($licenceDay)
+                    if (-not $line.AssignedTime -eq 0) {
+                        $unassignMinimum = $line.AssignedTime.AddDays($licenceDay)
+                    }
                     $now = Get-Date
 
                     switch ($true) {
-                        {$licenseday -ne 0 -and
-                            $line.timestamp -ne 0 -and
+
+                        {$line.AssignedTime -eq 0} {
+                            If ($PSCmdlet.ShouldProcess("Environment Variable Assignment $Name")) {
+                                Remove-FslLine -Path $Path -Category EnvironmentVariable -Name $Name -Type Assignment
+                            }
+                            break
+                        }
+                        {$licenceDay -ne 0 -and
+                            $line.AssignedTime -ne 0 -and
                             $unassignMinimum -gt $now -and
                             $Force -eq $false
                         } {
                             #If check for license time has failed and force isn't present, throw an error.
-                            $daysLeft = $unassignMinimum.DayOfYear() - ([date.time]$line.timestamp).DayOfYear()
-                            Write-Error "License agreement violation detected $daysLeft of $licenseday before license can be reassigned."
+                            $daysLeft = ($unassignMinimum - $line.AssignedTime).Days
+                            Write-Error "License agreement violation detected $daysLeft days left out of $licenceDay days before license can be reassigned."
                             break
                         }
-                        {$licenseday -ne 0 -and
-                            $line.timestamp -ne 0 -and
-                            $unassignMinimum -lt $now
-                        } {
-                            #If license reassignment time has been passed keep line, but add unassigned time
-                            If ($PSCmdlet.ShouldProcess("Environment Variable Assignment $Name")) {
-                                Remove-FslLine -Path $Path -Category EnvironmentVariable -Name $Name -Type Assignment
-                                $line | Add-FslAssignment -UnAssignedTime (Get-Date) -Path $Path
-                            }
-                            break
-                        }
+
                         Default {
                             If ($PSCmdlet.ShouldProcess("Environment Variable Assignment $Name")) {
                                 Remove-FslLine -Path $Path -Category EnvironmentVariable -Name $Name -Type Assignment
+                                $line.UnAssignedTime = Get-Date
+                                $line | Add-FslAssignment -Path $Path
                             }
                         }
                     }
