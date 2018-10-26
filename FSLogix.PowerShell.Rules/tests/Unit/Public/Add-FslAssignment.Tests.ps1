@@ -39,8 +39,5 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             $result = Add-FslAssignment @AddFslAssignmentParams
             $result.AssignedTime | should -Be 0
         }
-
-
     }
-
 }

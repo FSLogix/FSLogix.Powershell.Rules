@@ -54,11 +54,46 @@ function Remove-FslAssignment {
                     }
                 }
             }
-            {$assignments.GroupName -contains $Name} { $category = 'GroupName' }
-            {$assignments.ProcessName -contains $Name} { $category = 'ProcessName' }
-            {$assignments.IPAddress -contains $Name} { $category = 'IPAddress' }
-            {$assignments.ComputerName -contains $Name} { $category = 'ComputerName' }
-            {$assignments.OU -contains $Name} { $category = 'OU' }
+            {$assignments.GroupName -contains $Name} {
+                $lines = $assignments | Where-Object {$_.GroupName -eq $Name}
+                foreach ($line in $lines) {
+                    If ($PSCmdlet.ShouldProcess("GroupName Assignment $Name")) {
+                        Remove-FslLine -Path $Path -Category GroupName -Name $Name -Type Assignment
+                    }
+                }
+            }
+            {$assignments.ProcessName -contains $Name} {
+                $lines = $assignments | Where-Object {$_.ProcessName -eq $Name}
+                foreach ($line in $lines) {
+                    If ($PSCmdlet.ShouldProcess("ProcessName Assignment $Name")) {
+                        Remove-FslLine -Path $Path -Category ProcessName -Name $Name -Type Assignment
+                    }
+                }
+            }
+            {$assignments.IPAddress -contains $Name} {
+                $lines = $assignments | Where-Object {$_.IPAddress -eq $Name}
+                foreach ($line in $lines) {
+                    If ($PSCmdlet.ShouldProcess("IPAddress Assignment $Name")) {
+                        Remove-FslLine -Path $Path -Category IPAddress -Name $Name -Type Assignment
+                    }
+                }
+            }
+            {$assignments.ComputerName -contains $Name} {
+                $lines = $assignments | Where-Object {$_.ComputerName -eq $Name}
+                foreach ($line in $lines) {
+                    If ($PSCmdlet.ShouldProcess("ComputerName Assignment $Name")) {
+                        Remove-FslLine -Path $Path -Category ComputerName -Name $Name -Type Assignment
+                    }
+                }
+            }
+            {$assignments.OU -contains $Name} {
+                $lines = $assignments | Where-Object {$_.OU -eq $Name}
+                foreach ($line in $lines) {
+                    If ($PSCmdlet.ShouldProcess("OU Assignment $Name")) {
+                        Remove-FslLine -Path $Path -Category OU -Name $Name -Type Assignment
+                    }
+                }
+            }
             {$assignments.EnvironmentVariable -contains $Name} {
                 $lines = $assignments | Where-Object {$_.EnvironmentVariable -eq $Name}
 

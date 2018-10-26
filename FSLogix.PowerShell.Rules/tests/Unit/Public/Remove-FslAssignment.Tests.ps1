@@ -17,11 +17,14 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
         $name1 = 'CLIENTNAME=PC1'
         $name2 = 'CLIENTNAME=PC2'
 
+        BeforeEach {
         #Arrange
-        Set-FslAssignment -Path $Path -GroupName Everyone -RuleSetApplies
-        Set-FslLicenseDay -Path $Path -LicenseDay 90
-        Add-FslAssignment -Path $Path -RuleSetApplies -EnvironmentVariable $name1
-        Add-FslAssignment -Path $Path -EnvironmentVariable $name2
+            Set-FslAssignment -Path $Path -GroupName Everyone -RuleSetApplies
+            Set-FslLicenseDay -Path $Path -LicenseDay 90
+            Add-FslAssignment -Path $Path -RuleSetApplies -EnvironmentVariable $name1
+            Add-FslAssignment -Path $Path -EnvironmentVariable $name2
+            $count = (Get-Content -Path $path).count
+        }
 
         It 'Creates and error when License reassignment rules are violated.' {
             { Remove-FslAssignment -Path $Path -Name $name2 -ErrorAction Stop } | Should -Throw  "License agreement violation detected"
@@ -41,14 +44,20 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
 
         It 'Does not remove a line when License reassignment rules are violated.' {
             Remove-FslAssignment -Path $Path -Name $name2 -ErrorAction SilentlyContinue
-            Get-Content -Path $Path | Should -HaveCount 4
+            Get-Content -Path $Path | Should -HaveCount $count
         }
 
         It 'Removes a line when no assigned time is set' {
             Remove-FslAssignment -Path $Path -Name $name1
-            Get-Content -Path $Path | Should -HaveCount 3
+            Get-Content -Path $Path | Should -HaveCount ($count -1)
         }
 
+        It 'Does not change Assigned time on remove' {
+            $assignmentTime = (Get-FslAssignment -Path $Path | Where-Object {$_.EnvironmentVariable -eq $name2}).AssignedTime
+            Remove-FslAssignment -Path $Path -Name $name2 -Force
+            $newTime = (Get-FslAssignment -Path $Path | Where-Object {$_.EnvironmentVariable -eq $name2}).AssignedTime
+            $assignmentTime | Should -Be $newTime
+        }
 
     }
 }
