@@ -183,7 +183,7 @@ function Set-FslAssignment {
 
         #Add first line if pipeline input
         If ($setContent) {
-            Set-Content -Path $Path -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop
+            Set-Content -Path $Path -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop -WhatIf:$false
             Add-FslAssignment @PSBoundParameters
             $setContent = $false
         }

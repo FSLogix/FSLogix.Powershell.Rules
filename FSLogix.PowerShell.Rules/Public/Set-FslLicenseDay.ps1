@@ -19,7 +19,7 @@ function Set-FslLicenseDay {
             Mandatory = $true
         )]
         [int]$LicenseDay
-        
+
     )
 
     BEGIN {
@@ -39,9 +39,9 @@ function Set-FslLicenseDay {
 
         $content = Get-Content -Path $Path | Select-Object -Skip 1
 
-        Set-Content -Path $Path -Value "$version`t$LicenseDay" -Encoding Unicode
+        Set-Content -Path $Path -Value "$version`t$LicenseDay" -Encoding Unicode -WhatIf:$false
 
-        Add-Content -Path $Path -Value $content -Encoding Unicode
+        Add-Content -Path $Path -Value $content -Encoding Unicode -WhatIf:$false
 
     } #Process
     END {} #End

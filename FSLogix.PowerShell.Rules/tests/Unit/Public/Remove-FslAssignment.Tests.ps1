@@ -6,7 +6,7 @@ Import-Module -Name (Join-Path $global:here 'FSLogix.PowerShell.Rules.psd1') -Fo
 
 InModuleScope 'FSLogix.PowerShell.Rules' {
 
-    Describe $global:sut.TrimEnd('.ps1') -Tag 'Unit' {
+    Describe $global:sut.TrimEnd('.ps1') {
 
         AfterAll {
             Remove-Variable -Name 'here' -Scope Global
@@ -23,6 +23,11 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             Set-FslLicenseDay -Path $Path -LicenseDay 90
             Add-FslAssignment -Path $Path -RuleSetApplies -EnvironmentVariable $name1
             Add-FslAssignment -Path $Path -EnvironmentVariable $name2
+            Add-FslAssignment -Path $Path -UserName Jim -RuleSetApplies
+            Add-FslAssignment -Path $Path -ProcessName 'c:\test.exe'
+            Add-FslAssignment -Path $Path -IPAddress '192.168.0.99'
+            Add-FslAssignment -Path $Path -ComputerName 'MyLaptop@domain.com'
+            Add-FslAssignment -Path $Path -OU 'MyOU'
             $count = (Get-Content -Path $path).count
         }
 
@@ -59,5 +64,34 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
             $assignmentTime | Should -Be $newTime
         }
 
+        It 'Removes a User Name assignment' {
+            Remove-FslAssignment -Path $Path -Name Jim
+            Get-Content -Path $Path | Should -HaveCount ($count - 1)
+        }
+
+        It 'Removes a Group Name assignment' {
+            Remove-FslAssignment -Path $Path -Name Everyone
+            Get-Content -Path $Path | Should -HaveCount ($count - 1)
+        }
+
+        It 'Removes a Process Name assignment' {
+            Remove-FslAssignment -Path $Path -Name 'C:\test.exe'
+            Get-Content -Path $Path | Should -HaveCount ($count - 1)
+        }
+
+        It 'Removes a IPAddress assignment' {
+            Remove-FslAssignment -Path $Path -Name '192.168.0.99'
+            Get-Content -Path $Path | Should -HaveCount ($count - 1)
+        }
+
+        It 'Removes a Computername assignment' {
+            Remove-FslAssignment -Path $Path -Name 'MyLaptop@domain.com'
+            Get-Content -Path $Path | Should -HaveCount ($count - 1)
+        }
+
+        It 'Removes a OU assignment' {
+            Remove-FslAssignment -Path $Path -Name 'MyOU'
+            Get-Content -Path $Path | Should -HaveCount ($count - 1)
+        }
     }
 }

@@ -238,6 +238,7 @@ function Add-FslRule {
         $addContentParams = @{
             'Path'     = $RuleFilePath
             'Encoding' = 'Unicode'
+            'WhatIf'   = $false
         }
 
         Add-Content @addContentParams -Value "##$Comment"
