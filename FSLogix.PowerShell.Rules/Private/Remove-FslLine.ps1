@@ -18,11 +18,12 @@ function Remove-FslLine {
             Mandatory = $true
         )]
         [System.String]$Name,
-            [Parameter(
+
+        [Parameter(
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
         )]
-        [ValidateSet('Assignment','Rule')]
+        [ValidateSet('Assignment', 'Rule')]
         [System.String]$Type
     )
 
