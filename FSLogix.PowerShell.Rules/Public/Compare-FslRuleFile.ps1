@@ -11,7 +11,7 @@ function Compare-FslRuleFile {
         [System.Array]$Files,
 
         [Parameter(
-            Position = 0,
+            Position = 1,
             ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$OutputPath = "$PSScriptRoot"
