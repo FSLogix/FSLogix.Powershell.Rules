@@ -1950,4 +1950,4 @@ function Remove-FslLine {
     END {} #End
 }  #function Remove-FslLine
 
-Export-ModuleMember -Function Add-FslAssignment, Add-FslRule, Compare-FslFilePath, Compare-FslRuleFile, Get-FslAssignment, Get-FslLicenseDay, Get-FslRule, Remove-FslAssignment, Set-FslAssignment, Set-FslLicenseDay , Set-FslRule
+Export-ModuleMember -Function Add-FslAssignment, Add-FslRule, Compare-FslFilePath, Compare-FslRuleFile, Get-FslAssignment, Get-FslLicenseDay, Get-FslRule, Remove-FslAssignment, Set-FslAssignment, Set-FslLicenseDay, Set-FslRule
