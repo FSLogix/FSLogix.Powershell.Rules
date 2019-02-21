@@ -27,7 +27,7 @@
     CompanyName = 'FSLogix'
     
     # Copyright statement for this module
-    Copyright = '(c) 2018 FSLogix. All rights reserved.'
+    Copyright = '(c) 2019 FSLogix. All rights reserved.'
     
     # Description of the functionality provided by this module
     Description = 'Set of functions to control the behaviour of the FSlogix rules files'
