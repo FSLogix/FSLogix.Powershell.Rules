@@ -21,7 +21,7 @@
     GUID = '52118cef-ce60-4f5c-94bb-2e023ab7cf80'
     
     # Author of this module
-    Author = 'JimMoyle'
+    Author = 'Jim Moyle'
     
     # Company or vendor of this module
     CompanyName = 'FSLogix'
