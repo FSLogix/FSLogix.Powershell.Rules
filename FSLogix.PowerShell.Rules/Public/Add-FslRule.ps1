@@ -95,7 +95,7 @@ function Add-FslRule {
             Mandatory = $false,
             ValuefromPipelineByPropertyName = $true
         )]
-        [ValidateSet('String', 'Binary', 'DWORD', 'QWORD', 'Multi-String', 'ExpandableString')]
+        [ValidateSet('String', 'DWORD', 'QWORD', 'Multi-String', 'ExpandableString')]
         [string]$RegValueType = 'String',
 
         [Parameter(
@@ -137,7 +137,7 @@ function Add-FslRule {
             Write-Warning 'Rule files should have an fxr extension'
         }
 
-        $convertToFslRuleCodeParams = @{}
+        $convertToFslRuleCodeParams = @{ }
 
         switch ($PSCmdlet.ParameterSetName) {
 
@@ -147,9 +147,9 @@ function Add-FslRule {
                     }
                     { $HidingType -eq 'Printer' } { $convertToFslRuleCodeParams += @{ 'Printer' = $true }
                     }
-                    { $HidingType -eq 'FileOrValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
+                    { $HidingType -eq 'FileOrValue' } { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
                     }
-                    { $HidingType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
+                    { $HidingType -eq 'FolderOrKey' } { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
                     }
                     { $HidingType -ne 'Font' -and $HidingType -ne 'Printer' } { $convertToFslRuleCodeParams += @{ 'Hiding' = $true }
                     }
@@ -160,9 +160,9 @@ function Add-FslRule {
                 $convertToFslRuleCodeParams += @{ 'Redirect' = $true }
 
                 switch ($true) {
-                    { $RedirectType -eq 'FileOrValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
+                    { $RedirectType -eq 'FileOrValue' } { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
                     }
-                    { $RedirectType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
+                    { $RedirectType -eq 'FolderOrKey' } { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
                     }
                 }
                 $convertToFslRuleCodeParams += @{
@@ -178,14 +178,6 @@ function Add-FslRule {
             SpecifyValue {
                 $convertToFslRuleCodeParams += @{ 'SpecificData' = $true }
                 $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
-                switch ($RegValueType) {
-                    String              { $RegValueTypeFile = 'StringValue'; break }
-                    Binary              { $RegValueTypeFile = 'BinaryValue'; break }
-                    DWORD               { $RegValueTypeFile = 'dword'; break }
-                    QWORD               { $RegValueTypeFile = 'qword'; break }
-                    Multi-String        { $RegValueTypeFile = 'Multi-String'; break }
-                    ExpandableString    { $RegValueTypeFile = 'ExpandableString'; break }
-                }
                 break
             }
             RuleObjectPipeline {
@@ -195,9 +187,9 @@ function Add-FslRule {
                         }
                         { $RuleObject.HidingType -eq 'Printer' } { $convertToFslRuleCodeParams += @{ 'Printer' = $true }
                         }
-                        { $RuleObject.HidingType -eq 'FileOrValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
+                        { $RuleObject.HidingType -eq 'FileOrValue' } { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
                         }
-                        { $RuleObject.HidingType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
+                        { $RuleObject.HidingType -eq 'FolderOrKey' } { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
                         }
                         { $RuleObject.HidingType -ne 'Font' -and $RuleObject.HidingType -ne 'Printer' } { $convertToFslRuleCodeParams += @{ 'Hiding' = $true }
                         }
@@ -206,9 +198,9 @@ function Add-FslRule {
                 if ($RuleObject.RedirectType) {
                     $convertToFslRuleCodeParams += @{ 'Redirect' = $true }
                     switch ($true) {
-                        { $RuleObject.RedirectType -eq 'FileOrValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
+                        { $RuleObject.RedirectType -eq 'FileOrValue' } { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
                         }
-                        { $RuleObject.RedirectType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
+                        { $RuleObject.RedirectType -eq 'FolderOrKey' } { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
                         }
                     }
                 }
@@ -232,8 +224,36 @@ function Add-FslRule {
         switch ($true) {
             (($flags -band  $FRX_RULE_TYPE_SPECIFIC_DATA) -eq 2048) {
                 $sourceParent = $FullName
+                
+                switch ($RegValueType) {
+                    String { 
+                        $RegValueTypeFile = 'StringValue'
+                        $binary = ConvertTo-FslRegHex -RegData $ValueData -RegValueType $RegValueType
+                        break 
+                    }
+                    DWORD { 
+                        $RegValueTypeFile = 'dword'
+                        
+                        $binary = try{
+                            $intValueData = [int32]$ValueData
+                            try{
+                            $binary = ConvertTo-FslRegHex -RegData $intValueData -RegValueType $RegValueType
+                            }
+                            catch{
+                                Write-Error "Could not convert $intValueData of value $RegValueType to a registry hex code"
+                            }
+                        }
+                        catch{
+                            Write-Error "Could not convert $valueData to an Integer"
+                            exit
+                        }
+                        break 
+                    }
+                    QWORD { $RegValueTypeFile = 'qword'; break }
+                    Multi-String { $RegValueTypeFile = 'Multi-String'; break }
+                    ExpandableString { $RegValueTypeFile = 'ExpandableString'; break }
+                }
                 $Source = $RegValueTypeFile
-                $binary = ConvertTo-FslRegHex -RegStringData $ValueData
                 break
             }
             (($flags -band  $FRX_RULE_SRC_IS_A_FILE_OR_VALUE) -eq 2) {
@@ -306,5 +326,5 @@ function Add-FslRule {
             Write-Output $passThruObject
         }
     } #Process
-    END {} #End
+    END { } #End
 }  #function Add-FslRule

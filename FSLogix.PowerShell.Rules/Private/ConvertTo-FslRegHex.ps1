@@ -8,7 +8,15 @@ function ConvertTo-FslRegHex {
             ValuefromPipeline = $true,
             Mandatory = $true
         )]
-        [System.String]$RegStringData
+        [System.String]$RegData,
+
+        [Parameter(
+            ParameterSetName = 'SpecifyValue',
+            Mandatory = $true,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [ValidateSet('String', 'DWORD', 'QWORD', 'Multi-String', 'ExpandableString')]
+        [string]$RegValueType
     )
 
     BEGIN {
@@ -18,23 +26,35 @@ function ConvertTo-FslRegHex {
 
         $hexOnly = @()
 
-        $hexUniCode = $RegStringData | format-hex -Encoding UniCode
+        if ($RegValuetype -eq 'DWORD') {
+            [int]$RegData = $RegData
+        }
+
+        $hexUniCode = $RegData | format-hex -Encoding UniCode
         $hexToLine = $hexUniCode.ToString() -split [environment]::NewLine
 
         $hexToLine | ForEach-Object {
-            if ($_ -match "^\d{8,20}\s{3}((?:\d[0-9|A-F]\s){1,16})\s+(?:.\.)+\s{0,20}$") {
+            if ($_ -match "^\d{8,20}\s{3}((?:\d[0-9|A-F]\s){1,16})\s+.*$") {
                 $hexOnly += $Matches[1]
                 $Matches.clear()
-            }
-            
+            }           
         }
         $joined = [string]::join('', $hexOnly)
         $joinedNoSpaces = $joined.Replace(' ', '')
-        $output = '01' + $joinedNoSpaces + '0000'
+        switch ($RegValueType) {
+            String { $output = '01' + $joinedNoSpaces + '0000'; break }
+            DWORD { 
+                while ($joinedNoSpaces.length -lt 8) {
+                    $joinedNoSpaces = $joinedNoSpaces + '0'
+                }
+                $output = '04' + $joinedNoSpaces ; break }
+            Default { }
+        }
+        
 
         Write-Output $output
         
     } #Process
-    END {} #End
+    END { } #End
 }  #function ConvertTo-FslRegHex
 

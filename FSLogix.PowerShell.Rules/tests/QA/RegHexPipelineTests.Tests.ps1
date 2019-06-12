@@ -21,7 +21,7 @@ Describe "Tests to and from converstion string to registry hexadecimal" {
         foreach ($test in $tests) {
 
             It "Testing: $test" {
-                ConvertTo-FslRegHex $test | ConvertFrom-FslRegHex | Should -be $test
+                ConvertTo-FslRegHex $test -RegValueType String | ConvertFrom-FslRegHex | Should -be $test
             }
         }
     }
