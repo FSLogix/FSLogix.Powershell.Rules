@@ -88,8 +88,15 @@ function Add-FslRule {
             Position = 10,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Alias('Binary')]
-        [string]$Data,
+        [string]$ValueData,
+
+        [Parameter(
+            ParameterSetName = 'SpecifyValue',
+            Mandatory = $false,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [ValidateSet('String', 'Binary', 'DWORD', 'QWORD', 'Multi-String', 'ExpandableString')]
+        [string]$RegValueType = 'String',
 
         [Parameter(
             Position = 11,
@@ -116,6 +123,7 @@ function Add-FslRule {
 
         $FRX_RULE_SRC_IS_A_FILE_OR_VALUE = 0x00000002
         $FRX_RULE_TYPE_REDIRECT = 0x00000100
+        $FRX_RULE_TYPE_SPECIFIC_DATA = 0x00000800
 
     } # Begin
     PROCESS {
@@ -169,6 +177,23 @@ function Add-FslRule {
             }
             SpecifyValue {
                 $convertToFslRuleCodeParams += @{ 'SpecificData' = $true }
+                $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
+                switch ($RegValueType) {
+                    String              { $RegValueTypeFile = 'StringValue'; break }
+                    Binary              { $RegValueTypeFile = 'BinaryValue'; break }
+                    DWORD               { $RegValueTypeFile = 'dword'; break }
+                    QWORD               { $RegValueTypeFile = 'qword'; break }
+                    Multi-String        { $RegValueTypeFile = 'Multi-String'; break }
+                    ExpandableString    { $RegValueTypeFile = 'ExpandableString'; break }
+                }
+
+                $c = 'ChangedWithGui'
+                $r = $c | format-hex -Encoding UniCode
+                $c = ($r.ToString() -split [environment]::NewLine).substring(11, 47).replace(' ', '')
+                $joined = [string]::join('', $c)
+                $final = '01' + $joined + '0000'
+                $final
+
                 break
             }
             RuleObjectPipeline {
@@ -212,15 +237,31 @@ function Add-FslRule {
 
         $flags = ConvertTo-FslRuleCode @convertToFslRuleCodeParams
 
+        switch ($true) {
+            (($flags -band  $FRX_RULE_TYPE_SPECIFIC_DATA) -eq 2048) {
+                $sourceParent = $FullName
+                $Source = $RegValueTypeFile
+                break
+            }
+            (($flags -band  $FRX_RULE_SRC_IS_A_FILE_OR_VALUE) -eq 2) {
+                $sourceParent = Split-Path $FullName -Parent
+                $source = Split-Path $FullName -Leaf
+                break
+            }
+            Default {
+                $sourceParent = $FullName
+                $source = $null
+            }
+        }
 
-        if ($flags -band  $FRX_RULE_SRC_IS_A_FILE_OR_VALUE) {
-            $sourceParent = Split-Path $FullName -Parent
-            $source = Split-Path $FullName -Leaf
-        }
-        else {
-            $sourceParent = $FullName
-            $source = $null
-        }
+        # if ($flags -band  $FRX_RULE_SRC_IS_A_FILE_OR_VALUE) {
+        #     $sourceParent = Split-Path $FullName -Parent
+        #     $source = Split-Path $FullName -Leaf
+        # }
+        # else {
+        #     $sourceParent = $FullName
+        #     $source = $null
+        # }
 
         if ($flags -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE -and
             $flags -band $FRX_RULE_TYPE_REDIRECT) {
@@ -266,7 +307,7 @@ function Add-FslRule {
                 Source       = $Source
                 DestParent   = $DestParent
                 Dest         = $Dest
-                Flags        = $Flags
+                Flags        = $Flags                
                 binary       = $binary
                 Comment      = $Comment
             }
