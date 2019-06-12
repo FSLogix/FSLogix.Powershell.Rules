@@ -10,7 +10,13 @@ Describe "Tests to and from converstion string to registry hexadecimal" {
         $test1 = 'The Quick Brown Fox Jumped Over The Lazy Dog'
         $test2 = '0123456789'
         $test3 = 'c:\jimm\doesnotexist'
-        $tests = $test1,$test2,$test3
+        $test4 = 'Pipe and brackets | () {} []'
+        $test5 = 'Escaping Jim''s quote'
+        $test6 = "As they say, ""live and learn."""
+        $test7 = "As they say, 'live and learn.'"
+        $test8 = 'As they say, "live and learn."'
+
+        $tests = $test1, $test2, $test3, $test4, $test5, $test6, $test7, $test8
 
         foreach ($test in $tests) {
 
