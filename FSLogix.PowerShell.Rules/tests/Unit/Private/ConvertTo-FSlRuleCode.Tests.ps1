@@ -75,6 +75,9 @@ Describe ConvertTo-FslRuleCode -Tag 'Unit' {
                 VolumeAutoMount = $true
                 HideFont        = $true
             }
+
+            $return = ConvertTo-FslRuleCode @params
+            $return | Should Be '0x00007F13'
         }
     }
 }

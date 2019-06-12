@@ -186,14 +186,6 @@ function Add-FslRule {
                     Multi-String        { $RegValueTypeFile = 'Multi-String'; break }
                     ExpandableString    { $RegValueTypeFile = 'ExpandableString'; break }
                 }
-
-                $c = 'ChangedWithGui'
-                $r = $c | format-hex -Encoding UniCode
-                $c = ($r.ToString() -split [environment]::NewLine).substring(11, 47).replace(' ', '')
-                $joined = [string]::join('', $c)
-                $final = '01' + $joined + '0000'
-                $final
-
                 break
             }
             RuleObjectPipeline {
@@ -241,16 +233,19 @@ function Add-FslRule {
             (($flags -band  $FRX_RULE_TYPE_SPECIFIC_DATA) -eq 2048) {
                 $sourceParent = $FullName
                 $Source = $RegValueTypeFile
+                $binary = ConvertTo-FslRegHex -RegStringData $ValueData
                 break
             }
             (($flags -band  $FRX_RULE_SRC_IS_A_FILE_OR_VALUE) -eq 2) {
                 $sourceParent = Split-Path $FullName -Parent
                 $source = Split-Path $FullName -Leaf
+                $binary = $null
                 break
             }
             Default {
                 $sourceParent = $FullName
                 $source = $null
+                $binary = $null
             }
         }
 
@@ -272,9 +267,6 @@ function Add-FslRule {
             $destParent = $RedirectDestPath
             $dest = $null
         }
-
-        #Binary is an unused field in fxr files
-        $binary = $null
 
         $addContentParams = @{
             'Path'     = $RuleFilePath

@@ -8,6 +8,8 @@ Describe Add-FSlRule -Tag 'Unit' {
 
     Context -Name 'Output' {
         . "$here\Private\ConvertTo-FslRuleCode.ps1"
+        . "$here\Private\ConvertTo-FslRegHex.ps1"
+
         Mock ConvertTo-FslRuleCode {'0x00000222'}
         Mock Add-Content { $null } -ParameterFilter { $Encoding -and $Encoding -eq 'Unicode' }
 
@@ -40,6 +42,7 @@ Describe Add-FSlRule -Tag 'Unit' {
     Context 'Pipeline' {
 
         . "$here\Private\ConvertTo-FslRuleCode.ps1"
+        . "$here\Private\ConvertTo-FslRegHex.ps1"
         #Mock ConvertTo-FslRuleCode { '0x00000221' }
         Mock Add-Content { $null } -ParameterFilter { $Encoding -and $Encoding -eq 'Unicode' }
 
@@ -88,6 +91,10 @@ Describe Add-FSlRule -Tag 'Unit' {
             $return.Flags | Should Be '0x00000222'
             $return.binary | Should BeNullOrEmpty
             $return.Comment | Should Be 'Test'
+        }
+        
+        It "Takes Specify Value Params Correctly" {
+            Add-FslRule -FullName 'HKCU\Software\FSLogix\Test' -RegValueType 'String' -ValueData 'ChangedByPowerShell' -RuleFilePath TestDrive:\SpecifyValue.fxr
         }
     }
 

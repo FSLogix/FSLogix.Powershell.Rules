@@ -4,19 +4,18 @@ $global:here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Par
 
 Import-Module -Name (Join-Path $global:here 'FSLogix.PowerShell.Rules.psd1') -Force
 
-InModuleScope 'FSLogix.PowerShell.Rules' {
+Describe $global:sut.Trimend('.ps1') -Tag 'Long' {
 
-    Describe $global:sut.Trimend('.ps1') -Tag 'Long' {
+    InModuleScope 'FSLogix.PowerShell.Rules' {
 
         AfterAll {
             Remove-Variable -Name 'here' -Scope Global
             Remove-Variable -Name 'sut' -Scope Global
         }
 
-        BeforeAll {
-            [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
-            $files = (Get-ChildItem $global:here\Tests\QA\TestFiles\CustomerSamples\Office2016).FullName #  "TestDrive:\VisioNotExist.fxr", "TestDrive:\ProjectNotExist.fxr", "TestDrive:\OfficeNotExist.fxr"
-        }
+
+        $files = (Get-ChildItem $global:here\Tests\QA\TestFiles\CustomerSamples\Office2016).FullName #  "TestDrive:\VisioNotExist.fxr", "TestDrive:\ProjectNotExist.fxr", "TestDrive:\OfficeNotExist.fxr"
+
         <#
 
         Mock -CommandName Get-FslRule -MockWith {
@@ -95,12 +94,12 @@ InModuleScope 'FSLogix.PowerShell.Rules' {
 
         Context 'Return values' {
 
-            Mock -CommandName Set-FslRule -MockWith {} -Verifiable
+            Mock -CommandName Set-FslRule -MockWith { } -Verifiable
             Mock -CommandName Test-Path -MockWith { $true } -Verifiable
 
             It 'Should Not Throw' {
 
-                { Compare-FslRuleFile -Files $files -OutputPath TestDrive:\ }  | Should Not Throw
+                { Compare-FslRuleFile -Files $files -OutputPath TestDrive:\ } | Should Not Throw
             }
 
             It 'Returns no object' {

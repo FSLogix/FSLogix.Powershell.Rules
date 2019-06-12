@@ -4,3 +4,4 @@ BuildOutput
 .build
 PSDepend.build.psd1
 .build.ps1
+StartPester.ps1
