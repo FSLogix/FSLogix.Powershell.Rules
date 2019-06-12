@@ -17,14 +17,16 @@ function ConvertTo-FslRegHex {
     PROCESS {
 
         $hexOnly = @()
+
         $hexUniCode = $RegStringData | format-hex -Encoding UniCode
         $hexToLine = $hexUniCode.ToString() -split [environment]::NewLine
 
         $hexToLine | ForEach-Object {
-            if ($_ -match "^\d{8,20}\s{3}((?:\d[0-9|A-F]\s){1,16})\s+(?:\w\.)+\s{0,9}$") {
+            if ($_ -match "^\d{8,20}\s{3}((?:\d[0-9|A-F]\s){1,16})\s+(?:.\.)+\s{0,20}$") {
                 $hexOnly += $Matches[1]
+                $Matches.clear()
             }
-            $Matches.clear()
+            
         }
         $joined = [string]::join('', $hexOnly)
         $joinedNoSpaces = $joined.Replace(' ', '')
