@@ -139,6 +139,7 @@ function Add-FslRule {
 
         $convertToFslRuleCodeParams = @{ }
 
+        #This switch statement sets up the function parameters for ConvertT-FslRuleCode
         switch ($PSCmdlet.ParameterSetName) {
 
             Hiding {

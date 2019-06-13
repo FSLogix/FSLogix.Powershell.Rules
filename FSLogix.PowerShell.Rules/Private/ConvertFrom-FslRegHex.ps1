@@ -8,7 +8,14 @@ function ConvertFrom-FslRegHex {
             ValuefromPipeline = $true,
             Mandatory = $true
         )]
-        [System.String]$HexString
+        [System.String]$HexString,
+
+        [Parameter(
+            Mandatory = $true,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [ValidateSet('String', 'DWORD', 'QWORD', 'Multi-String', 'ExpandableString')]
+        [string]$RegValueType
     )
 
     BEGIN {
@@ -16,7 +23,11 @@ function ConvertFrom-FslRegHex {
     } # Begin
     PROCESS {
         $ascii = $null
-        $hexLong = $HexString.substring(2, $HexString.length - 6)
+        switch ($RegValueType) {
+            String { $hexLong = $HexString.substring(2, $HexString.length - 6) ; break }
+            DWORD { $hexLong = $HexString.substring(2, 8) ; break }
+            Default {}
+        }
         $hex = $hexLong -Split '(.{4})'
         $hex | ForEach-Object {
             if ($_ -ne '') {

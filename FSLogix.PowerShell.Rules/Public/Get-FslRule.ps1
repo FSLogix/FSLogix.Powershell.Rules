@@ -31,7 +31,7 @@ function Get-FslRule {
                 }
                 #If line matches tab separated data with 5 columns.
                 { $line -match "([^\t]*\t){5}" } {
-                    #Create a powershell object from the columns
+                    #Create a powershell object from the columns only works on full PowerShell, not core
                     $lineObj = $line | ConvertFrom-String -Delimiter `t -PropertyNames SrcParent, Src, DestParent, Dest, FlagsDec, Binary
                     #ConvertFrom-String converts the hex value in flag to decimal, need to convert back to a hex string. Add in the comment and output it.
                     $rulePlusComment = $lineObj | Select-Object -Property SrcParent, Src, DestParent, Dest, @{n='Flags';e={'0x' + "{0:X8}" -f $lineObj.FlagsDec}}, Binary, @{n='Comment';e={$comment}}

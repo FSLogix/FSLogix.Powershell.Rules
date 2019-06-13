@@ -11,7 +11,6 @@ function ConvertTo-FslRegHex {
         [System.String]$RegData,
 
         [Parameter(
-            ParameterSetName = 'SpecifyValue',
             Mandatory = $true,
             ValuefromPipelineByPropertyName = $true
         )]
