@@ -34,10 +34,10 @@ function Get-FslRule {
                     #Create a powershell object from the columns only works on full PowerShell, not core
                     $lineObj = $line | ConvertFrom-String -Delimiter `t -PropertyNames SrcParent, Src, DestParent, Dest, FlagsDec, Binary
                     #ConvertFrom-String converts the hex value in flag to decimal, need to convert back to a hex string. Add in the comment and output it.
-                    $rulePlusComment = $lineObj | Select-Object -Property SrcParent, Src, DestParent, Dest, @{n='Flags';e={'0x' + "{0:X8}" -f $lineObj.FlagsDec}}, Binary, @{n='Comment';e={$comment}}
+                    $rulePlusComment = $lineObj | Select-Object -Property SrcParent, Src, DestParent, Dest, @{n = 'Flags'; e = { '0x' + "{0:X8}" -f $lineObj.FlagsDec } }, Binary, @{n = 'Comment'; e = { $comment } }
 
-                    $poshFlags =  $rulePlusComment.Flags | ConvertFrom-FslRuleCode
-                    if ($rulePlusComment.DestParent){
+                    $poshFlags = $rulePlusComment.Flags | ConvertFrom-FslRuleCode
+                    if ($rulePlusComment.DestParent) {
                         $destPath = try {
                             (Join-Path $rulePlusComment.DestParent $rulePlusComment.Dest -ErrorAction Stop).TrimEnd('\')
                         }
@@ -46,11 +46,11 @@ function Get-FslRule {
                         }
                     }
                     $fullnameJoin = try {
-                                (Join-Path $rulePlusComment.SrcParent $rulePlusComment.Src -ErrorAction Stop).TrimEnd('\')
-                            }
-                            catch {
-                                [system.io.fileinfo]($rulePlusComment.SrcParent.TrimEnd('\', '/') + '\' + $rulePlusComment.Src.TrimStart('\', '/')).TrimEnd('\')
-                            }
+                        (Join-Path $rulePlusComment.SrcParent $rulePlusComment.Src -ErrorAction Stop).TrimEnd('\')
+                    }
+                    catch {
+                        [system.io.fileinfo]($rulePlusComment.SrcParent.TrimEnd('\', '/') + '\' + $rulePlusComment.Src.TrimStart('\', '/')).TrimEnd('\')
+                    }
 
                     $output = [PSCustomObject]@{
                         PSTypeName       = "FSLogix.Rule"
@@ -58,31 +58,31 @@ function Get-FslRule {
 
                         HidingType       = if ($poshFlags.Hiding -or $poshFlags.HideFont -or $poshFlags.Printer) {
                             switch ( $true ) {
-                                $poshFlags.HideFont {'Font'; break}
-                                $poshFlags.Printer {'Printer'; break}
-                                $poshFlags.FolderOrKey {'FolderOrKey'; break}
-                                $poshFlags.FileOrValue {'FileOrValue'; break}
+                                $poshFlags.HideFont { 'Font'; break }
+                                $poshFlags.Printer { 'Printer'; break }
+                                $poshFlags.FolderOrKey { 'FolderOrKey'; break }
+                                $poshFlags.FileOrValue { 'FileOrValue'; break }
                             }
                         }
                         else { $null }
-                        RedirectDestPath = if ($poshFlags.Redirect) { $destPath } else {$null}
+                        RedirectDestPath = if ($poshFlags.Redirect) { $destPath } else { $null }
                         RedirectType     = if ($poshFlags.Redirect) {
                             switch ( $true ) {
-                                $poshFlags.FolderOrKey {'FolderOrKey'; break}
-                                $poshFlags.FileOrValue {'FileOrValue'; break}
+                                $poshFlags.FolderOrKey { 'FolderOrKey'; break }
+                                $poshFlags.FileOrValue { 'FileOrValue'; break }
                             }
                         }
                         else { $null }
                         
-                        CopyObject       = if ($poshFlags.CopyObject) { $poshFlags.CopyObject } else {$null}
-                        DiskFile         = if ($poshFlags.VolumeAutoMount) { $destPath } else {$null}
+                        CopyObject       = if ($poshFlags.CopyObject) { $poshFlags.CopyObject } else { $null }
+                        DiskFile         = if ($poshFlags.VolumeAutoMount) { $destPath } else { $null }
                         Binary           = $rulePlusComment.Binary
                         Data             = $null
                         Comment          = $rulePlusComment.Comment
                         #Flags            = $rulePlusComment.Flags
                     }
 
-                Write-Output $output
+                    Write-Output $output
                     break
 
                 }
@@ -92,5 +92,5 @@ function Get-FslRule {
             }
         }
     } #Process
-    END {} #End
+    END { } #End
 }  #function Get-FslRule

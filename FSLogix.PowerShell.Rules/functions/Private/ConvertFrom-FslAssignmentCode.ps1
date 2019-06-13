@@ -13,17 +13,17 @@ function ConvertFrom-FslAssignmentCode {
 
     BEGIN {
         Set-StrictMode -Version Latest
-        $Apply                      = 0x0001
-        $Remove                     = 0x0002
-        $User                       = 0x0004
-        $Process                    = 0x0008
-        $Group                      = 0x0010
-        $Network                    = 0x0020
-        $Computer                   = 0x0040
-        $ADDistinguishedName        = 0x0080
-        $ApplyToProcessChildren     = 0x0100
+        $Apply = 0x0001
+        $Remove = 0x0002
+        $User = 0x0004
+        $Process = 0x0008
+        $Group = 0x0010
+        $Network = 0x0020
+        $Computer = 0x0040
+        $ADDistinguishedName = 0x0080
+        $ApplyToProcessChildren = 0x0100
         #$ProcessID                  = 0x0200
-        $EnvironmentVariable        = 0x2000
+        $EnvironmentVariable = 0x2000
         #$MandatoryLevelShift        = 10
         #$MandatoryLevelMask         = 0x1C00
 
@@ -50,5 +50,5 @@ function ConvertFrom-FslAssignmentCode {
         Write-Output $output
 
     } #Process
-    END {} #End
+    END { } #End
 }  #function ConvertFrom-FslAssignmentCode

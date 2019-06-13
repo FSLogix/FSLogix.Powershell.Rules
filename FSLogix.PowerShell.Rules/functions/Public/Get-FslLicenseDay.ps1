@@ -21,18 +21,18 @@ function Get-FslLicenseDay {
             break
         }
 
-        If ((Get-ChildItem -Path $Path).Extension -ne '.fxa'){
+        If ((Get-ChildItem -Path $Path).Extension -ne '.fxa') {
             Write-Warning 'Assignment file extension should be .fxa'
         }
 
         $firstLine = Get-Content -Path $Path -TotalCount 1
 
-        try{
+        try {
             [int]$licenseDay = $firstLine.Split("`t")[-1]
         }
-        catch{
-             Write-Error "Bad data on first line of $Path"
-             break
+        catch {
+            Write-Error "Bad data on first line of $Path"
+            break
         }
 
         $output = [pscustomobject]@{
@@ -42,5 +42,5 @@ function Get-FslLicenseDay {
         Write-Output $output
 
     } #Process
-    END {} #End
+    END { } #End
 }  #function Get-FslLicenseDay

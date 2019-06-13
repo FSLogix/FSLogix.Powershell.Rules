@@ -29,26 +29,26 @@ function ConvertFrom-FslRuleCode {
 
         switch ($true) {
             { $RuleCode -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY } { $folderOrKey = $true }
-            { -not ( $RuleCode -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY ) } { $folderOrKey = $false}
-            { $RuleCode -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE } {$fileOrValue = $true}
+            { -not ( $RuleCode -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY ) } { $folderOrKey = $false }
+            { $RuleCode -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE } { $fileOrValue = $true }
             { -not ( $RuleCode -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE ) } { $fileOrValue = $false }
             { $RuleCode -band $FRX_RULE_SHOULD_COPY_FILE } { $copyObject = $true }
             { -not ( $RuleCode -band $FRX_RULE_SHOULD_COPY_FILE ) } { $copyObject = $false }
-            { $RuleCode -band $FRX_RULE_TYPE_REDIRECT } { $redirect = $true}
+            { $RuleCode -band $FRX_RULE_TYPE_REDIRECT } { $redirect = $true }
             { -not ( $RuleCode -band $FRX_RULE_TYPE_REDIRECT ) } { $redirect = $false }
-            { $RuleCode -band $FRX_RULE_TYPE_HIDING } { $hiding = $true}
+            { $RuleCode -band $FRX_RULE_TYPE_HIDING } { $hiding = $true }
             { -not ( $RuleCode -band $FRX_RULE_TYPE_HIDING ) } { $hiding = $false }
             { $RuleCode -band $FRX_RULE_TYPE_HIDE_PRINTER } { $hidePrinter = $true }
-            { -not ( $RuleCode -band $FRX_RULE_TYPE_HIDE_PRINTER ) } { $hidePrinter = $false}
+            { -not ( $RuleCode -band $FRX_RULE_TYPE_HIDE_PRINTER ) } { $hidePrinter = $false }
             { $RuleCode -band $FRX_RULE_TYPE_SPECIFIC_DATA } { $specificData = $true }
             { -not ( $RuleCode -band $FRX_RULE_TYPE_SPECIFIC_DATA ) } { $specificData = $false }
             { $RuleCode -band $FRX_RULE_TYPE_JAVA } { $java = $true }
             { -not ( $RuleCode -band $FRX_RULE_TYPE_JAVA ) } { $java = $false }
-            { $RuleCode -band $FRX_RULE_TYPE_VOLUME_AUTOMOUNT } { $volumeAutoMount = $true}
+            { $RuleCode -band $FRX_RULE_TYPE_VOLUME_AUTOMOUNT } { $volumeAutoMount = $true }
             { -not ( $RuleCode -band $FRX_RULE_TYPE_VOLUME_AUTOMOUNT ) } { $volumeAutoMount = $false }
             { $RuleCode -band $FRX_RULE_TYPE_HIDE_FONT } { $font = $true }
             { -not ( $RuleCode -band $FRX_RULE_TYPE_HIDE_FONT ) } { $font = $false }
-            default {}
+            default { }
         } #Switch
 
         $outObject = [PSCustomObject]@{
@@ -65,5 +65,5 @@ function ConvertFrom-FslRuleCode {
         }
         Write-Output $outObject
     } #Process
-    END {} #End
+    END { } #End
 }  #function ConvertFrom-FslRuleCode

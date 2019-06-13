@@ -1,15 +1,15 @@
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 #$funcType = Split-Path $here -Leaf
-$sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
-$global:here = $here |  Split-Path -Parent | Split-Path -Parent
+#$sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
+$global:here = $here | Split-Path -Parent | Split-Path -Parent
 #. "$here\$funcType\$sut"
 
 Import-Module -Name (Join-Path $global:here 'FSLogix.PowerShell.Rules.psd1') -Force
 
-InModuleScope 'FSLogix.PowerShell.Rules' {
-
-    Describe 'Get Assignment to Set Assignment should result in the same file' -Tag 'QA' {
-
+Describe 'Get Assignment to Set Assignment should result in the same file' -Tag 'QA' {
+    
+    InModuleScope 'FSLogix.PowerShell.Rules' {
+        
         AfterAll {
             Remove-Variable -Name 'here' -Scope Global
         }

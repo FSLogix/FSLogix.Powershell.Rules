@@ -4,20 +4,17 @@
 
 #Requires -Version 5.0
 
-$Public  = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -ErrorAction SilentlyContinue )
-$Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction SilentlyContinue )
+$Public = @( Get-ChildItem -Path $PSScriptRoot\functions\Public\*.ps1 -ErrorAction SilentlyContinue )
+$Private = @( Get-ChildItem -Path $PSScriptRoot\functions\Private\*.ps1 -ErrorAction SilentlyContinue )
 $Type = @( Get-ChildItem -Path $PSScriptRoot\Types\*.ps1 -ErrorAction SilentlyContinue)
 
 #Dot source the files
-Foreach($import in @($Type + $Public + $Private))
-{
-    Try
-    {
+Foreach ($import in @($Type + $Public + $Private)) {
+    Try {
         Write-Verbose "Importing $($Import.FullName)"
         . $import.fullname
     }
-    Catch
-    {
+    Catch {
         Write-Error -Message "Failed to import function $($import.fullname): $_"
     }
 }

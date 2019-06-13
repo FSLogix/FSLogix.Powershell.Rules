@@ -185,7 +185,7 @@ function Add-FslAssignment {
     } # Begin
     PROCESS {
 
-        $convertToFslAssignmentCodeParams = @{}
+        $convertToFslAssignmentCodeParams = @{ }
 
         $assignmentCode = $null
         $idString = $null
@@ -248,16 +248,21 @@ function Add-FslAssignment {
             #Determine if the group has a Well Known SID
             $wellknownSids = [Enum]::GetValues([System.Security.Principal.WellKnownSidType])
             $account = New-Object System.Security.Principal.NTAccount($allFields.GroupName)
-            $sid = $account.Translate([System.Security.Principal.SecurityIdentifier])
-            $result = foreach ($s in $wellknownSids) { $sid.IsWellKnown($s)}
+            try {
+                $sid = $account.Translate([System.Security.Principal.SecurityIdentifier])
+                $result = foreach ($s in $wellknownSids) { $sid.IsWellKnown($s) }
 
-            if ( $result -contains $true ) {
-                $idString = $sid.Value
+                if ( $result -contains $true ) {
+                    $idString = $sid.Value
+                }
+                else {
+                    $idString = $allFields.GroupName
+                }
             }
-            else {
+            catch {
                 $idString = $allFields.GroupName
             }
-
+            
             $friendlyName = $allFields.GroupName
         }
 
@@ -323,7 +328,7 @@ function Add-FslAssignment {
             'Path'     = $Path
             'Encoding' = 'Unicode'
             'Value'    = $message
-            'WhatIf'     = $false
+            'WhatIf'   = $false
         }
 
         Add-Content @addContentParams
@@ -342,5 +347,5 @@ function Add-FslAssignment {
             Write-Output $passThruObject
         }
     } #Process
-    END {} #End
+    END { } #End
 }  #function Add-FslAssignment

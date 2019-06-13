@@ -6,9 +6,9 @@ $global:here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Par
 
 Import-Module -Name (Join-Path $global:here 'FSLogix.PowerShell.Rules.psd1') -Force
 
-InModuleScope 'FSLogix.PowerShell.Rules' {
+Describe $global:sut.Trimend('.ps1') -Tag 'Unit' {
 
-    Describe $global:sut.Trimend('.ps1') -Tag 'Unit' {
+    InModuleScope 'FSLogix.PowerShell.Rules' {
 
         AfterAll {
             Remove-Variable -Name 'here' -Scope Global

@@ -6,9 +6,9 @@ $global:here = $here |  Split-Path -Parent | Split-Path -Parent
 
 Import-Module -Name (Join-Path $global:here 'FSLogix.PowerShell.Rules.psd1') -Force
 
-InModuleScope 'FSLogix.PowerShell.Rules' {
+Describe 'Get Rule to Set Rule should result in the same file' -Tag 'QA' {
 
-    Describe 'Get Rule to Set Rule should result in the same file' -Tag 'QA' {
+    InModuleScope 'FSLogix.PowerShell.Rules' {
 
         AfterAll {
             Remove-Variable -Name 'here' -Scope Global
