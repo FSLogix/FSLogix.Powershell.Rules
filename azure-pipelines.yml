@@ -30,7 +30,7 @@ steps:
     targetType: 'inline' # Optional. Options: filePath, inline
     #filePath: # Required when targetType == FilePath
     #arguments: # Optional
-    script: Invoke-Pester -OutputFile PesterTest.xml -OutputFormat NUnitXml -CodeCoverage (Get-ChildItem .\FSLogix.PowerShell.Rules\public -File -Recurse -Include *.ps1) -CodeCoverageOutputFile CodeCoverage.xml # Required when targetType == Inline
+    script: Invoke-Pester -OutputFile PesterTest.xml -OutputFormat NUnitXml -CodeCoverage (Get-ChildItem .\FSLogix.PowerShell.Rules\functions -File -Recurse -Include *.ps1) -CodeCoverageOutputFile CodeCoverage.xml # Required when targetType == Inline
     #errorActionPreference: 'stop' # Optional. Options: stop, continue, silentlyContinue
     #failOnStderr: false # Optional
     #ignoreLASTEXITCODE: false # Optional

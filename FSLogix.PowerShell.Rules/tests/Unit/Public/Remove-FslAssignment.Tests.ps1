@@ -30,7 +30,7 @@ Describe $global:sut.TrimEnd('.ps1') {
                 Add-FslAssignment -Path $Path -IPAddress '192.168.0.99'
                 Add-FslAssignment -Path $Path -ComputerName 'MyLaptop@domain.com'
                 Add-FslAssignment -Path $Path -OU 'MyOU'
-                $count = (Get-Content -Path $path).count
+                #$count = (Get-Content -Path $path).count
             }
 
             It 'Creates and error when License reassignment rules are violated.' {
