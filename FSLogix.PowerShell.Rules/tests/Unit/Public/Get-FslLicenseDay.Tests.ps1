@@ -14,7 +14,7 @@ Describe $Global:sut.Trimend('.ps1') -Tag 'Unit' {
             Remove-Variable -Name 'sut' -Scope Global        
         }
 
-        It 'Takes Pipline Input'{
+        It 'Takes Pipline Input' {
             Set-Content -Path Testdrive:\pipe.fxa -Value "1`t0"
             'Testdrive:\pipe.fxa' | Get-FslLicenseDay | Select-Object -ExpandProperty LicenseDay | Should -Be 0
         }
@@ -24,7 +24,7 @@ Describe $Global:sut.Trimend('.ps1') -Tag 'Unit' {
             (Get-FslLicenseDay -AssignmentFilePath 'Testdrive:\alias.fxa').LicenseDay | Should -Be 20
         }
 
-        It 'Gets correct License days back'{
+        It 'Gets correct License days back' {
             Set-Content -Path Testdrive:\Correct.fxa -Value "1`t90"
             Add-Content -Path Testdrive:\Correct.fxa -Value "Doesn't Matter"
             (Get-FslLicenseDay -Path Testdrive:\Correct.fxa).LicenseDay | Should -Be 90
@@ -37,7 +37,7 @@ Describe $Global:sut.Trimend('.ps1') -Tag 'Unit' {
 
         It 'Gets correct Error with bad data' {
             Set-Content -Path Testdrive:\BadData.fxa -Value "Rubbish"
-            Get-FslLicenseDay -Path Testdrive:\BadData.fxa 2>&1 | Select-Object -first 1 | Should -Be 'Bad data on first line of Testdrive:\BadData.fxa'
+            Get-FslLicenseDay -Path Testdrive:\BadData.fxa | Should -Throw
         }
 
     }
