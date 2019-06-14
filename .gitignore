@@ -5,3 +5,5 @@ BuildOutput
 PSDepend.build.psd1
 .build.ps1
 StartPester.ps1
+PesterTest.xml
+CodeCoverage.xml
