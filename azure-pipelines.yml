@@ -55,7 +55,7 @@ steps:
     testRunTitle: 'Pester Test Results'
     buildPlatform: 'Windows'
     testRunner: 'NUnit'
-    testResultsFiles: '.\PesterTest.xml'
+    testResultsFiles: 'PesterTest.xml'
     failTaskOnFailedTests: true
 
 - task: PublishCodeCoverageResults@1
