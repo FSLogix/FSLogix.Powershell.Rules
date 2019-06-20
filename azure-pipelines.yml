@@ -55,8 +55,8 @@ steps:
     testRunTitle: 'Pester Test Results'
     buildPlatform: 'Windows'
     testRunner: 'NUnit'
-    testResultsFiles: 'PesterTest.xml'
-    mergeTestResults: true
+    testResultsFiles: '.\PesterTest.xml'
+    mergeTestResults: false
     failTaskOnFailedTests: true
 
 
