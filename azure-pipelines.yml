@@ -9,6 +9,9 @@ trigger:
 pool:
   vmImage: 'windows-2019'
 
+variables:
+- group: my-variable-group
+
 steps:
 - task: PowerShell@2
   displayName: 'Install Newest Pester Version'
