@@ -4,7 +4,7 @@ $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 $here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
 . "$here\functions\$funcType\$sut"
 
-Describe ConvertFrom-FslAssignmentCode -Tag 'Unit' {
+Describe ConvertFrom-FslAssignmentCode -Tag 'Unit','Pipeline' {
 
     Context -Name 'Output' {
 
