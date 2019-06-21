@@ -26,34 +26,49 @@ function ConvertTo-FslRegHex {
         $hexOnly = @()
 
         if ($RegValuetype -eq 'DWORD') {
-            [int]$RegData = $RegData
+            try {
+                [int]$RegData = $RegData
+            }
+            catch {
+                Write-Error "Unable to convert $Regdata to a 32 bit Integer (DWORD)"
+            }
         }
 
-        $hexUniCode = $RegData | format-hex -Encoding UniCode
+        if ($RegValuetype -eq 'QWORD') {
+            try {
+                [int64]$RegData = $RegData
+            }
+            catch {
+                Write-Error "Unable to convert $Regdata to a 64 bit Integer (QWORD)"
+            }
+        }
+
+        $hexUniCode = $RegData | Format-Hex -Encoding UniCode
         $hexToLine = $hexUniCode.ToString() -split [environment]::NewLine
 
         $hexToLine | ForEach-Object {
             if ($_ -match "^\d{8,20}\s{3}((?:\d[0-9|A-F]\s){1,16})\s+.*$") {
                 $hexOnly += $Matches[1]
                 $Matches.clear()
-            }           
+            }
         }
         $joined = [string]::join('', $hexOnly)
         $joinedNoSpaces = $joined.Replace(' ', '')
+
         switch ($RegValueType) {
             String { $output = '01' + $joinedNoSpaces + '0000'; break }
-            DWORD { 
+            DWORD {
                 while ($joinedNoSpaces.length -lt 8) {
                     $joinedNoSpaces = $joinedNoSpaces + '0'
                 }
-                $output = '04' + $joinedNoSpaces ; break }
+                $output = '04' + $joinedNoSpaces
+                break
+            }
             Default { }
         }
-        
 
         Write-Output $output
-        
+
     } #Process
     END { } #End
 }  #function ConvertTo-FslRegHex
-

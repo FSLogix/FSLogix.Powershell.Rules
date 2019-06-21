@@ -225,30 +225,30 @@ function Add-FslRule {
         switch ($true) {
             (($flags -band  $FRX_RULE_TYPE_SPECIFIC_DATA) -eq 2048) {
                 $sourceParent = $FullName
-                
+
                 switch ($RegValueType) {
-                    String { 
+                    String {
                         $RegValueTypeFile = 'StringValue'
                         $binary = ConvertTo-FslRegHex -RegData $ValueData -RegValueType $RegValueType
-                        break 
+                        break
                     }
-                    DWORD { 
+                    DWORD {
                         $RegValueTypeFile = 'dword'
-                        
-                        $binary = try{
+
+                        $binary = try {
                             $intValueData = [int32]$ValueData
-                            try{
-                            $binary = ConvertTo-FslRegHex -RegData $intValueData -RegValueType $RegValueType
+                            try {
+                                $binary = ConvertTo-FslRegHex -RegData $intValueData -RegValueType $RegValueType -ErrorAction Stop
                             }
-                            catch{
+                            catch {
                                 Write-Error "Could not convert $intValueData of value $RegValueType to a registry hex code"
                             }
                         }
-                        catch{
+                        catch {
                             Write-Error "Could not convert $valueData to an Integer"
                             exit
                         }
-                        break 
+                        break
                     }
                     QWORD { $RegValueTypeFile = 'qword'; break }
                     Multi-String { $RegValueTypeFile = 'Multi-String'; break }
@@ -320,7 +320,7 @@ function Add-FslRule {
                 Source       = $Source
                 DestParent   = $DestParent
                 Dest         = $Dest
-                Flags        = $Flags                
+                Flags        = $Flags
                 binary       = $binary
                 Comment      = $Comment
             }
