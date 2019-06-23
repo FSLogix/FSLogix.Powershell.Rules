@@ -224,7 +224,8 @@ function Add-FslRule {
 
         switch ($true) {
             (($flags -band  $FRX_RULE_TYPE_SPECIFIC_DATA) -eq 2048) {
-                $sourceParent = $FullName
+                $sourceParent = Split-Path $FullName -Parent
+                $source = Split-Path $FullName -Leaf
 
                 switch ($RegValueType) {
                     String {
@@ -254,7 +255,6 @@ function Add-FslRule {
                     Multi-String { $RegValueTypeFile = 'Multi-String'; break }
                     ExpandableString { $RegValueTypeFile = 'ExpandableString'; break }
                 }
-                $Source = $RegValueTypeFile
                 break
             }
             (($flags -band  $FRX_RULE_SRC_IS_A_FILE_OR_VALUE) -eq 2) {
