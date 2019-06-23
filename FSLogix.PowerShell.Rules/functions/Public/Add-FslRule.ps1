@@ -239,7 +239,7 @@ function Add-FslRule {
                         $binary = try {
                             $intValueData = [int32]$ValueData
                             try {
-                                $binary = ConvertTo-FslRegHex -RegData $intValueData -RegValueType $RegValueType -ErrorAction Stop
+                                ConvertTo-FslRegHex -RegData $intValueData -RegValueType $RegValueType -ErrorAction Stop
                             }
                             catch {
                                 Write-Error "Could not convert $intValueData of value $RegValueType to a registry hex code"
