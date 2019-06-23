@@ -3,7 +3,7 @@ function ConvertFrom-FslRegHex {
 
     Param (
         [Parameter(
-            Position = 0,
+            Position = 1,
             ValuefromPipelineByPropertyName = $true,
             ValuefromPipeline = $true,
             Mandatory = $true
@@ -15,23 +15,25 @@ function ConvertFrom-FslRegHex {
         Set-StrictMode -Version Latest
     } # Begin
     PROCESS {
+        $ascii = $null
 
-        #TODO Combine with next switch
-        switch ($HexString.Substring(0,2)) {
-            01 { $RegValueType = String ; break }
-            04 { $RegValueType = DWORD ; break}
+        switch ($HexString.Substring(0, 2)) {
+            01 {
+                $regValueType = 'String'
+                $hexLong = $HexString.substring(2, $HexString.length - 6)
+                break
+            }
+            04 {
+                $regValueType = 'DWORD'
+                $hexLong = $HexString.substring(2, 8)
+                break
+            }
             Default {
-                Write-Error "Could not determine the type of registry value form the Hex Code $($HexString.Substring(2))"
+                Write-Error "Could not determine the type of registry value form the Hex Code $($HexString.Substring(0,2))"
                 exit
             }
         }
 
-        $ascii = $null
-        switch ($RegValueType) {
-            String { $hexLong = $HexString.substring(2, $HexString.length - 6) ; break }
-            DWORD { $hexLong = $HexString.substring(2, 8) ; break }
-            Default { }
-        }
         $hex = $hexLong -Split '(.{4})'
         $hex | ForEach-Object {
             if ($_ -ne '') {
@@ -39,7 +41,11 @@ function ConvertFrom-FslRegHex {
                 $ascii += [CHAR]([CONVERT]::toint16($byte, 16))
             }
         }
-        Write-Output $ascii
+        $output = [PSCustomObject]@{
+            Data         = $ascii
+            RegValueType = $regValueType
+        }
+        Write-Output $output
     } #Process
     END { } #End
 }  #function ConvertFrom-FslRegHex
