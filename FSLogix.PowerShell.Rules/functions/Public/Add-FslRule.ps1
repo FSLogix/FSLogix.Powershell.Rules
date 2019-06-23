@@ -229,12 +229,12 @@ function Add-FslRule {
 
                 switch ($RegValueType) {
                     String {
-                        $RegValueTypeFile = 'StringValue'
+                        #$RegValueTypeFile = 'StringValue'
                         $binary = ConvertTo-FslRegHex -RegData $ValueData -RegValueType $RegValueType
                         break
                     }
                     DWORD {
-                        $RegValueTypeFile = 'dword'
+                        #$RegValueTypeFile = 'dword'
 
                         $binary = try {
                             $intValueData = [int32]$ValueData
@@ -251,9 +251,18 @@ function Add-FslRule {
                         }
                         break
                     }
-                    QWORD { $RegValueTypeFile = 'qword'; break }
-                    Multi-String { $RegValueTypeFile = 'Multi-String'; break }
-                    ExpandableString { $RegValueTypeFile = 'ExpandableString'; break }
+                    QWORD {
+                        #$RegValueTypeFile = 'qword'
+                        break
+                    }
+                    Multi-String {
+                        #$RegValueTypeFile = 'Multi-String'
+                        break
+                    }
+                    ExpandableString {
+                        #$RegValueTypeFile = 'ExpandableString'
+                        break
+                    }
                 }
                 break
             }

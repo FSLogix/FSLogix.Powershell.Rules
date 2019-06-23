@@ -52,6 +52,10 @@ function Get-FslRule {
                         [system.io.fileinfo]($rulePlusComment.SrcParent.TrimEnd('\', '/') + '\' + $rulePlusComment.Src.TrimStart('\', '/')).TrimEnd('\')
                     }
 
+                    if ($rulePlusComment.Binary) {
+                        $SpecificData = ConvertFrom-FslRegHex -
+                    }
+
                     $output = [PSCustomObject]@{
                         PSTypeName       = "FSLogix.Rule"
                         FullName         = $fullnameJoin
@@ -73,11 +77,11 @@ function Get-FslRule {
                             }
                         }
                         else { $null }
-                        
+
                         CopyObject       = if ($poshFlags.CopyObject) { $poshFlags.CopyObject } else { $null }
                         DiskFile         = if ($poshFlags.VolumeAutoMount) { $destPath } else { $null }
                         Binary           = $rulePlusComment.Binary
-                        Data             = $null
+                        Data             =
                         Comment          = $rulePlusComment.Comment
                         #Flags            = $rulePlusComment.Flags
                     }
