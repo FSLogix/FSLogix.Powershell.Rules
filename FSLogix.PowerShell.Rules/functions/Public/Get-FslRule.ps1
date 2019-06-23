@@ -53,7 +53,7 @@ function Get-FslRule {
                     }
 
                     if ($rulePlusComment.Binary) {
-                        $SpecificData = ConvertFrom-FslRegHex -
+                        $SpecificData = ConvertFrom-FslRegHex -HexString $rulePlusComment.Binary
                     }
 
                     $output = [PSCustomObject]@{
@@ -80,8 +80,9 @@ function Get-FslRule {
 
                         CopyObject       = if ($poshFlags.CopyObject) { $poshFlags.CopyObject } else { $null }
                         DiskFile         = if ($poshFlags.VolumeAutoMount) { $destPath } else { $null }
-                        Binary           = $rulePlusComment.Binary
-                        Data             =
+                        #Binary           = $rulePlusComment.Binary
+                        Data             = $SpecificData.Data
+                        RegValueType     = $SpecificData.RegValueType
                         Comment          = $rulePlusComment.Comment
                         #Flags            = $rulePlusComment.Flags
                     }

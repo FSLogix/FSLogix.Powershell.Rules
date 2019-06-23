@@ -210,6 +210,8 @@ function Add-FslRule {
                 }
                 if ($RuleObject.Data) {
                     $convertToFslRuleCodeParams += @{ 'SpecificData' = $true }
+                    $RegValueType = $RuleObject.RegValueType
+                    $ValueData = $RuleObject.Data
                 }
                 if ($RuleObject.CopyObject) {
                     $convertToFslRuleCodeParams += @{ 'CopyObject' = $true }

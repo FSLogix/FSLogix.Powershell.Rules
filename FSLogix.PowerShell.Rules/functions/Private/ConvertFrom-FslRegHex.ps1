@@ -18,12 +18,12 @@ function ConvertFrom-FslRegHex {
         $ascii = $null
 
         switch ($HexString.Substring(0, 2)) {
-            01 {
+            '01' {
                 $regValueType = 'String'
                 $hexLong = $HexString.substring(2, $HexString.length - 6)
                 break
             }
-            04 {
+            '04' {
                 $regValueType = 'DWORD'
                 $hexLong = $HexString.substring(2, 8)
                 break
