@@ -8,7 +8,8 @@ function Add-FslRule {
             Mandatory = $true,
             ValuefromPipelineByPropertyName = $true
         )]
-        [System.String]$RuleFilePath,
+        [Alias('RuleFilePath')]
+        [System.String]$Path,
 
         [Parameter(
             ParameterSetName = 'Hiding',
@@ -128,12 +129,12 @@ function Add-FslRule {
     } # Begin
     PROCESS {
 
-        if ( -not ( Test-Path $RuleFilePath )) {
+        if ( -not ( Test-Path $Path )) {
             $version = 1
-            Set-Content -Path $RuleFilePath -Value $version -Encoding Unicode -ErrorAction Stop
+            Set-Content -Path $Path -Value $version -Encoding Unicode -ErrorAction Stop
         }
         #check file has correct filename extension
-        if ($RuleFilePath -notlike "*.fxr") {
+        if ($Path -notlike "*.fxr") {
             Write-Warning 'Rule files should have an fxr extension'
         }
 
@@ -301,13 +302,13 @@ function Add-FslRule {
         }
 
         $addContentParams = @{
-            'Path'     = $RuleFilePath
+            'Path'     = $Path
             'Encoding' = 'Unicode'
             'WhatIf'   = $false
         }
 
         Add-Content @addContentParams -Value "##$Comment"
-        Write-Verbose -Message "Written $Comment to $RuleFilePath"
+        Write-Verbose -Message "Written $Comment to $Path"
 
         If ($convertToFslRuleCodeParams.ContainsKey( 'CopyObject' ) -and
             $convertToFslRuleCodeParams.ContainsKey( 'Redirect' ) -and
@@ -323,7 +324,7 @@ function Add-FslRule {
 
         Add-Content @addContentParams -Value $message
 
-        Write-Verbose -Message "Written $message to $RuleFilePath"
+        Write-Verbose -Message "Written $message to $Path"
 
         If ($passThru) {
             $passThruObject = [pscustomobject]@{
