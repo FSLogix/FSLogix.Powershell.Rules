@@ -13,5 +13,5 @@ Describe "ConvertTo-FslRegHex" {
         It "takes a int and has correct ouput" {
             ConvertTo-FslRegHex -RegData '45' -RegValueType DWORD | should -Be '042D000000'
         }
-    }
+    } #Context
 }
