@@ -211,6 +211,7 @@ function Add-FslRule {
                 }
                 if ($RuleObject.Data) {
                     $convertToFslRuleCodeParams += @{ 'SpecificData' = $true }
+                    $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
                     $RegValueType = $RuleObject.RegValueType
                     $ValueData = $RuleObject.Data
                 }
@@ -281,15 +282,6 @@ function Add-FslRule {
                 $binary = $null
             }
         }
-
-        # if ($flags -band  $FRX_RULE_SRC_IS_A_FILE_OR_VALUE) {
-        #     $sourceParent = Split-Path $FullName -Parent
-        #     $source = Split-Path $FullName -Leaf
-        # }
-        # else {
-        #     $sourceParent = $FullName
-        #     $source = $null
-        # }
 
         if ($flags -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE -and
             $flags -band $FRX_RULE_TYPE_REDIRECT) {

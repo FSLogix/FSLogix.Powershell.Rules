@@ -33,7 +33,7 @@ Describe 'Get Rule to Set Rule should result in the same file' -Tag 'QA' {
 
             Compare-Object -ReferenceObject $redirect -DifferenceObject $redirectTarget | Measure-Object | Select-Object -ExpandProperty Count | Should Be 0
         }
-        <#
+        
         It 'Gets and Sets Specify Rules' {
             $path = Join-Path $global:here 'tests\QA\TestFiles\AllHiding\specify.fxr'
             $specify = Get-Content $path
@@ -44,6 +44,7 @@ Describe 'Get Rule to Set Rule should result in the same file' -Tag 'QA' {
             Compare-Object -ReferenceObject $specify -DifferenceObject $specifyTarget | Measure-Object | Select-Object -ExpandProperty Count | Should Be 0
         }
 
+        <#
         It 'Gets and Sets Volume Rules' {
             $path = Join-Path $global:here 'tests\QA\TestFiles\AllHiding\volume.fxr'
             $volume = Get-Content $path

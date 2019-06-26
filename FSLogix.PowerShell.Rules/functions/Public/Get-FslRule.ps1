@@ -55,6 +55,12 @@ function Get-FslRule {
                     if ($rulePlusComment.Binary) {
                         $SpecificData = ConvertFrom-FslRegHex -HexString $rulePlusComment.Binary
                     }
+                    else{
+                        $SpecificData = [PSCustomObject]@{
+                            Data = $null
+                            RegValueType = $null
+                        }
+                    }
 
                     $output = [PSCustomObject]@{
                         PSTypeName       = "FSLogix.Rule"

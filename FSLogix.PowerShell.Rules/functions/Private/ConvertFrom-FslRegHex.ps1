@@ -25,7 +25,7 @@ function ConvertFrom-FslRegHex {
                 $hex | ForEach-Object {
                     if ($_ -ne '') {
                         $byte = $_.substring(0, 2)
-                        $outputData += [CHAR]([CONVERT]::toint16($byte, 16))
+                        $outputData += [char]([convert]::toint16($byte, 16))
                     }
                 }
                 break
@@ -36,7 +36,7 @@ function ConvertFrom-FslRegHex {
                 $hexLong = $HexString.substring(2, 8)
                 #Split into bytes
                 $hex = $hexLong -Split '(.{2})'
-                #Need to make current little endian into big endian in oder for [convert] to work
+                #Need to make current little endian into big endian in order for [convert] to work
                 [System.Array]::Reverse($hex)
                 $bEndian = $hex -join ''
                 $int32 = [convert]::ToInt32($bEndian, 16)

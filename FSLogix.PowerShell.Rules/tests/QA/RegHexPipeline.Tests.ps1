@@ -5,7 +5,7 @@ $here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
 . "$here\FSLogix.PowerShell.Rules\functions\Private\ConvertFrom-FslRegHex.ps1"
 . "$here\FSLogix.PowerShell.Rules\functions\Private\ConvertTo-FslRegHex.ps1"
 
-Describe "Tests to and from converstion string to registry hexadecimal" {
+Describe "Tests to and from converstion string to registry hexadecimal" -Tag 'Current' {
     Context "Strings" {
         $test1 = 'The Quick Brown Fox Jumped Over The Lazy Dog'
         $test2 = '0123456789'
@@ -27,10 +27,10 @@ Describe "Tests to and from converstion string to registry hexadecimal" {
     }
 
     Context "Dword"  {
-        $testDword1 = 0
+        #$testDword1 = 0
         $testDword2 = 2147483647
         $testDword3 = 20
-        $testDword4 = -1
+        #$testDword4 = -1
         $testDword5 = -2147483648
 
         $tests = $testDword1, $testDword2, $testDword3, $testDword4, $testDword5
