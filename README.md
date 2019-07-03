@@ -1,3 +1,4 @@
+[![Build Status](https://dev.azure.com/jsmoyle/FSLogix/_apis/build/status/FSLogix.FSLogix.Powershell.Rules?branchName=master)](https://dev.azure.com/jsmoyle/FSLogix/_build/latest?definitionId=3&branchName=master)
 # FSLogix.PowerShell.Rules
 
 Module to manipulate Rules and assignment files for FSLogix App Masking.
