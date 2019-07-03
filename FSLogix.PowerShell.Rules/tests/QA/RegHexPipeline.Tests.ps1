@@ -33,7 +33,7 @@ Describe "Tests to and from converstion string to registry hexadecimal" -Tag 'Cu
         #$testDword4 = -1
         $testDword5 = -2147483648
 
-        $tests = $testDword1, $testDword2, $testDword3, $testDword4, $testDword5
+        $tests = $testDword2, $testDword3, $testDword5
 
         foreach ($test in $tests) {
 
