@@ -22,52 +22,74 @@ function ConvertTo-FslRegHex {
         Set-StrictMode -Version Latest
     } # Begin
     PROCESS {
-
-        $hexOnly = @()
-
-        if ($RegValuetype -eq 'DWORD') {
-            try {
-                [int]$RegData = $RegData
-            }
-            catch {
-                Write-Error "Unable to convert $Regdata to a 32 bit Integer (DWORD)"
-            }
-        }
-
-        if ($RegValuetype -eq 'QWORD') {
-            try {
-                [int64]$RegData = $RegData
-            }
-            catch {
-                Write-Error "Unable to convert $Regdata to a 64 bit Integer (QWORD)"
-            }
-        }
-
-        $hexUniCode = $RegData | Format-Hex -Encoding UniCode
-        $hexToLine = $hexUniCode.ToString() -split [environment]::NewLine
-
-        $hexToLine | ForEach-Object {
-            if ($_ -match "^\d{8,20}\s{3}((?:[0-9|A-F]{2}\s){1,16})\s+.*$") {
-                $hexOnly += $Matches[1]
-                $Matches.clear()
-            }
-        }
-        $joined = [string]::join('', $hexOnly)
-        $joinedNoSpaces = $joined.Replace(' ', '')
+        $hex = ''
 
         switch ($RegValueType) {
-            String { $output = '01' + $joinedNoSpaces + '0000'; break }
-            DWORD {
-                while ($joinedNoSpaces.length -lt 8) {
-                    $joinedNoSpaces = $joinedNoSpaces + '0'
+            String { 
+                $regDataChars = $RegData.ToCharArray()
+                foreach ($character in $regDataChars) { 
+                    $hex = $hex + [System.String]::Format("{0:X4}", [System.Convert]::ToUInt16($character))
                 }
-                $output = '04' + $joinedNoSpaces
-                break
+                $hexInRegFormat = ($hex -replace "^00", '01') + '000000'
             }
+            DWORD {
+                try {
+                    [Uint32]$RegData = $RegData
+                }
+                catch {
+                    Write-Error "Unable to convert $Regdata to a DWORD Unsigned 32 bit Integer $([uint32]::MinValue) - $([uint32]::MaxValue)"
+                    exit
+                }
+
+                try {
+                    $hex = [convert]::ToString($RegData, 16)
+
+                    while ($hex.length -lt 8) {
+                        $hex = '0' + $hex
+                    }
+
+                    $hexArray = $hex -split "(..)"
+                    [array]::Reverse($hexArray)              
+
+                    $hexInRegFormat = '04' + -join $hexArray
+                }
+                catch {
+                    Write-Error "Unable to convert $Regdata to Hex"
+                    exit
+                }
+            }
+            QWORD {
+                try {
+                    [UInt64]$RegData = $RegData
+                }
+                catch {
+                    Write-Error "Unable to convert $Regdata to a QWORD Unsigned 64 bit Integer"
+                    exit
+                }
+
+                try {
+                    $hex = [convert]::ToString($RegData, 16)
+
+                    while ($hex.length -lt 16) {
+                        $hex = '0' + $hex
+                    }
+
+                    $hexArray = $hex -split "(..)"
+                    [array]::Reverse($hexArray)              
+
+                    $hexInRegFormat = '05' + -join $hexArray
+                }
+                catch {
+                    Write-Error "Unable to convert $Regdata to Hex"
+                    exit
+                }
+            }
+            Multi-String {}
+            ExpandableString {}
             Default { }
         }
 
-        Write-Output $output
+        Write-Output $hexInRegFormat
 
     } #Process
     END { } #End

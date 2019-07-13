@@ -35,7 +35,21 @@ function ConvertFrom-FslRegHex {
                 #Grab relevant characters
                 $hexLong = $HexString.substring(2, 8)
                 #Split into bytes
-                $hex = $hexLong -Split '(.{2})'
+                $hex = $hexLong -Split '(..)'
+                #Need to make current little endian into big endian in order for [convert] to work
+                [System.Array]::Reverse($hex)
+                $bEndian = $hex -join ''
+                $int32 = [convert]::ToInt32($bEndian, 16)
+                #everything is a string in output - maybe change
+                $outputData = $int32.ToString()
+                break
+            }
+            05 {
+                $regValueType = 'DWORD'
+                #Grab relevant characters
+                $hexLong = $HexString.substring(2, 16)
+                #Split into bytes
+                $hex = $hexLong -Split '(..)'
                 #Need to make current little endian into big endian in order for [convert] to work
                 [System.Array]::Reverse($hex)
                 $bEndian = $hex -join ''

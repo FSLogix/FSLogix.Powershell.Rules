@@ -7,18 +7,18 @@ $here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
 
 Describe "Tests to and from converstion string to registry hexadecimal" -Tag 'Current' {
     Context "Strings" {
-        $test1 = 'The Quick Brown Fox Jumped Over The Lazy Dog'
-        $test2 = '0123456789'
-        $test3 = 'c:\jimm\doesnotexist'
-        $test4 = 'Pipe and brackets | () {} []'
-        $test5 = 'Escaping Jim''s quote'
-        $test6 = "As they say, ""live and learn."""
-        $test7 = "As they say, 'live and learn.'"
-        $test8 = 'As they say, "live and learn."'
+        $testStrings = @(
+            'The Quick Brown Fox Jumped Over The Lazy Dog',
+            '0123456789',
+            'c:\jimm\doesnotexist',
+            'Pipe and brackets | () {} []',
+            'Escaping Jim''s quote',
+            "As they say, ""live and learn.""",
+            "As they say, 'live and learn.'",
+            'As they say, "live and learn."'
+        )
 
-        $tests = $test1, $test2, $test3, $test4, $test5, $test6, $test7, $test8
-
-        foreach ($test in $tests) {
+        foreach ($test in $testStrings) {
 
             It "Testing: $test" {
                 ConvertTo-FslRegHex $test -RegValueType String | ConvertFrom-FslRegHex | Select-Object -ExpandProperty Data | Should -be $test
@@ -26,20 +26,46 @@ Describe "Tests to and from converstion string to registry hexadecimal" -Tag 'Cu
         }
     }
 
-    Context "Dword"  {
-        #$testDword1 = 0
-        $testDword2 = 2147483647
-        $testDword3 = 20
-        #$testDword4 = -1
-        $testDword5 = -2147483648
+    Context "Dword" {
+        
+        $testNumbers = @(
+            0,
+            2147483647,
+            20,
+            65535,
+            4294967295
+        )
+        
 
-        $tests = $testDword1, $testDword2, $testDword3, $testDword4, $testDword5
-
-        foreach ($test in $tests) {
+        foreach ($test in $testNumbers) {
 
             It "Testing: $test" {
                 ConvertTo-FslRegHex $test -RegValueType Dword | ConvertFrom-FslRegHex | Select-Object -ExpandProperty Data | Should -be $test
             }
+        }
+    }
+
+    Context "Qword" {
+        
+            $testNumbers = @(
+                0,
+                2147483647,
+                20,
+                65535,
+                2147483648,
+                4294967295
+            )
+            
+    
+            foreach ($test in $testNumbers) {
+    
+                It "Testing: $test" {
+                    ConvertTo-FslRegHex $test -RegValueType Dword | ConvertFrom-FslRegHex | Select-Object -ExpandProperty Data | Should -be $test
+                }
+            }
+
+        It "ItName" {
+            Assertion
         }
     }
 }
