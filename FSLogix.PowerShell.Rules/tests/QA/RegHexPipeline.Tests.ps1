@@ -26,7 +26,6 @@ Describe "Tests to and from converstion string to registry hexadecimal" -Tag 'Cu
         }
     }
 
-<<<<<<< HEAD
     Context "Dword" {
         
         $testNumbers = @(
@@ -37,16 +36,6 @@ Describe "Tests to and from converstion string to registry hexadecimal" -Tag 'Cu
             4294967295
         )
         
-=======
-    Context "Dword"  {
-        #$testDword1 = 0
-        $testDword2 = 2147483647
-        $testDword3 = 20
-        #$testDword4 = -1
-        $testDword5 = -2147483648
-
-        $tests = $testDword2, $testDword3
->>>>>>> 259b38b0f39546a6546b4ccdbfd1e1fe009f99cf
 
         foreach ($test in $testNumbers) {
 
