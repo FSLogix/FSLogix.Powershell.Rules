@@ -33,6 +33,7 @@ Describe "Tests to and from converstion string to registry hexadecimal" -Tag 'Cu
             2147483647,
             20,
             65535,
+            3147483647,
             4294967295
         )
         

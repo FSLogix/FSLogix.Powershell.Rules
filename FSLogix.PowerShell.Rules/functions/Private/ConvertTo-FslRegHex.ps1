@@ -34,7 +34,7 @@ function ConvertTo-FslRegHex {
             }
             DWORD {
                 try {
-                    [Uint32]$RegData = $RegData
+                    #[Uint32]$RegData = $RegData
                 }
                 catch {
                     Write-Error "Unable to convert $Regdata to a DWORD Unsigned 32 bit Integer $([uint32]::MinValue) - $([uint32]::MaxValue)"

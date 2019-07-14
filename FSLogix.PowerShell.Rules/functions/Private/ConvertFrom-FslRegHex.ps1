@@ -39,7 +39,7 @@ function ConvertFrom-FslRegHex {
                 #Need to make current little endian into big endian in order for [convert] to work
                 [System.Array]::Reverse($hex)
                 $bEndian = $hex -join ''
-                $int32 = [convert]::ToInt32($bEndian, 16)
+                $int32 = [convert]::ToUInt32($bEndian, 16)
                 #everything is a string in output - maybe change
                 $outputData = $int32.ToString()
                 break
