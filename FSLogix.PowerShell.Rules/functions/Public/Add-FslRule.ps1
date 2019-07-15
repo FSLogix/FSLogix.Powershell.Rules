@@ -241,22 +241,35 @@ function Add-FslRule {
                         #$RegValueTypeFile = 'dword'
 
                         $binary = try {
-                            $intValueData = [int32]$ValueData
+                            #$intValueData = [uint32]$ValueData
                             try {
-                                ConvertTo-FslRegHex -RegData $intValueData -RegValueType $RegValueType -ErrorAction Stop
+                                ConvertTo-FslRegHex -RegData $ValueData -RegValueType $RegValueType -ErrorAction Stop
                             }
                             catch {
-                                Write-Error "Could not convert $intValueData of value $RegValueType to a registry hex code"
+                                Write-Error "Could not convert $ValueData of value $RegValueType to a registry hex code"
                             }
                         }
                         catch {
-                            Write-Error "Could not convert $valueData to an Integer"
+                            Write-Error "Could not convert $ValueData to an Integer"
                             exit
                         }
                         break
                     }
                     QWORD {
                         #$RegValueTypeFile = 'qword'
+                        $binary = try {
+                            #$intValueData = [int32]$ValueData
+                            try {
+                                ConvertTo-FslRegHex -RegData $ValueData -RegValueType $RegValueType -ErrorAction Stop
+                            }
+                            catch {
+                                Write-Error "Could not convert $ValueData of value $RegValueType to a registry hex code"
+                            }
+                        }
+                        catch {
+                            Write-Error "Could not convert $ValueData to an Integer"
+                            exit
+                        }
                         break
                     }
                     Multi-String {

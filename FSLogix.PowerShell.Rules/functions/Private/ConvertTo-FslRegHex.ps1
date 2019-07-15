@@ -68,7 +68,7 @@ function ConvertTo-FslRegHex {
                 }
 
                 try {
-                    $hex = [convert]::ToString($RegData, 16)
+                    $hex = [String]::Format("{0:x}", $regdata)
 
                     while ($hex.length -lt 16) {
                         $hex = '0' + $hex
@@ -77,7 +77,7 @@ function ConvertTo-FslRegHex {
                     $hexArray = $hex -split "(..)"
                     [array]::Reverse($hexArray)              
 
-                    $hexInRegFormat = '05' + -join $hexArray
+                    $hexInRegFormat = '0B' + [system.String]::Join("", $hexArray)  
                 }
                 catch {
                     Write-Error "Unable to convert $Regdata to Hex"

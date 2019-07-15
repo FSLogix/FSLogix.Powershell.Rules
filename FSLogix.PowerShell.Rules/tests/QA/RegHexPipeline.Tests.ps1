@@ -48,25 +48,26 @@ Describe "Tests to and from converstion string to registry hexadecimal" -Tag 'Cu
 
     Context "Qword" {
         
-            $testNumbers = @(
-                0,
-                2147483647,
-                20,
-                65535,
-                2147483648,
-                4294967295
-            )
+        $testNumbers = @(
+            0,
+            2147483647,
+            20,
+            65535,
+            2147483648,
+            4294967295,
+            42949672950,
+            12199541755961100288,
+            18212214579788599296,
+            15000815849732499456,
+            18446744073709551615
+        )
             
     
-            foreach ($test in $testNumbers) {
+        foreach ($test in $testNumbers) {
     
-                It "Testing: $test" {
-                    ConvertTo-FslRegHex $test -RegValueType Dword | ConvertFrom-FslRegHex | Select-Object -ExpandProperty Data | Should -be $test
-                }
+            It "Testing: $test" {
+                ConvertTo-FslRegHex $test -RegValueType QWORD | ConvertFrom-FslRegHex | Select-Object -ExpandProperty Data | Should -be $test
             }
-
-        It "ItName" {
-            Assertion
         }
     }
 }
