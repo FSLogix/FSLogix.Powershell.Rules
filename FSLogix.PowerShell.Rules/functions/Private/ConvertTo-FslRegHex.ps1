@@ -26,7 +26,14 @@ function ConvertTo-FslRegHex {
 
         switch ($RegValueType) {
             String { 
-                $hex = ConvertTo-FslHexString -RegData $RegData
+                try {
+                    $hex = ConvertTo-FslHexString -RegData $RegData -ErrorAction Stop
+                }
+                catch {
+                    Write-Error "$Error[0]"
+                    exit
+                }
+
                 $hexInRegFormat = '01' + $hex.ToString() + '0000'
             }
             DWORD {
@@ -68,7 +75,7 @@ function ConvertTo-FslRegHex {
                 $combinedHex = $combinedHex -join ''
                 $hexInRegFormat = '07' + $combinedHex + '000000'
             }
-            ExpandableString {}
+            ExpandableString { }
             Default { }
         }
 
