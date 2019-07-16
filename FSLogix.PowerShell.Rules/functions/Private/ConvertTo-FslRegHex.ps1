@@ -14,7 +14,7 @@ function ConvertTo-FslRegHex {
             Mandatory = $true,
             ValuefromPipelineByPropertyName = $true
         )]
-        [ValidateSet('String', 'DWORD', 'QWORD', 'Multi-String', 'ExpandableString')]
+        [ValidateSet('String', 'DWORD', 'QWORD', 'ExpandableString')]
         [string]$RegValueType
     )
 
@@ -26,11 +26,8 @@ function ConvertTo-FslRegHex {
 
         switch ($RegValueType) {
             String { 
-                $regDataChars = $RegData.ToCharArray()
-                foreach ($character in $regDataChars) { 
-                    $hex = $hex + [System.String]::Format("{0:X4}", [System.Convert]::ToUInt16($character))
-                }
-                $hexInRegFormat = ($hex -replace "^00", '01') + '000000'
+                $hex = ConvertTo-FslHexString -RegData $RegData
+                $hexInRegFormat = '01' + $hex.ToString() + '0000'
             }
             DWORD {
                 try {
