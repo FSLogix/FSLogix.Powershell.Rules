@@ -47,29 +47,14 @@ function ConvertTo-FslRegHex {
             QWORD {
 
                 try {
-                    [Uint64]$RegData = $RegData[0]
+                    $hex = ConvertTo-FslHexQword -RegData $RegData -ErrorAction Stop
                 }
                 catch {
                     Write-Error "Unable to convert $Regdata to a QWORD Unsigned 64 bit Integer"
                     exit
                 }
 
-                try {
-                    $hex = [String]::Format("{0:x}", $regdata)
-
-                    while ($hex.length -lt 16) {
-                        $hex = '0' + $hex
-                    }
-
-                    $hexArray = $hex -split "(..)"
-                    [array]::Reverse($hexArray)              
-
-                    $hexInRegFormat = '0B' + [system.String]::Join("", $hexArray)  
-                }
-                catch {
-                    Write-Error "Unable to convert $Regdata to Hex"
-                    exit
-                }
+                $hexInRegFormat = '0B' + $hex.ToString()
             }
             Multi-String {
                 $combinedHex = @()
