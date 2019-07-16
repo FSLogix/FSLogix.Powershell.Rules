@@ -89,7 +89,7 @@ function Add-FslRule {
             Position = 10,
             ValuefromPipelineByPropertyName = $true
         )]
-        [string]$ValueData,
+        [string[]]$ValueData,
 
         [Parameter(
             ParameterSetName = 'SpecifyValue',
@@ -274,12 +274,28 @@ function Add-FslRule {
                     }
                     Multi-String {
                         #$RegValueTypeFile = 'Multi-String'
+                        $binary = try {
+                            #$intValueData = [int32]$ValueData
+                            try {
+                                ConvertTo-FslRegHex -RegData $ValueData -RegValueType $RegValueType -ErrorAction Stop
+                            }
+                            catch {
+                                Write-Error "Could not convert $ValueData of value $RegValueType to a registry hex code"
+                            }
+                        }
+                        catch {
+                            Write-Error "Could not convert $ValueData to a Multi String"
+                            exit
+                        }
                         break
                     }
                     ExpandableString {
                         #$RegValueTypeFile = 'ExpandableString'
                         break
                     }
+                }
+                if ($Comment -eq 'Created By PowerShell Script'){
+                    $Comment = "Created by Script: $RegValueType $($ValueData.ToString())"
                 }
                 break
             }

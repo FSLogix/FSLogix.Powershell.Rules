@@ -34,33 +34,20 @@ function ConvertTo-FslRegHex {
             }
             DWORD {
                 try {
-                    #[Uint32]$RegData = $RegData
+                    $hex = ConvertTo-FslHexDword -RegData $RegData -ErrorAction Stop
                 }
                 catch {
-                    Write-Error "Unable to convert $Regdata to a DWORD Unsigned 32 bit Integer $([uint32]::MinValue) - $([uint32]::MaxValue)"
+                    Write-Error "$Error[0]"
                     exit
                 }
 
-                try {
-                    $hex = [convert]::ToString($RegData, 16)
+                $hexInRegFormat = '04' + $hex.ToString()
 
-                    while ($hex.length -lt 8) {
-                        $hex = '0' + $hex
-                    }
-
-                    $hexArray = $hex -split "(..)"
-                    [array]::Reverse($hexArray)              
-
-                    $hexInRegFormat = '04' + -join $hexArray
-                }
-                catch {
-                    Write-Error "Unable to convert $Regdata to Hex"
-                    exit
-                }
             }
             QWORD {
+
                 try {
-                    [UInt64]$RegData = $RegData
+                    [Uint64]$RegData = $RegData[0]
                 }
                 catch {
                     Write-Error "Unable to convert $Regdata to a QWORD Unsigned 64 bit Integer"
@@ -84,7 +71,21 @@ function ConvertTo-FslRegHex {
                     exit
                 }
             }
-            Multi-String {}
+            Multi-String {
+                $combinedHex = @()
+                foreach ($string in $RegData) {
+                    $regDataChars = $string.ToCharArray()
+                    foreach ($character in $regDataChars) { 
+                        $hex = $hex + [System.String]::Format("{0:X4}", [System.Convert]::ToUInt16($character))
+                    }
+                    $hexWithZeros = $hex.Substring(2) + '000000'
+                    $hex = $null
+                    $combinedHex = $combinedHex + $hexWithZeros
+                    
+                }
+                $combinedHex = $combinedHex -join ''
+                $hexInRegFormat = '07' + $combinedHex + '000000'
+            }
             ExpandableString {}
             Default { }
         }

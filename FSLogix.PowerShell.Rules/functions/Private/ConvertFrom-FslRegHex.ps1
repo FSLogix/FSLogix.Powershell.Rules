@@ -45,7 +45,7 @@ function ConvertFrom-FslRegHex {
                 break
             }
             '0B' {
-                $regValueType = 'DWORD'
+                $regValueType = 'QWORD'
                 #Grab relevant characters
                 $hexLong = $HexString.substring(2, 16)
                 #Split into bytes
@@ -56,6 +56,27 @@ function ConvertFrom-FslRegHex {
                 $int64 = [convert]::ToUInt64($bEndian, 16)
                 #everything is a string in output - maybe change
                 $outputData = $int64.ToString()
+                break
+            }
+            '07' {
+                $regValueType = 'Multi-String'
+                $outputData = @()
+                
+                $splitStrings = $HexString.substring(2, $HexString.length - 10) -split '000000'
+
+                foreach ($string in $splitStrings) {
+                    $outputLine = @()
+                    $string = $string + '00'
+                    $hex = $string -Split '(.{4})'
+                    $hex | ForEach-Object {
+                        if ($_ -ne '') {
+                            $byte = $_.substring(0, 2)
+                            $outputLine += [char]([convert]::toint16($byte, 16))
+                        }
+                        
+                    }
+                    $outputData += $outputLine -Join ''
+                }
                 break
             }
             Default {

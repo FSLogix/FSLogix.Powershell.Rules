@@ -70,4 +70,18 @@ Describe "Tests to and from converstion string to registry hexadecimal" -Tag 'Cu
             }
         }
     }
+
+    Context 'Multi-String' {
+        $testStrings = @(
+            @('line one','line two', 'line three'),
+            @('oneline')
+        )
+
+        foreach ($test in $testStrings) {
+    
+            It "Testing: $test" {
+                ConvertTo-FslRegHex $test -RegValueType Multi-String | ConvertFrom-FslRegHex | Select-Object -ExpandProperty Data | Should -be $test
+            }
+        }
+    }
 }
