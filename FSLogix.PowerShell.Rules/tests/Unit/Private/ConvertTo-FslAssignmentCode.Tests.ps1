@@ -3,3 +3,5 @@ $funcType = Split-Path $here -Leaf
 $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 $here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
 . "$here\functions\$funcType\$sut"
+
+#TODO write tests

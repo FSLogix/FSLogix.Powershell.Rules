@@ -14,6 +14,7 @@ function ConvertTo-FslHexQword {
     }
     
     process {
+        $hex = $null
         try {
             $hex = [String]::Format("{0:x}", $regdata)
 

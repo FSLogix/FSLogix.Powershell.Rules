@@ -92,16 +92,60 @@ Describe "$($sut.Replace('.ps1',''))" -Tag 'Unit' {
                 $return.binary | Should BeNullOrEmpty
                 $return.Comment | Should Be 'Test'
             }
+
+        }
+        Context 'Logic' {
         
-            It "Takes Specify Value Params Correctly" {
+            It "Takes Specify Value String Params Correctly" {
                 $AddFslRuleParams = @{
-                    FullName = 'HKCU\Software\FSLogix\Test'
+                    FullName     = 'HKCU\Software\FSLogix\Test'
                     RegValueType = 'String'
-                    ValueData = 'ChangedByPowerShell'
+                    ValueData    = 'ChangedByPowerShell'
                     RuleFilePath = 'TestDrive:\SpecifyValue.fxr'
                 }
                 Add-FslRule @AddFslRuleParams
             }
+
+            It "Takes Specify Value Dword Params Correctly" {
+                $AddFslRuleParams = @{
+                    FullName     = 'HKCU\Software\FSLogix\Test'
+                    RegValueType = 'Dword'
+                    ValueData    = 2000
+                    RuleFilePath = 'TestDrive:\SpecifyValue.fxr'
+                }
+                Add-FslRule @AddFslRuleParams
+            }
+
+            It "Takes Specify Value Qword Params Correctly" {
+                $AddFslRuleParams = @{
+                    FullName     = 'HKCU\Software\FSLogix\Test'
+                    RegValueType = 'Qword'
+                    ValueData    = 6679678969868
+                    RuleFilePath = 'TestDrive:\SpecifyValue.fxr'
+                }
+                Add-FslRule @AddFslRuleParams
+            }
+
+            It "Takes Specify Value Multi-String Params Correctly" {
+                $AddFslRuleParams = @{
+                    FullName     = 'HKCU\Software\FSLogix\Test'
+                    RegValueType = 'Multi-String'
+                    ValueData    = 'One', 'Two', 'Three', 'Four'
+                    RuleFilePath = 'TestDrive:\SpecifyValue.fxr'
+                }
+                Add-FslRule @AddFslRuleParams
+            }
+
+            It "Takes Specify Value ExpandableString Params Correctly" {
+                $AddFslRuleParams = @{
+                    FullName     = 'HKCU\Software\FSLogix\Test'
+                    RegValueType = 'ExpandableString'
+                    ValueData    = '%PATH%'
+                    RuleFilePath = 'TestDrive:\SpecifyValue.fxr'
+                }
+                Add-FslRule @AddFslRuleParams
+            }
+
         }
     }
 }

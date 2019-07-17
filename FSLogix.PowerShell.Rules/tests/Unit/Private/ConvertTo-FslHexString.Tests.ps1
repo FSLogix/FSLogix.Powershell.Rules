@@ -6,8 +6,12 @@ $here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
 
 Describe "$($sut.Replace('.ps1',''))" {
     
-    It "takes a string and has correct output" {
+    It "takes a string ChangedWithGui and has correct output" {
         ConvertTo-FslHexString -RegData ChangedWithGui | should -Be '4300680061006E006700650064005700690074006800470075006900'
+    }
+
+    It "takes a string %PATH% and has correct output" {
+        ConvertTo-FslHexString -RegData '%PATH%' | should -Be '250050004100540048002500'
     }
     
 }

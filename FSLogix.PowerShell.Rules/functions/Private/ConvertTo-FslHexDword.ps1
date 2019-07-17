@@ -14,6 +14,7 @@ function ConvertTo-FslHexDword {
     }
     
     process {
+        $hex = $null
         try {
             $hex = [convert]::ToString($RegData, 16)
 

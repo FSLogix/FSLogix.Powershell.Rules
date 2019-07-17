@@ -286,11 +286,19 @@ function Add-FslRule {
                             Write-Error $error[0]
                             exit
                         }
-                        $binary = '07' + $combinedHex + '000000'
+                        $binary = '07' + $hex + '000000'
                         break
                     }
                     ExpandableString {
-                        #$RegValueTypeFile = 'ExpandableString'
+                        try {
+                            $hex = ConvertTo-FslHexString -RegData $RegData -ErrorAction Stop
+                        }
+                        catch {
+                            Write-Error "$Error[0]"
+                            exit
+                        }
+        
+                        $binary = '02' + $hex.ToString() + '0000'    
                         break
                     }
                 }
