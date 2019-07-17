@@ -231,62 +231,59 @@ function Add-FslRule {
                 $sourceParent = Split-Path $FullName -Parent
                 $source = Split-Path $FullName -Leaf
 
+                #get rid of array, when not using multi-string
+                if ($RegValueType -ne 'Multi-String') {
+                    $RegValueType = $RegValueType[0]
+                }
+
                 switch ($RegValueType) {
                     String {
-                        #$RegValueTypeFile = 'StringValue'
-                        $binary = ConvertTo-FslRegHex -RegData $ValueData -RegValueType $RegValueType
+                        try {
+                            $hex = ConvertTo-FslHexString -RegData $RegData -ErrorAction Stop
+                        }
+                        catch {
+                            Write-Error "$Error[0]"
+                            exit
+                        }
+        
+                        $binary = '01' + $hex.ToString() + '0000'
                         break
                     }
                     DWORD {
-                        #$RegValueTypeFile = 'dword'
-
-                        $binary = try {
-                            #$intValueData = [uint32]$ValueData
-                            try {
-                                ConvertTo-FslRegHex -RegData $ValueData -RegValueType $RegValueType -ErrorAction Stop
-                            }
-                            catch {
-                                Write-Error "Could not convert $ValueData of value $RegValueType to a registry hex code"
-                            }
+ 
+                        try {
+                            $hex = ConvertTo-FslHexDword -RegData $RegData -ErrorAction Stop
                         }
                         catch {
-                            Write-Error "Could not convert $ValueData to an Integer"
+                            Write-Error "$Error[0]"
                             exit
                         }
+        
+                        $binary = '04' + $hex.ToString()
+                        
                         break
                     }
                     QWORD {
-                        #$RegValueTypeFile = 'qword'
-                        $binary = try {
-                            #$intValueData = [int32]$ValueData
-                            try {
-                                ConvertTo-FslRegHex -RegData $ValueData -RegValueType $RegValueType -ErrorAction Stop
-                            }
-                            catch {
-                                Write-Error "Could not convert $ValueData of value $RegValueType to a registry hex code"
-                            }
+                        try {
+                            $hex = ConvertTo-FslHexQword -RegData $RegData -ErrorAction Stop
                         }
                         catch {
-                            Write-Error "Could not convert $ValueData to an Integer"
+                            Write-Error "Unable to convert $Regdata to a QWORD Unsigned 64 bit Integer"
                             exit
                         }
+        
+                        $binary = '0B' + $hex.ToString()
                         break
                     }
                     Multi-String {
-                        #$RegValueTypeFile = 'Multi-String'
-                        $binary = try {
-                            #$intValueData = [int32]$ValueData
-                            try {
-                                ConvertTo-FslRegHex -RegData $ValueData -RegValueType $RegValueType -ErrorAction Stop
-                            }
-                            catch {
-                                Write-Error "Could not convert $ValueData of value $RegValueType to a registry hex code"
-                            }
+                        try {
+                            $hex = ConvertTo-FslHexMultiString -RegData $RegData -ErrorAction Stop
                         }
                         catch {
-                            Write-Error "Could not convert $ValueData to a Multi String"
+                            Write-Error "Unable to convert $Regdata to a QWORD Unsigned 64 bit Integer"
                             exit
                         }
+                        $binary = '07' + $combinedHex + '000000'
                         break
                     }
                     ExpandableString {
