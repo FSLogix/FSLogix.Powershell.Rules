@@ -233,7 +233,10 @@ function Add-FslRule {
 
                 #get rid of array, when not using multi-string
                 if ($RegValueType -ne 'Multi-String') {
-                    $RegValueType = $RegValueType[0]
+                    $RegData = $ValueData[0]
+                }
+                else {
+                    $RegData = $ValueData
                 }
 
                 switch ($RegValueType) {
@@ -280,7 +283,7 @@ function Add-FslRule {
                             $hex = ConvertTo-FslHexMultiString -RegData $RegData -ErrorAction Stop
                         }
                         catch {
-                            Write-Error "Unable to convert $Regdata to a QWORD Unsigned 64 bit Integer"
+                            Write-Error $error[0]
                             exit
                         }
                         $binary = '07' + $combinedHex + '000000'

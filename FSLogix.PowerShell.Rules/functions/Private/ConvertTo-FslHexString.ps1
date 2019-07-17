@@ -14,6 +14,7 @@ function ConvertTo-FslHexString {
     }
     
     process {
+        $hex = $null
         $regDataChars = $RegData.ToCharArray()
 
         foreach ($character in $regDataChars) { 
