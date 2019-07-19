@@ -12,7 +12,7 @@
     RootModule = 'FSLogix.PowerShell.Rules.psm1'
     
     # Version number of this module.
-    ModuleVersion = '1.0.3'
+    ModuleVersion = '2019.7.1'
     
     # Supported PSEditions
     # CompatiblePSEditions = @()
