@@ -14,18 +14,26 @@ Describe 'Get Assignment to Set Assignment should result in the same file' -Tag 
             Remove-Variable -Name 'here' -Scope Global
         }
 
-        It 'Gets and Sets App Masking Assignments' {
-            $path = Join-Path $global:here 'tests\QA\TestFiles\AllAssign\Assign.fxa'
-            $hiding = Get-Content $path
+        $files = @((Join-Path $global:here 'tests\QA\TestFiles\AllAssign\Assign.fxa'),
+        (Join-Path $global:here 'tests\QA\TestFiles\AllAssign\AssignNoGroup.fxa'),
+        (Join-Path $global:here 'tests\QA\TestFiles\AllAssign\ClientName.fxa'))
 
-            $ld = Get-FslLicenseDay -Path $path
-
-            Get-FslAssignment -Path $path | Set-FslAssignment -AssignmentFilePath Testdrive:\Assign.fxa
-            $ld | Set-FslLicenseDay -Path Testdrive:\Assign.fxa
-            $hidingTarget = Get-Content Testdrive:\Assign.fxa
-
-            Compare-Object -ReferenceObject $hiding -DifferenceObject $hidingTarget | Measure-Object | Select-Object -ExpandProperty Count | Should Be 0
+        foreach ($assignFile in $files) {
+            $filename = $assignFile.Split('\')[-1]
+            It "Gets and Sets App Masking Assignments for file $filename" {
+                $hiding = Get-Content $assignFile
+    
+                $ld = Get-FslLicenseDay -Path $assignFile
+    
+                Get-FslAssignment -Path $assignFile | Set-FslAssignment -AssignmentFilePath Testdrive:\$filename
+                $ld | Set-FslLicenseDay -Path Testdrive:\$filename
+                $hidingTarget = Get-Content Testdrive:\$filename
+    
+                Compare-Object -ReferenceObject $hiding -DifferenceObject $hidingTarget | Measure-Object | Select-Object -ExpandProperty Count | Should Be 0
+            }
         }
+
+
 
         <#
         It 'Gets and Sets Java Process Assignments' {

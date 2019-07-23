@@ -5,7 +5,7 @@ $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 
 Import-Module -Name (Join-Path $here 'FSLogix.PowerShell.Rules.psd1') -Force
 
-Describe "$sut.TrimEnd('.ps1')" {
+Describe "$($sut.TrimEnd('.ps1'))" -Tag 'Unit','Public' {
 
     InModuleScope FSLogix.PowerShell.Rules {
 
@@ -32,7 +32,7 @@ Describe "$sut.TrimEnd('.ps1')" {
             }
 
             It "Takes an FSLogix Object as pipeline input" {
-                $input = [PSCustomObject]@{
+                $assignInput = [PSCustomObject]@{
                     PSTypeName          = "FSLogix.Assignment"
                     RuleSetApplies      = $false
                     UserName            = $null
@@ -49,14 +49,13 @@ Describe "$sut.TrimEnd('.ps1')" {
                     UnAssignedTime      = 0
                 }
 
-                $input | Set-FslAssignment -Path TestDrive:\ObjectPipe.fxa
+                $assignInput | Set-FslAssignment -Path TestDrive:\ObjectPipe.fxa
                 Test-Path TestDrive:\ObjectPipe.fxa | Should -BeTrue
 
             }
         }
 
         Context 'Execution' {
-
 
 
         }
@@ -68,9 +67,21 @@ Describe "$sut.TrimEnd('.ps1')" {
                 $h.count | Should -BeGreaterThan 10
             }
 
-            It 'Only outputs a single verbose line (from Add-fslRule)' {
+            It 'Outputs two verbose lines (one from Add-fslRule) on initial set' {
                 $verboseLine = Set-FslAssignment -Path TestDrive:\Verbose.fxa -Verbose 4>&1 -EnvironmentVariable 'CLIENTNAME=PC1'
-                $verboseLine.count | Should -Be 1
+                $verboseLine.count | Should -Be 2
+            }
+
+            It "Only has three verbose lines in the case of multiple pipeline objects" {
+                $pipeInput1 = [PSCustomObject]@{
+                    EnvironmentVariable = 'CLIENTNAME=PC1'
+                }
+                $pipeInput2 = [PSCustomObject]@{
+                    EnvironmentVariable = 'CLIENTNAME=PC2'
+                }
+
+                $verboseLine = $pipeInput1, $pipeInput2 | Set-FslAssignment -Path 'TestDrive:\multipipeline.fxa' -Verbose 4>&1
+                $verboseLine.count | Should -Be 3
             }
         }
     }

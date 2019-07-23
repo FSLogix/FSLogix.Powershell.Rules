@@ -6,10 +6,9 @@
 
 $Public = @( Get-ChildItem -Path $PSScriptRoot\functions\Public\*.ps1 -ErrorAction SilentlyContinue )
 $Private = @( Get-ChildItem -Path $PSScriptRoot\functions\Private\*.ps1 -ErrorAction SilentlyContinue )
-$Type = @( Get-ChildItem -Path $PSScriptRoot\Types\*.ps1 -ErrorAction SilentlyContinue)
 
 #Dot source the files
-Foreach ($import in @($Type + $Public + $Private)) {
+Foreach ($import in @($Public + $Private)) {
     Try {
         Write-Verbose "Importing $($Import.FullName)"
         . $import.fullname
