@@ -50,7 +50,19 @@ Describe "$sut.TrimEnd('.ps1')" {
                 }
 
                 $input | Set-FslAssignment -Path TestDrive:\ObjectPipe.fxa
-                Test-Path TestDrive:\ObjectPipe
+                Test-Path TestDrive:\ObjectPipe.fxa | Should -BeTrue
+
+            }
+        }
+
+        Context 'Execution' {
+
+
+
+        }
+
+        Context 'Output' {
+
             It 'Produces comment based help' {
                 $h = help Set-FslAssignment
                 $h.count | Should -BeGreaterThan 10
