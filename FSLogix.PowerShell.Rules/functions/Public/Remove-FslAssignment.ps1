@@ -43,8 +43,6 @@ function Remove-FslAssignment {
 
         $assignments = Get-FslAssignment -Path $Path
 
-
-
         switch ($true) {
             {$assignments.UserName -contains $Name} {
                 $lines = $assignments | Where-Object {$_.Username -eq $Name}
