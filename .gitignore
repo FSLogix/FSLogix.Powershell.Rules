@@ -7,3 +7,4 @@ PSDepend.build.psd1
 StartPester.ps1
 PesterTest.xml
 CodeCoverage.xml
+.vscode

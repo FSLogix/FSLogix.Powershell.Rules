@@ -1,7 +1,6 @@
-$here = Split-Path -Parent $MyInvocation.MyCommand.Path
-#$funcType = Split-Path $here -Leaf
+$here = Split-Path -Parent $MyInvocation.MyCommand.Path | Split-Path | Split-Path | Split-Path
 $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
-$here = $here | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
+#$funcType = Split-Path $here -Leaf
 #. "$here\$funcType\$sut"
 
 Import-Module -Name (Join-Path $here 'FSLogix.PowerShell.Rules.psd1') -Force
