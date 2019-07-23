@@ -30,16 +30,27 @@ Describe "$sut.TrimEnd('.ps1')" {
                 Set-FslAssignment 'TestDrive:\position.fxa' -EnvironmentVariable 'CLIENTNAME=PC1'
                 Test-Path TestDrive:\position.fxa | Should -BeTrue
             }
-        }
 
-        Context 'Execution' {
+            It "Takes an FSLogix Object as pipeline input" {
+                $input = [PSCustomObject]@{
+                    PSTypeName          = "FSLogix.Assignment"
+                    RuleSetApplies      = $false
+                    UserName            = $null
+                    GroupName           = $null
+                    ADDistinguisedName  = $null
+                    WellKnownSID        = $null
+                    ProcessName         = $null
+                    IncludeChildProcess = $null
+                    IPAddress           = $null
+                    ComputerName        = $null
+                    OU                  = $null
+                    EnvironmentVariable = 'CLIENTNAME=PC1'
+                    AssignedTime        = 0
+                    UnAssignedTime      = 0
+                }
 
-
-
-        }
-
-        Context 'Output' {
-
+                $input | Set-FslAssignment -Path TestDrive:\ObjectPipe.fxa
+                Test-Path TestDrive:\ObjectPipe
             It 'Produces comment based help' {
                 $h = help Set-FslAssignment
                 $h.count | Should -BeGreaterThan 10
