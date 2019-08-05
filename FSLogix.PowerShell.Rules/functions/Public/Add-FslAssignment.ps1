@@ -179,7 +179,7 @@ function Add-FslAssignment {
         if ( -not ( Test-Path $Path )) {
             $version = 1
             $minimumLicenseAssignedTime = 0
-            Set-Content -Path $Path -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop -WhatIf:$false
+            Set-Content -Path $Path -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop
         }
 
     } # Begin

@@ -3,7 +3,7 @@
 
 Module to manipulate Rules and assignment files for FSLogix App Masking.
 
-# Module files
+# Install Module
 
 Use the two files in the release folder to import the module
 

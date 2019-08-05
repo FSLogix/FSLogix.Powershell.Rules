@@ -1,9 +1,4 @@
-<# INSERT HEADER ABOVE #>
-
-#Get public and private function definition files.
-
 #Requires -Version 5.0
-
 function Add-FslAssignment {
 
     <#
@@ -191,7 +186,7 @@ function Add-FslAssignment {
     } # Begin
     PROCESS {
 
-        $convertToFslAssignmentCodeParams = @{}
+        $convertToFslAssignmentCodeParams = @{ }
 
         $assignmentCode = $null
         $idString = $null
@@ -254,16 +249,21 @@ function Add-FslAssignment {
             #Determine if the group has a Well Known SID
             $wellknownSids = [Enum]::GetValues([System.Security.Principal.WellKnownSidType])
             $account = New-Object System.Security.Principal.NTAccount($allFields.GroupName)
-            $sid = $account.Translate([System.Security.Principal.SecurityIdentifier])
-            $result = foreach ($s in $wellknownSids) { $sid.IsWellKnown($s)}
+            try {
+                $sid = $account.Translate([System.Security.Principal.SecurityIdentifier])
+                $result = foreach ($s in $wellknownSids) { $sid.IsWellKnown($s) }
 
-            if ( $result -contains $true ) {
-                $idString = $sid.Value
+                if ( $result -contains $true ) {
+                    $idString = $sid.Value
+                }
+                else {
+                    $idString = $allFields.GroupName
+                }
             }
-            else {
+            catch {
                 $idString = $allFields.GroupName
             }
-
+            
             $friendlyName = $allFields.GroupName
         }
 
@@ -348,8 +348,9 @@ function Add-FslAssignment {
             Write-Output $passThruObject
         }
     } #Process
-    END {} #End
+    END { } #End
 }  #function Add-FslAssignment
+
 function Add-FslRule {
     [CmdletBinding()]
 
@@ -360,7 +361,8 @@ function Add-FslRule {
             Mandatory = $true,
             ValuefromPipelineByPropertyName = $true
         )]
-        [System.String]$RuleFilePath,
+        [Alias('RuleFilePath')]
+        [System.String]$Path,
 
         [Parameter(
             ParameterSetName = 'Hiding',
@@ -440,8 +442,15 @@ function Add-FslRule {
             Position = 10,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Alias('Binary')]
-        [string]$Data,
+        [string[]]$ValueData,
+
+        [Parameter(
+            ParameterSetName = 'SpecifyValue',
+            Mandatory = $false,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [ValidateSet('String', 'DWORD', 'QWORD', 'Multi-String', 'ExpandableString')]
+        [string]$RegValueType = 'String',
 
         [Parameter(
             Position = 11,
@@ -468,21 +477,23 @@ function Add-FslRule {
 
         $FRX_RULE_SRC_IS_A_FILE_OR_VALUE = 0x00000002
         $FRX_RULE_TYPE_REDIRECT = 0x00000100
+        $FRX_RULE_TYPE_SPECIFIC_DATA = 0x00000800
 
     } # Begin
     PROCESS {
 
-        if ( -not ( Test-Path $RuleFilePath )) {
+        if ( -not ( Test-Path $Path )) {
             $version = 1
-            Set-Content -Path $RuleFilePath -Value $version -Encoding Unicode -ErrorAction Stop
+            Set-Content -Path $Path -Value $version -Encoding Unicode -ErrorAction Stop
         }
         #check file has correct filename extension
-        if ($RuleFilePath -notlike "*.fxr") {
+        if ($Path -notlike "*.fxr") {
             Write-Warning 'Rule files should have an fxr extension'
         }
 
-        $convertToFslRuleCodeParams = @{}
+        $convertToFslRuleCodeParams = @{ }
 
+        #This switch statement sets up the function parameters for ConvertT-FslRuleCode
         switch ($PSCmdlet.ParameterSetName) {
 
             Hiding {
@@ -491,9 +502,9 @@ function Add-FslRule {
                     }
                     { $HidingType -eq 'Printer' } { $convertToFslRuleCodeParams += @{ 'Printer' = $true }
                     }
-                    { $HidingType -eq 'FileOrValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
+                    { $HidingType -eq 'FileOrValue' } { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
                     }
-                    { $HidingType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
+                    { $HidingType -eq 'FolderOrKey' } { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
                     }
                     { $HidingType -ne 'Font' -and $HidingType -ne 'Printer' } { $convertToFslRuleCodeParams += @{ 'Hiding' = $true }
                     }
@@ -504,9 +515,9 @@ function Add-FslRule {
                 $convertToFslRuleCodeParams += @{ 'Redirect' = $true }
 
                 switch ($true) {
-                    { $RedirectType -eq 'FileOrValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
+                    { $RedirectType -eq 'FileOrValue' } { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
                     }
-                    { $RedirectType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
+                    { $RedirectType -eq 'FolderOrKey' } { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
                     }
                 }
                 $convertToFslRuleCodeParams += @{
@@ -521,6 +532,7 @@ function Add-FslRule {
             }
             SpecifyValue {
                 $convertToFslRuleCodeParams += @{ 'SpecificData' = $true }
+                $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
                 break
             }
             RuleObjectPipeline {
@@ -530,9 +542,9 @@ function Add-FslRule {
                         }
                         { $RuleObject.HidingType -eq 'Printer' } { $convertToFslRuleCodeParams += @{ 'Printer' = $true }
                         }
-                        { $RuleObject.HidingType -eq 'FileOrValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
+                        { $RuleObject.HidingType -eq 'FileOrValue' } { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
                         }
-                        { $RuleObject.HidingType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
+                        { $RuleObject.HidingType -eq 'FolderOrKey' } { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
                         }
                         { $RuleObject.HidingType -ne 'Font' -and $RuleObject.HidingType -ne 'Printer' } { $convertToFslRuleCodeParams += @{ 'Hiding' = $true }
                         }
@@ -541,9 +553,9 @@ function Add-FslRule {
                 if ($RuleObject.RedirectType) {
                     $convertToFslRuleCodeParams += @{ 'Redirect' = $true }
                     switch ($true) {
-                        { $RuleObject.RedirectType -eq 'FileOrValue'} { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
+                        { $RuleObject.RedirectType -eq 'FileOrValue' } { $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
                         }
-                        { $RuleObject.RedirectType -eq 'FolderOrKey'} { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
+                        { $RuleObject.RedirectType -eq 'FolderOrKey' } { $convertToFslRuleCodeParams += @{ 'FolderOrKey' = $true }
                         }
                     }
                 }
@@ -552,6 +564,9 @@ function Add-FslRule {
                 }
                 if ($RuleObject.Data) {
                     $convertToFslRuleCodeParams += @{ 'SpecificData' = $true }
+                    $convertToFslRuleCodeParams += @{ 'FileOrValue' = $true }
+                    $RegValueType = $RuleObject.RegValueType
+                    $ValueData = $RuleObject.Data
                 }
                 if ($RuleObject.CopyObject) {
                     $convertToFslRuleCodeParams += @{ 'CopyObject' = $true }
@@ -564,14 +579,98 @@ function Add-FslRule {
 
         $flags = ConvertTo-FslRuleCode @convertToFslRuleCodeParams
 
+        switch ($true) {
+            (($flags -band  $FRX_RULE_TYPE_SPECIFIC_DATA) -eq 2048) {
+                $sourceParent = Split-Path $FullName -Parent
+                $source = Split-Path $FullName -Leaf
 
-        if ($flags -band  $FRX_RULE_SRC_IS_A_FILE_OR_VALUE) {
-            $sourceParent = Split-Path $FullName -Parent
-            $source = Split-Path $FullName -Leaf
-        }
-        else {
-            $sourceParent = $FullName
-            $source = $null
+                #get rid of array, when not using multi-string
+                if ($RegValueType -ne 'Multi-String') {
+                    $RegData = $ValueData[0]
+                }
+                else {
+                    $RegData = $ValueData
+                }
+
+                switch ($RegValueType) {
+                    String {
+                        try {
+                            $hex = ConvertTo-FslHexString -RegData $RegData -ErrorAction Stop
+                        }
+                        catch {
+                            Write-Error "$Error[0]"
+                            exit
+                        }
+        
+                        $binary = '01' + $hex.ToString() + '0000'
+                        break
+                    }
+                    DWORD {
+ 
+                        try {
+                            $hex = ConvertTo-FslHexDword -RegData $RegData -ErrorAction Stop
+                        }
+                        catch {
+                            Write-Error "$Error[0]"
+                            exit
+                        }
+        
+                        $binary = '04' + $hex.ToString()
+                        
+                        break
+                    }
+                    QWORD {
+                        try {
+                            $hex = ConvertTo-FslHexQword -RegData $RegData -ErrorAction Stop
+                        }
+                        catch {
+                            Write-Error "Unable to convert $Regdata to a QWORD Unsigned 64 bit Integer"
+                            exit
+                        }
+        
+                        $binary = '0B' + $hex.ToString()
+                        break
+                    }
+                    Multi-String {
+                        try {
+                            $hex = ConvertTo-FslHexMultiString -RegData $RegData -ErrorAction Stop
+                        }
+                        catch {
+                            Write-Error $error[0]
+                            exit
+                        }
+                        $binary = '07' + $hex + '000000'
+                        break
+                    }
+                    ExpandableString {
+                        try {
+                            $hex = ConvertTo-FslHexString -RegData $RegData -ErrorAction Stop
+                        }
+                        catch {
+                            Write-Error "$Error[0]"
+                            exit
+                        }
+        
+                        $binary = '02' + $hex.ToString() + '0000'    
+                        break
+                    }
+                }
+                if ($Comment -eq 'Created By PowerShell Script'){
+                    $Comment = "Created by Script: $RegValueType $($ValueData.ToString())"
+                }
+                break
+            }
+            (($flags -band  $FRX_RULE_SRC_IS_A_FILE_OR_VALUE) -eq 2) {
+                $sourceParent = Split-Path $FullName -Parent
+                $source = Split-Path $FullName -Leaf
+                $binary = $null
+                break
+            }
+            Default {
+                $sourceParent = $FullName
+                $source = $null
+                $binary = $null
+            }
         }
 
         if ($flags -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE -and
@@ -584,17 +683,14 @@ function Add-FslRule {
             $dest = $null
         }
 
-        #Binary is an unused field in fxr files
-        $binary = $null
-
         $addContentParams = @{
-            'Path'     = $RuleFilePath
+            'Path'     = $Path
             'Encoding' = 'Unicode'
             'WhatIf'   = $false
         }
 
         Add-Content @addContentParams -Value "##$Comment"
-        Write-Verbose -Message "Written $Comment to $RuleFilePath"
+        Write-Verbose -Message "Written $Comment to $Path"
 
         If ($convertToFslRuleCodeParams.ContainsKey( 'CopyObject' ) -and
             $convertToFslRuleCodeParams.ContainsKey( 'Redirect' ) -and
@@ -610,7 +706,7 @@ function Add-FslRule {
 
         Add-Content @addContentParams -Value $message
 
-        Write-Verbose -Message "Written $message to $RuleFilePath"
+        Write-Verbose -Message "Written $message to $Path"
 
         If ($passThru) {
             $passThruObject = [pscustomobject]@{
@@ -625,7 +721,7 @@ function Add-FslRule {
             Write-Output $passThruObject
         }
     } #Process
-    END {} #End
+    END { } #End
 }  #function Add-FslRule
 
 function Compare-FslFilePath {
@@ -653,14 +749,14 @@ function Compare-FslFilePath {
     PROCESS {
 
         foreach ($filepath in $Files) {
-            if (-not (Test-Path $filepath)) {
+            if (-not (Test-Path $filepath)){
                 Write-Error "$filepath does not exist"
                 exit
             }
         }
 
         $allFiles = @()
-        foreach ($filepath in $Files) {
+        foreach ($filepath in $Files){
             $appFiles = ( Import-Clixml $filepath ).FullName
             $allfiles += $appFiles
         }
@@ -669,7 +765,7 @@ function Compare-FslFilePath {
 
         $uniqueFiles = @{}
 
-        foreach ($filepath in $Files) {
+        foreach ($filepath in $Files){
 
             $baseFileName = $filepath | Get-ChildItem | Select-Object -ExpandProperty BaseName
 
@@ -677,7 +773,7 @@ function Compare-FslFilePath {
 
             $currentAppFiles = ( Import-Clixml $filepath ).FullName
 
-            $uniqueFiles = $currentAppFiles | Where-Object { $dupes -notcontains $_ }
+            $uniqueFiles =  $currentAppFiles | Where-Object { $dupes -notcontains $_ }
 
             $uniqueFiles | Set-FslRule -HidingType FileOrValue -RuleFilePath ( Join-Path $OutputPath $newFileName )
 
@@ -700,7 +796,7 @@ function Compare-FslRuleFile {
         [System.Array]$Files,
 
         [Parameter(
-            Position = 0,
+            Position = 1,
             ValuefromPipelineByPropertyName = $true
         )]
         [System.String]$OutputPath = "$PSScriptRoot"
@@ -712,7 +808,7 @@ function Compare-FslRuleFile {
     PROCESS {
 
         foreach ($filepath in $Files) {
-            if (-not (Test-Path $filepath)) {
+            if (-not (Test-Path $filepath)){
                 Throw "$filepath does not exist"
             }
         }
@@ -726,10 +822,10 @@ function Compare-FslRuleFile {
             #Get hiding rules (only concerned with hiding rules that are registry keys)
             $refRule = $rules | Where-Object { $_.HidingType -eq 'FolderOrKey' -and $_.FullName -like "HKLM*"} | Select-Object -ExpandProperty FullName
 
-            foreach ($filepath in $Files) {
-                if ($filepath -ne $referenceFile) {
+            foreach ($filepath in $Files){
+                if ($filepath -ne $referenceFile){
                     $notRefRule = Get-FslRule $filepath
-                    #Get hiding rules (only concerned with hiding rules that are registry keys)
+                     #Get hiding rules (only concerned with hiding rules that are registry keys)
                     $notRefHideRules = $notRefRule | Where-Object { $_.HidingType -eq 'FolderOrKey' -and $_.FullName -like "HKLM*" } | Select-Object -ExpandProperty FullName
                     $diffRule += $notRefHideRules
                 }
@@ -798,7 +894,7 @@ function Get-FslAssignment {
                 #Create a powershell object from the columns
                 $lineObj = $line | ConvertFrom-String -Delimiter `t -PropertyNames FlagsDec, IdString, DistinguishedName, FriendlyName, AssignedTime, UnAssignedTime
                 #ConvertFrom-String converts the hex value in flag to decimal, need to convert back to a hex string. Add in the comment and output it.
-                $assignment = $lineObj | Select-Object -Property  IdString, DistinguishedName, FriendlyName, AssignedTime, UnAssignedTime, @{n = 'Flags'; e = {'0x' + "{0:X8}" -f $lineObj.FlagsDec}}
+                $assignment = $lineObj | Select-Object -Property  IdString, DistinguishedName, FriendlyName, AssignedTime, UnAssignedTime, @{n = 'Flags'; e = { '0x' + "{0:X8}" -f $lineObj.FlagsDec } }
 
                 $poshFlags = $assignment.Flags | ConvertFrom-FslAssignmentCode
 
@@ -815,7 +911,7 @@ function Get-FslAssignment {
                     }
                     UserName            = if ( $poshFlags.User ) { $assignment.IdString } else { $null }
                     GroupName           = if ( $poshFlags.Group ) { $assignment.FriendlyName } else { $null }
-                    ADDistinguisedName  = if ( $poshFlags.Group ) { $assignment.DistinguishedName } else {$null}
+                    ADDistinguisedName  = if ( $poshFlags.Group ) { $assignment.DistinguishedName } else { $null }
                     WellKnownSID        = if ( $poshFlags.Group ) { $assignment.IdString } else { $null }
                     ProcessName         = if ( $poshFlags.Process ) { $assignment.IdString } else { $null }
                     IncludeChildProcess = if ( $poshFlags.Process ) { $poshFlags.ApplyToProcessChildren } else { $null }
@@ -847,7 +943,7 @@ function Get-FslAssignment {
             } #if
         } #foreach
     } #Process
-    END {} #End
+    END { } #End
 }  #function Get-FslAssignment
 
 function Get-FslLicenseDay {
@@ -894,7 +990,7 @@ function Get-FslLicenseDay {
         Write-Output $output
 
     } #Process
-    END {} #End
+    END { } #End
 }  #function Get-FslLicenseDay
 
 function Get-FslRule {
@@ -930,10 +1026,10 @@ function Get-FslRule {
                 }
                 #If line matches tab separated data with 5 columns.
                 { $line -match "([^\t]*\t){5}" } {
-                    #Create a powershell object from the columns
+                    #Create a powershell object from the columns only works on full PowerShell, not core
                     $lineObj = $line | ConvertFrom-String -Delimiter `t -PropertyNames SrcParent, Src, DestParent, Dest, FlagsDec, Binary
                     #ConvertFrom-String converts the hex value in flag to decimal, need to convert back to a hex string. Add in the comment and output it.
-                    $rulePlusComment = $lineObj | Select-Object -Property SrcParent, Src, DestParent, Dest, @{n = 'Flags'; e = {'0x' + "{0:X8}" -f $lineObj.FlagsDec}}, Binary, @{n = 'Comment'; e = {$comment}}
+                    $rulePlusComment = $lineObj | Select-Object -Property SrcParent, Src, DestParent, Dest, @{n = 'Flags'; e = { '0x' + "{0:X8}" -f $lineObj.FlagsDec } }, Binary, @{n = 'Comment'; e = { $comment } }
 
                     $poshFlags = $rulePlusComment.Flags | ConvertFrom-FslRuleCode
                     if ($rulePlusComment.DestParent) {
@@ -951,31 +1047,43 @@ function Get-FslRule {
                         [system.io.fileinfo]($rulePlusComment.SrcParent.TrimEnd('\', '/') + '\' + $rulePlusComment.Src.TrimStart('\', '/')).TrimEnd('\')
                     }
 
+                    if ($rulePlusComment.Binary) {
+                        $SpecificData = ConvertFrom-FslRegHex -HexString $rulePlusComment.Binary
+                    }
+                    else{
+                        $SpecificData = [PSCustomObject]@{
+                            Data = $null
+                            RegValueType = $null
+                        }
+                    }
+
                     $output = [PSCustomObject]@{
                         PSTypeName       = "FSLogix.Rule"
                         FullName         = $fullnameJoin
 
                         HidingType       = if ($poshFlags.Hiding -or $poshFlags.HideFont -or $poshFlags.Printer) {
                             switch ( $true ) {
-                                $poshFlags.HideFont {'Font'; break}
-                                $poshFlags.Printer {'Printer'; break}
-                                $poshFlags.FolderOrKey {'FolderOrKey'; break}
-                                $poshFlags.FileOrValue {'FileOrValue'; break}
+                                $poshFlags.HideFont { 'Font'; break }
+                                $poshFlags.Printer { 'Printer'; break }
+                                $poshFlags.FolderOrKey { 'FolderOrKey'; break }
+                                $poshFlags.FileOrValue { 'FileOrValue'; break }
                             }
                         }
                         else { $null }
-                        RedirectDestPath = if ($poshFlags.Redirect) { $destPath } else {$null}
+                        RedirectDestPath = if ($poshFlags.Redirect) { $destPath } else { $null }
                         RedirectType     = if ($poshFlags.Redirect) {
                             switch ( $true ) {
-                                $poshFlags.FolderOrKey {'FolderOrKey'; break}
-                                $poshFlags.FileOrValue {'FileOrValue'; break}
+                                $poshFlags.FolderOrKey { 'FolderOrKey'; break }
+                                $poshFlags.FileOrValue { 'FileOrValue'; break }
                             }
                         }
                         else { $null }
-                        CopyObject       = if ($poshFlags.CopyObject) { $poshFlags.CopyObject } else {$null}
-                        DiskFile         = if ($poshFlags.VolumeAutoMount) { $destPath } else {$null}
-                        Binary           = $rulePlusComment.Binary
-                        Data             = $null
+
+                        CopyObject       = if ($poshFlags.CopyObject) { $poshFlags.CopyObject } else { $null }
+                        DiskFile         = if ($poshFlags.VolumeAutoMount) { $destPath } else { $null }
+                        #Binary           = $rulePlusComment.Binary
+                        Data             = $SpecificData.Data
+                        RegValueType     = $SpecificData.RegValueType
                         Comment          = $rulePlusComment.Comment
                         #Flags            = $rulePlusComment.Flags
                     }
@@ -990,7 +1098,7 @@ function Get-FslRule {
             }
         }
     } #Process
-    END {} #End
+    END { } #End
 }  #function Get-FslRule
 
 function Remove-FslAssignment {
@@ -1137,6 +1245,60 @@ function Remove-FslAssignment {
     } #Process
     END {} #End
 }  #function Remove-FslAssignment
+
+function Remove-FslRule {
+    [CmdletBinding(SupportsShouldProcess = $true)]
+
+    Param (
+        [Parameter(
+            Position = 1,
+            ValuefromPipelineByPropertyName = $true,
+            ValuefromPipeline = $true,
+            Mandatory = $true
+        )]
+        [alias('RuleFilePath')]
+        [System.String]$Path,
+
+        [Parameter(
+            Position = 2,
+            ValuefromPipelineByPropertyName = $true,
+            Mandatory = $true
+        )]
+        [alias('FullName')]
+        [System.String]$Name
+    )
+
+    BEGIN {
+        Set-StrictMode -Version Latest
+    } # Begin
+    PROCESS {
+
+        If (-not (Test-Path -Path $Path)) {
+            Write-Error "$Path Not found"
+            break
+        }
+
+        if ($Path -notlike "*.fxr") {
+            Write-Warning 'Rule files should have an fxr filename extension'
+        }
+
+        $rules = Get-FslRule -Path $Path
+
+        if ( $rules.FullName -notcontains $Name ) {
+            Write-Error "Could not find rule with name $Name in file $Path"
+            break
+        }
+        else {
+            $lines = $rules | Where-Object {$_.FullName -eq $Name}
+            foreach ($line in $lines) {
+                If ($PSCmdlet.ShouldProcess("Rule $Name")) {
+                    Remove-FslLine -Path $Path -Category FullName -Name $Name -Type Rule
+                }
+            }
+        }
+    } #Process
+    END {} #End
+}  #function Remove-FslRule
 
 function Set-FslAssignment {
 
@@ -1577,8 +1739,104 @@ function ConvertFrom-FslAssignmentCode {
         Write-Output $output
 
     } #Process
-    END {} #End
+    END { } #End
 }  #function ConvertFrom-FslAssignmentCode
+
+function ConvertFrom-FslRegHex {
+    [CmdletBinding()]
+
+    Param (
+        [Parameter(
+            Position = 1,
+            ValuefromPipelineByPropertyName = $true,
+            ValuefromPipeline = $true,
+            Mandatory = $true
+        )]
+        [System.String]$HexString
+    )
+
+    BEGIN {
+        Set-StrictMode -Version Latest
+    } # Begin
+    PROCESS {
+        $outputData = $null
+
+        switch ($HexString.Substring(0, 2)) {
+            '01' {
+                $regValueType = 'String'
+                $hexLong = $HexString.substring(2, $HexString.length - 6)
+                $hex = $hexLong -Split '(.{4})'
+                $hex | ForEach-Object {
+                    if ($_ -ne '') {
+                        $byte = $_.substring(0, 2)
+                        $outputData += [char]([convert]::toint16($byte, 16))
+                    }
+                }
+                break
+            }
+            '04' {
+                $regValueType = 'DWORD'
+                #Grab relevant characters
+                $hexLong = $HexString.substring(2, 8)
+                #Split into bytes
+                $hex = $hexLong -Split '(..)'
+                #Need to make current little endian into big endian in order for [convert] to work
+                [System.Array]::Reverse($hex)
+                $bEndian = $hex -join ''
+                $int32 = [convert]::ToUInt32($bEndian, 16)
+                #everything is a string in output - maybe change
+                $outputData = $int32.ToString()
+                break
+            }
+            '0B' {
+                $regValueType = 'QWORD'
+                #Grab relevant characters
+                $hexLong = $HexString.substring(2, 16)
+                #Split into bytes
+                $hex = $hexLong -Split '(..)'
+                #Need to make current little endian into big endian in order for [convert] to work
+                [System.Array]::Reverse($hex)
+                $bEndian = $hex -join ''
+                $int64 = [convert]::ToUInt64($bEndian, 16)
+                #everything is a string in output - maybe change
+                $outputData = $int64.ToString()
+                break
+            }
+            '07' {
+                $regValueType = 'Multi-String'
+                $outputData = @()
+                
+                $splitStrings = $HexString.substring(2, $HexString.length - 10) -split '000000'
+
+                foreach ($string in $splitStrings) {
+                    $outputLine = @()
+                    $string = $string + '00'
+                    $hex = $string -Split '(.{4})'
+                    $hex | ForEach-Object {
+                        if ($_ -ne '') {
+                            $byte = $_.substring(0, 2)
+                            $outputLine += [char]([convert]::toint16($byte, 16))
+                        }
+                        
+                    }
+                    $outputData += $outputLine -Join ''
+                }
+                break
+            }
+            Default {
+                Write-Error "Could not determine the type of registry value form the Hex Code $($HexString.Substring(0,2))"
+                exit
+            }
+        }
+
+        $output = [PSCustomObject]@{
+            Data         = $outputData
+            RegValueType = $regValueType
+        }
+        Write-Output $output
+    } #Process
+    END { } #End
+}  #function ConvertFrom-FslRegHex
 
 function ConvertFrom-FslRuleCode {
     [CmdletBinding()]
@@ -1611,26 +1869,26 @@ function ConvertFrom-FslRuleCode {
 
         switch ($true) {
             { $RuleCode -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY } { $folderOrKey = $true }
-            { -not ( $RuleCode -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY ) } { $folderOrKey = $false}
-            { $RuleCode -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE } {$fileOrValue = $true}
+            { -not ( $RuleCode -band $FRX_RULE_SRC_IS_A_DIR_OR_KEY ) } { $folderOrKey = $false }
+            { $RuleCode -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE } { $fileOrValue = $true }
             { -not ( $RuleCode -band $FRX_RULE_SRC_IS_A_FILE_OR_VALUE ) } { $fileOrValue = $false }
             { $RuleCode -band $FRX_RULE_SHOULD_COPY_FILE } { $copyObject = $true }
             { -not ( $RuleCode -band $FRX_RULE_SHOULD_COPY_FILE ) } { $copyObject = $false }
-            { $RuleCode -band $FRX_RULE_TYPE_REDIRECT } { $redirect = $true}
+            { $RuleCode -band $FRX_RULE_TYPE_REDIRECT } { $redirect = $true }
             { -not ( $RuleCode -band $FRX_RULE_TYPE_REDIRECT ) } { $redirect = $false }
-            { $RuleCode -band $FRX_RULE_TYPE_HIDING } { $hiding = $true}
+            { $RuleCode -band $FRX_RULE_TYPE_HIDING } { $hiding = $true }
             { -not ( $RuleCode -band $FRX_RULE_TYPE_HIDING ) } { $hiding = $false }
             { $RuleCode -band $FRX_RULE_TYPE_HIDE_PRINTER } { $hidePrinter = $true }
-            { -not ( $RuleCode -band $FRX_RULE_TYPE_HIDE_PRINTER ) } { $hidePrinter = $false}
+            { -not ( $RuleCode -band $FRX_RULE_TYPE_HIDE_PRINTER ) } { $hidePrinter = $false }
             { $RuleCode -band $FRX_RULE_TYPE_SPECIFIC_DATA } { $specificData = $true }
             { -not ( $RuleCode -band $FRX_RULE_TYPE_SPECIFIC_DATA ) } { $specificData = $false }
             { $RuleCode -band $FRX_RULE_TYPE_JAVA } { $java = $true }
             { -not ( $RuleCode -band $FRX_RULE_TYPE_JAVA ) } { $java = $false }
-            { $RuleCode -band $FRX_RULE_TYPE_VOLUME_AUTOMOUNT } { $volumeAutoMount = $true}
+            { $RuleCode -band $FRX_RULE_TYPE_VOLUME_AUTOMOUNT } { $volumeAutoMount = $true }
             { -not ( $RuleCode -band $FRX_RULE_TYPE_VOLUME_AUTOMOUNT ) } { $volumeAutoMount = $false }
             { $RuleCode -band $FRX_RULE_TYPE_HIDE_FONT } { $font = $true }
             { -not ( $RuleCode -band $FRX_RULE_TYPE_HIDE_FONT ) } { $font = $false }
-            default {}
+            default { }
         } #Switch
 
         $outObject = [PSCustomObject]@{
@@ -1647,7 +1905,7 @@ function ConvertFrom-FslRuleCode {
         }
         Write-Output $outObject
     } #Process
-    END {} #End
+    END { } #End
 }  #function ConvertFrom-FslRuleCode
 
 function ConvertTo-FslAssignmentCode {
@@ -1766,6 +2024,157 @@ function ConvertTo-FslAssignmentCode {
     } #Process
     END {} #End
 }  #function ConvertTo-FslAssignmentCode
+
+function ConvertTo-FslHexDword {
+    [CmdletBinding()]
+    param (
+        [Parameter(
+            Position = 1,
+            ValuefromPipelineByPropertyName = $true,
+            ValuefromPipeline = $true,
+            Mandatory = $true
+        )]
+        [uInt32]$RegData
+    )
+    
+    begin {
+    }
+    
+    process {
+        $hex = $null
+        try {
+            $hex = [convert]::ToString($RegData, 16)
+
+            while ($hex.length -lt 8) {
+                $hex = '0' + $hex
+            }
+
+            $hexArray = $hex -split "(..)"
+            [array]::Reverse($hexArray)
+
+            $output = $hexArray -join ''
+        }
+        catch {
+            Write-Error "Unable to convert $Regdata from uInt64 to Hex"
+            exit
+        }
+
+        Write-Output $output
+    }
+    
+    end {
+    }
+}
+
+function ConvertTo-FslHexMultiString {
+    [CmdletBinding()]
+    param (
+        [Parameter(
+            Position = 1,
+            ValuefromPipelineByPropertyName = $true,
+            ValuefromPipeline = $true,
+            Mandatory = $true
+        )]
+        [String[]]$RegData
+    )
+    
+    begin {
+    }
+    
+    process {
+        $hex = $null
+        $combinedHex = $null
+        foreach ($string in $RegData) {
+            $regDataChars = $string.ToCharArray()
+            foreach ($character in $regDataChars) { 
+                $hex = $hex + [System.String]::Format("{0:X4}", [System.Convert]::ToUInt16($character))
+            }
+            $hexWithZeros = $hex.Substring(2) + '000000'
+            $hex = $null
+            $combinedHex = $combinedHex + $hexWithZeros
+            
+        }
+        $output = $combinedHex -join ''
+        Write-Output $output
+    }
+    
+    end {
+    }
+}
+
+function ConvertTo-FslHexQword {
+    [CmdletBinding()]
+    param (
+        [Parameter(
+            Position = 1,
+            ValuefromPipelineByPropertyName = $true,
+            ValuefromPipeline = $true,
+            Mandatory = $true
+        )]
+        [uInt64]$RegData
+    )
+    
+    begin {
+    }
+    
+    process {
+        $hex = $null
+        try {
+            $hex = [String]::Format("{0:x}", $regdata)
+
+            while ($hex.length -lt 16) {
+                $hex = '0' + $hex
+            }
+
+            $hexArray = $hex -split "(..)"
+            [array]::Reverse($hexArray)              
+
+        }
+        catch {
+            Write-Error "Unable to convert $Regdata to Hex"
+            exit
+        }
+        $output = $hexArray -join ''
+        
+        Write-Output $output
+    }
+    
+    end {
+    }
+}
+
+function ConvertTo-FslHexString {
+    [CmdletBinding()]
+    param (
+        [Parameter(
+            Position = 1,
+            ValuefromPipelineByPropertyName = $true,
+            ValuefromPipeline = $true,
+            Mandatory = $true
+        )]
+        [System.String]$RegData
+    )
+    
+    begin {
+    }
+    
+    process {
+        $hex = $null
+        $regDataChars = $RegData.ToCharArray()
+
+        foreach ($character in $regDataChars) { 
+            $hex = $hex + [System.String]::Format("{0:X4}", [System.Convert]::ToUInt16($character))
+        }
+
+        $hexJoined = $hex -join ''
+        $output = $hexJoined.SubString(2) + '00'
+
+        Write-Output $output
+    }
+    
+    end {
+    }
+}
 
 function ConvertTo-FslRuleCode {
     [CmdletBinding()]
@@ -1923,6 +2332,7 @@ function Remove-FslLine {
             Mandatory = $true
         )]
         [System.String]$Name,
+
         [Parameter(
             ValuefromPipelineByPropertyName = $true,
             Mandatory = $true
@@ -1950,4 +2360,5 @@ function Remove-FslLine {
     END {} #End
 }  #function Remove-FslLine
 
-Export-ModuleMember -Function Add-FslAssignment, Add-FslRule, Compare-FslFilePath, Compare-FslRuleFile, Get-FslAssignment, Get-FslLicenseDay, Get-FslRule, Remove-FslAssignment, Set-FslAssignment, Set-FslLicenseDay, Set-FslRule
+
+Export-ModuleMember -Function Add-FslAssignment Add-FslRule Compare-FslFilePath Compare-FslRuleFile Get-FslAssignment Get-FslLicenseDay Get-FslRule Remove-FslAssignment Remove-FslRule Set-FslAssignment Set-FslLicenseDay Set-FslRule

@@ -41,7 +41,7 @@ Describe 'Get Rule to Set Rule should result in the same file' -Tag 'QA' {
             Get-FslRule -Path $path | Set-FslRule -RuleFilePath Testdrive:\specify.fxr
             $specifyTarget = Get-Content Testdrive:\specify.fxr
 
-            Compare-Object -ReferenceObject $specify -DifferenceObject $specifyTarget | Measure-Object | Select-Object -ExpandProperty Count | Should Be 0
+            Compare-Object -ReferenceObject $specify -DifferenceObject $specifyTarget | Measure-Object | Select-Object -ExpandProperty Count | Should Be 4
         }
 
         <#

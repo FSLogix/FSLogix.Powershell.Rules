@@ -89,7 +89,7 @@ function Add-FslRule {
             Position = 10,
             ValuefromPipelineByPropertyName = $true
         )]
-        [string]$ValueData,
+        [string[]]$ValueData,
 
         [Parameter(
             ParameterSetName = 'SpecifyValue',
@@ -231,42 +231,79 @@ function Add-FslRule {
                 $sourceParent = Split-Path $FullName -Parent
                 $source = Split-Path $FullName -Leaf
 
+                #get rid of array, when not using multi-string
+                if ($RegValueType -ne 'Multi-String') {
+                    $RegData = $ValueData[0]
+                }
+                else {
+                    $RegData = $ValueData
+                }
+
                 switch ($RegValueType) {
                     String {
-                        #$RegValueTypeFile = 'StringValue'
-                        $binary = ConvertTo-FslRegHex -RegData $ValueData -RegValueType $RegValueType
+                        try {
+                            $hex = ConvertTo-FslHexString -RegData $RegData -ErrorAction Stop
+                        }
+                        catch {
+                            Write-Error "$Error[0]"
+                            exit
+                        }
+        
+                        $binary = '01' + $hex.ToString() + '0000'
                         break
                     }
                     DWORD {
-                        #$RegValueTypeFile = 'dword'
-
-                        $binary = try {
-                            $intValueData = [int32]$ValueData
-                            try {
-                                ConvertTo-FslRegHex -RegData $intValueData -RegValueType $RegValueType -ErrorAction Stop
-                            }
-                            catch {
-                                Write-Error "Could not convert $intValueData of value $RegValueType to a registry hex code"
-                            }
+ 
+                        try {
+                            $hex = ConvertTo-FslHexDword -RegData $RegData -ErrorAction Stop
                         }
                         catch {
-                            Write-Error "Could not convert $valueData to an Integer"
+                            Write-Error "$Error[0]"
                             exit
                         }
+        
+                        $binary = '04' + $hex.ToString()
+                        
                         break
                     }
                     QWORD {
-                        #$RegValueTypeFile = 'qword'
+                        try {
+                            $hex = ConvertTo-FslHexQword -RegData $RegData -ErrorAction Stop
+                        }
+                        catch {
+                            Write-Error "Unable to convert $Regdata to a QWORD Unsigned 64 bit Integer"
+                            exit
+                        }
+        
+                        $binary = '0B' + $hex.ToString()
                         break
                     }
                     Multi-String {
-                        #$RegValueTypeFile = 'Multi-String'
+                        try {
+                            $hex = ConvertTo-FslHexMultiString -RegData $RegData -ErrorAction Stop
+                        }
+                        catch {
+                            Write-Error $error[0]
+                            exit
+                        }
+                        $binary = '07' + $hex + '000000'
                         break
                     }
                     ExpandableString {
-                        #$RegValueTypeFile = 'ExpandableString'
+                        try {
+                            $hex = ConvertTo-FslHexString -RegData $RegData -ErrorAction Stop
+                        }
+                        catch {
+                            Write-Error "$Error[0]"
+                            exit
+                        }
+        
+                        $binary = '02' + $hex.ToString() + '0000'    
                         break
                     }
+                }
+                if ($Comment -eq 'Created By PowerShell Script'){
+                    $Comment = "Created by Script: $RegValueType $($ValueData.ToString())"
                 }
                 break
             }
