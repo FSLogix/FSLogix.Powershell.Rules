@@ -339,9 +339,9 @@ function Add-FslRule {
         Add-Content @addContentParams -Value "##$Comment"
         Write-Verbose -Message "Written $Comment to $Path"
 
-        If ($convertToFslRuleCodeParams.ContainsKey( 'CopyObject' ) -and
-            $convertToFslRuleCodeParams.ContainsKey( 'Redirect' ) -and
-            $convertToFslRuleCodeParams.ContainsKey( 'FolderOrKey' ) ) {
+        If ($convertToFslRuleCodeParams.CopyObject -and
+            $convertToFslRuleCodeParams.Redirect -and
+            $convertToFslRuleCodeParams.FolderOrKey ) {
             $SourceParent = $SourceParent.TrimEnd('\') + '\'
             $destParent = $destParent.TrimEnd('\') + '\'
         }

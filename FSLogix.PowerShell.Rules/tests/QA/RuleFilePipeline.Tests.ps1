@@ -18,7 +18,7 @@ Describe 'Get Rule to Set Rule should result in the same file' -Tag 'QA' {
             $path = Join-Path $global:here 'tests\QA\TestFiles\AllHiding\Hiding.fxr'
             $hiding = Get-Content $path
 
-            Get-FslRule -Path $path | Set-FslRule -RuleFilePath Testdrive:\Hiding.fxr
+            Get-FslRule -Path $path | Set-FslRule -Path Testdrive:\Hiding.fxr
             $hidingTarget = Get-Content Testdrive:\Hiding.fxr
 
             Compare-Object -ReferenceObject $hiding -DifferenceObject $hidingTarget | Measure-Object | Select-Object -ExpandProperty Count | Should Be 0
@@ -28,7 +28,7 @@ Describe 'Get Rule to Set Rule should result in the same file' -Tag 'QA' {
             $path = Join-Path $global:here 'tests\QA\TestFiles\AllHiding\redirect.fxr'
             $redirect = Get-Content $path
 
-            Get-FslRule -Path $path | Set-FslRule -RuleFilePath Testdrive:\redirect.fxr
+            Get-FslRule -Path $path | Set-FslRule -Path Testdrive:\redirect.fxr
             $redirectTarget = Get-Content Testdrive:\redirect.fxr
 
             Compare-Object -ReferenceObject $redirect -DifferenceObject $redirectTarget | Measure-Object | Select-Object -ExpandProperty Count | Should Be 0
