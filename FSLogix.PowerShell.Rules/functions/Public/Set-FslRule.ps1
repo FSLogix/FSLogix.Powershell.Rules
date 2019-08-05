@@ -8,7 +8,8 @@ function Set-FslRule {
             Mandatory = $true,
             ValuefromPipelineByPropertyName = $true
         )]
-        [System.String]$RuleFilePath,
+        [Alias('RuleFilePath')]
+        [System.String]$Path,
 
         [Parameter(
             ParameterSetName = 'Hiding',
