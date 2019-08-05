@@ -1,8 +1,8 @@
-<# INSERT HEADER ABOVE #>
+$here = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 #Get public and private function definition files.
 
-$fileName = "C:\PoShCode\GitHub\FSLogix.Powershell.Rules\Release\FSLogix.PowerShell.Rules.psm1"
+$fileName = Join-Path ($here | Split-Path) "Release\FSLogix.PowerShell.Rules.psm1"
 
 Set-Content -Value '#Requires -Version 5.0' -Path $fileName
 
@@ -16,13 +16,13 @@ Foreach ($import in @($Public + $Private)) {
         $function = Get-Content $import
         Add-Content -Value $function -Path $fileName
         Add-Content -Value '' -Path $fileName
-
-        #. $import.fullname
     }
     Catch {
-        Write-Error -Message "Failed to import function $($import.fullname): $_"
+        Write-Error -Message "Failed to write function $($import.fullname): $_"
     }
 }
 Add-Content -Value '' -Path $fileName
 
-Add-Content -Value "Export-ModuleMember -Function $($Public.Basename)" -Path $fileName
+$functionList = $Public.Basename -join ', '
+
+Add-Content -Value "Export-ModuleMember -Function $functionList" -Path $fileName

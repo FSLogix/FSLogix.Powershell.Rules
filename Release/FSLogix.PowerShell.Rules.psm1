@@ -180,7 +180,7 @@ function Add-FslAssignment {
         if ( -not ( Test-Path $Path )) {
             $version = 1
             $minimumLicenseAssignedTime = 0
-            Set-Content -Path $Path -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop -WhatIf:$false
+            Set-Content -Path $Path -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop
         }
 
     } # Begin
@@ -655,7 +655,7 @@ function Add-FslRule {
                         break
                     }
                 }
-                if ($Comment -eq 'Created By PowerShell Script'){
+                if ($Comment -eq 'Created By PowerShell Script') {
                     $Comment = "Created by Script: $RegValueType $($ValueData.ToString())"
                 }
                 break
@@ -695,8 +695,13 @@ function Add-FslRule {
         If ($convertToFslRuleCodeParams.ContainsKey( 'CopyObject' ) -and
             $convertToFslRuleCodeParams.ContainsKey( 'Redirect' ) -and
             $convertToFslRuleCodeParams.ContainsKey( 'FolderOrKey' ) ) {
-            $SourceParent = $SourceParent.TrimEnd('\') + '\'
-            $destParent = $destParent.TrimEnd('\') + '\'
+            if ( $convertToFslRuleCodeParams.CopyObject -and
+                $convertToFslRuleCodeParams.Redirect -and
+                $convertToFslRuleCodeParams.FolderOrKey ) {
+                    $SourceParent = $SourceParent.TrimEnd('\') + '\'
+                    $destParent = $destParent.TrimEnd('\') + '\'
+            }
+        
         }
         else {
             $destParent = $destParent.TrimEnd('\')
@@ -1146,8 +1151,6 @@ function Remove-FslAssignment {
 
         $assignments = Get-FslAssignment -Path $Path
 
-
-
         switch ($true) {
             {$assignments.UserName -contains $Name} {
                 $lines = $assignments | Where-Object {$_.Username -eq $Name}
@@ -1478,14 +1481,10 @@ function Set-FslAssignment {
     } # Begin
     PROCESS {
 
-        #check file has correct filename extension
-        if ($Path -notlike "*.fxa") {
-            Write-Warning 'Assignment files should have an fxa extension'
-        }
-
         #Add first line if pipeline input
         If ($setContent) {
             Set-Content -Path $Path -Value "$version`t$minimumLicenseAssignedTime" -Encoding Unicode -ErrorAction Stop -WhatIf:$false
+            Write-Verbose "Setting assignment file $Path contents"
             Add-FslAssignment @PSBoundParameters
             $setContent = $false
         }
@@ -1557,7 +1556,8 @@ function Set-FslRule {
             Mandatory = $true,
             ValuefromPipelineByPropertyName = $true
         )]
-        [System.String]$RuleFilePath,
+        [Alias('RuleFilePath')]
+        [System.String]$Path,
 
         [Parameter(
             ParameterSetName = 'Hiding',
@@ -1670,13 +1670,13 @@ function Set-FslRule {
     PROCESS {
 
         #check file has correct filename extension
-        if ($RuleFilePath -notlike "*.fxr") {
+        if ($Path -notlike "*.fxr") {
             Write-Warning 'The Rule file should have an fxr extension'
         }
 
         #Add first line if pipeline input
         If ($setContent) {
-            Set-Content -Path $RuleFilePath -Value $version -Encoding Unicode -ErrorAction Stop
+            Set-Content -Path $Path -Value $version -Encoding Unicode -ErrorAction Stop
             Add-FslRule @PSBoundParameters
             $setContent = $false
         }
