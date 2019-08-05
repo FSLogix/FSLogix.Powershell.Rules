@@ -12,7 +12,7 @@
     RootModule = 'FSLogix.PowerShell.Rules.psm1'
     
     # Version number of this module.
-    ModuleVersion = '2019.7.1'
+    ModuleVersion = '2019.8.1'
     
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -101,7 +101,7 @@
             # LicenseUri = ''
     
             # A URL to the main website for this project.
-            ProjectUri = 'https://github.com/FSLogix/FSLogix.Powershell.Rules'
+            ProjectUri = 'https://github.com/FSLogix/FSLogix.PowerShell.Rules'
     
             # A URL to an icon representing this module.
             # IconUri = ''
