@@ -302,7 +302,7 @@ function Add-FslRule {
                         break
                     }
                 }
-                if ($Comment -eq 'Created By PowerShell Script'){
+                if ($Comment -eq 'Created By PowerShell Script') {
                     $Comment = "Created by Script: $RegValueType $($ValueData.ToString())"
                 }
                 break
@@ -339,11 +339,16 @@ function Add-FslRule {
         Add-Content @addContentParams -Value "##$Comment"
         Write-Verbose -Message "Written $Comment to $Path"
 
-        If ($convertToFslRuleCodeParams.CopyObject -and
-            $convertToFslRuleCodeParams.Redirect -and
-            $convertToFslRuleCodeParams.FolderOrKey ) {
-            $SourceParent = $SourceParent.TrimEnd('\') + '\'
-            $destParent = $destParent.TrimEnd('\') + '\'
+        If ($convertToFslRuleCodeParams.ContainsKey( 'CopyObject' ) -and
+            $convertToFslRuleCodeParams.ContainsKey( 'Redirect' ) -and
+            $convertToFslRuleCodeParams.ContainsKey( 'FolderOrKey' ) ) {
+            if ( $convertToFslRuleCodeParams.CopyObject -and
+                $convertToFslRuleCodeParams.Redirect -and
+                $convertToFslRuleCodeParams.FolderOrKey ) {
+                    $SourceParent = $SourceParent.TrimEnd('\') + '\'
+                    $destParent = $destParent.TrimEnd('\') + '\'
+            }
+        
         }
         else {
             $destParent = $destParent.TrimEnd('\')

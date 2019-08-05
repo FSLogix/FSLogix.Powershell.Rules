@@ -122,13 +122,13 @@ function Set-FslRule {
     PROCESS {
 
         #check file has correct filename extension
-        if ($RuleFilePath -notlike "*.fxr") {
+        if ($Path -notlike "*.fxr") {
             Write-Warning 'The Rule file should have an fxr extension'
         }
 
         #Add first line if pipeline input
         If ($setContent) {
-            Set-Content -Path $RuleFilePath -Value $version -Encoding Unicode -ErrorAction Stop
+            Set-Content -Path $Path -Value $version -Encoding Unicode -ErrorAction Stop
             Add-FslRule @PSBoundParameters
             $setContent = $false
         }
