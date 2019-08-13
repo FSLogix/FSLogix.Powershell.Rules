@@ -2361,4 +2361,3 @@ function Remove-FslLine {
 }  #function Remove-FslLine
 
 
-Export-ModuleMember -Function Add-FslAssignment, Add-FslRule, Compare-FslFilePath, Compare-FslRuleFile, Get-FslAssignment, Get-FslLicenseDay, Get-FslRule, Remove-FslAssignment, Remove-FslRule, Set-FslAssignment, Set-FslLicenseDay, Set-FslRule

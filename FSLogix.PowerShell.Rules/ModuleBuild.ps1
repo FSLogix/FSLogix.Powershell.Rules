@@ -3,6 +3,7 @@ $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 #Get public and private function definition files.
 
 $fileName = Join-Path ($here | Split-Path) "Release\FSLogix.PowerShell.Rules.psm1"
+$manifest = Join-Path ($here | Split-Path) "Release\FSLogix.PowerShell.Rules.psd1"
 
 Set-Content -Value '#Requires -Version 5.0' -Path $fileName
 
@@ -25,4 +26,6 @@ Add-Content -Value '' -Path $fileName
 
 $functionList = $Public.Basename -join ', '
 
-Add-Content -Value "Export-ModuleMember -Function $functionList" -Path $fileName
+$currentVersion = (Get-Date -Format yyMM) + '.1'
+
+Update-ModuleManifest -Path $manifest -FunctionsToExport $functionList -ModuleVersion $currentVersion
