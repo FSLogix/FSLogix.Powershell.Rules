@@ -24,8 +24,6 @@ Foreach ($import in @($Public + $Private)) {
 }
 Add-Content -Value '' -Path $fileName
 
-$functionList = $Public.Basename -join ', '
-
 $currentVersion = (Get-Date -Format yyMM) + '.1'
 
-Update-ModuleManifest -Path $manifest -FunctionsToExport $functionList -ModuleVersion $currentVersion
+Update-ModuleManifest -Path $manifest -FunctionsToExport $Public.Basename -ModuleVersion $currentVersion

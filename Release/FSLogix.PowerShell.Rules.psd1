@@ -69,8 +69,10 @@ PowerShellVersion = '5.0'
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = 
-     'Add-FslAssignment, Add-FslRule, Compare-FslFilePath, Compare-FslRuleFile, Get-FslAssignment, Get-FslLicenseDay, Get-FslRule, Remove-FslAssignment, Remove-FslRule, Set-FslAssignment, Set-FslLicenseDay, Set-FslRule'
+FunctionsToExport = 'Add-FslAssignment', 'Add-FslRule', 'Compare-FslFilePath', 
+               'Compare-FslRuleFile', 'Get-FslAssignment', 'Get-FslLicenseDay', 
+               'Get-FslRule', 'Remove-FslAssignment', 'Remove-FslRule', 
+               'Set-FslAssignment', 'Set-FslLicenseDay', 'Set-FslRule'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = '*'
@@ -99,7 +101,7 @@ PrivateData = @{
         # Tags = @()
 
         # A URL to the license for this module.
-        # LicenseUri = ''
+        LicenseUri = 'https://opensource.org/licenses/MIT'
 
         # A URL to the main website for this project.
         ProjectUri = 'https://github.com/FSLogix/FSLogix.PowerShell.Rules'
