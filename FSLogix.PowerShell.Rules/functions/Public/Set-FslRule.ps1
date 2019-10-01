@@ -89,8 +89,15 @@ function Set-FslRule {
             Position = 10,
             ValuefromPipelineByPropertyName = $true
         )]
-        [Alias('Binary')]
-        [string]$Data,
+        [string[]]$ValueData,
+
+        [Parameter(
+            ParameterSetName = 'SpecifyValue',
+            Mandatory = $false,
+            ValuefromPipelineByPropertyName = $true
+        )]
+        [ValidateSet('String', 'DWORD', 'QWORD', 'Multi-String', 'ExpandableString')]
+        [string]$RegValueType = 'String',
 
         [Parameter(
             Position = 11,
