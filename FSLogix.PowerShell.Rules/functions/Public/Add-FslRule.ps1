@@ -303,7 +303,7 @@ function Add-FslRule {
                     }
                 }
                 if ($Comment -eq 'Created By PowerShell Script') {
-                    $Comment = "Created by Script: $RegValueType $($ValueData.ToString())"
+                    $Comment = "Created by Script. Type is $RegValueType. Data is $RegData"
                 }
                 break
             }
